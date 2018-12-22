@@ -19,6 +19,8 @@ passport.deserializeUser((id, done) => {
     } else {
       // user found
       delete user.password; // remove password so it doesn't get sent
+      delete user.fb_access_token; // remove facebook info so it isnt sent
+      delete user.facebook_id;
       done(null, user);
     }
   }).catch((err) => {
@@ -50,30 +52,30 @@ passport.use('local', new LocalStrategy({
         done(null, {});
       });
   })));
-
+// Setup new facebook strategy
 passport.use('facebook', new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:5000/api/user/fb/callback",
-    profileFields: ['id', 'displayName', 'picture.type(large)', 'email', 'first_name', 'profileUrl']
-},
+    callbackURL: 'http://localhost:5000/auth/facebook/return',
+    profileFields: ['id', 'displayName', 'picture.type(large)', 'first_name']
+},  // this is called after facebook authorizes user
     function (accessToken, refreshToken, profile, done) {
-        const profilePicture = profile.photos[0].value;
-        console.log(profilePicture);
+        // grab user info from DB
         pool.query('SELECT * FROM person WHERE facebook_id = $1', [profile.id])
             .then((result) => {
                 const user = result && result.rows && result.rows[0];
+                //found facebook id
                 if (user) {
-                    //found facebook id
                     done(null, user);
+                //cant find facebook id -- so create one
                 } else if (!user) {
-                    //cant find facebook id -- so create one
-                    pool.query(`INSERT INTO "person"("name", "facebook_id", "facebook_image")
-                                VALUES($1, $2, $3) RETURNING *;`, [profile.displayName, profile.id, profile.photos[0].value])
+                    //get first name if one is set otherwise display name
+                    let name = profile.name.givenName || profile.displayName;
+                    pool.query(`INSERT INTO "person"("name", "facebook_id", "facebook_image", "fb_access_token")
+                                VALUES($1, $2, $3, $4) RETURNING *;`, [name, profile.id, profile.photos[0].value, accessToken])
                     .then((results) => {
                         const newUser = results && results.rows &&results.rows[0];
                         if(newUser) {
-                            console.log('made id to add', newUser);
                             done(null, newUser);
                         } 
                     }).catch(err => {

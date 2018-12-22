@@ -86,7 +86,7 @@ class LoginPage extends Component {
                         type="button"
                         className="link-button"
                     >
-                        <a href='http://localhost:5000/api/user/fb/login'>Login with facebook</a>
+                        <a href='http://localhost:5000/auth/facebook'>Login with facebook</a>
                     </button>
                     
 

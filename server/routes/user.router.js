@@ -33,13 +33,6 @@ router.post('/login', userStrategy.authenticate('local'), (req, res) => {
   res.sendStatus(200);
 });
 
-router.get('/fb/login', userStrategy.authenticate('facebook'));
-
-router.get('/fb/callback', userStrategy.authenticate('facebook'), (req, res) => 
-{
-    res.redirect('http://localhost:3000/');
-});
-
 // clear all server session information about this user
 router.post('/logout', (req, res) => {
   // Use passport's built-in method to log out the user
