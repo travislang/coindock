@@ -51,17 +51,42 @@ passport.use('local', new LocalStrategy({
       });
   })));
 
-
-passport.use(new FacebookStrategy({
-    clientID: FACEBOOK_APP_ID,
-    clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:3000/auth/facebook/callback"
+passport.use('facebook', new FacebookStrategy({
+    clientID: process.env.FACEBOOK_APP_ID,
+    clientSecret: process.env.FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:5000/api/user/fb/callback",
+    profileFields: ['id', 'displayName', 'picture.type(large)', 'email', 'first_name', 'profileUrl']
 },
     function (accessToken, refreshToken, profile, done) {
-        User.findOrCreate(..., function (err, user) {
-            if (err) { return done(err); }
-            done(null, user);
-        });
+        const profilePicture = profile.photos[0].value;
+        console.log(profilePicture);
+        pool.query('SELECT * FROM person WHERE facebook_id = $1', [profile.id])
+            .then((result) => {
+                const user = result && result.rows && result.rows[0];
+                if (user) {
+                    //found facebook id
+                    done(null, user);
+                } else if (!user) {
+                    //cant find facebook id -- so create one
+                    pool.query(`INSERT INTO "person"("name", "facebook_id", "facebook_image")
+                                VALUES($1, $2, $3) RETURNING *;`, [profile.displayName, profile.id, profile.photos[0].value])
+                    .then((results) => {
+                        const newUser = results && results.rows &&results.rows[0];
+                        if(newUser) {
+                            console.log('made id to add', newUser);
+                            done(null, newUser);
+                        } 
+                    }).catch(err => {
+                        console.log('error in creating fb credentials:', err);
+                        done(null, {});
+                    });
+                } else {
+                    done(null, false, { message: 'Error with facebook login.' });
+                }
+            }).catch((err) => {
+                console.log('error', err);
+                done(null, {});
+            });
     }
 ));
 

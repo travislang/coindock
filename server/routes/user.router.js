@@ -33,10 +33,11 @@ router.post('/login', userStrategy.authenticate('local'), (req, res) => {
   res.sendStatus(200);
 });
 
-router.post('/fb/login', userStrategy.authenticate('facebook'));
+router.get('/fb/login', userStrategy.authenticate('facebook'));
 
-router.get('/fb/callback', userStrategy.authenticate('facebook'), (req, res) => {
-    res.sendStatus(200);
+router.get('/fb/callback', userStrategy.authenticate('facebook'), (req, res) => 
+{
+    res.redirect('http://localhost:3000/');
 });
 
 // clear all server session information about this user
