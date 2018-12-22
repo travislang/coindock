@@ -64,13 +64,18 @@ passport.use('facebook', new FacebookStrategy({
         pool.query('SELECT * FROM person WHERE facebook_id = $1', [profile.id])
             .then((result) => {
                 const user = result && result.rows && result.rows[0];
+                let name = profile.name.givenName || profile.displayName;
                 //found facebook id
                 if (user) {
-                    done(null, user);
+                    //make sure name & profile image are up to date in DB
+                    pool.query(`UPDATE "person" SET "facebook_image" = $1, "name" = $2 WHERE "facebook_id" = $3`, [profile.photos[0].value, name, profile.id])
+                    .then( () => {
+                        done(null, user);
+                    })
                 //cant find facebook id -- so create one
                 } else if (!user) {
                     //get first name if one is set otherwise display name
-                    let name = profile.name.givenName || profile.displayName;
+                    
                     pool.query(`INSERT INTO "person"("name", "facebook_id", "facebook_image", "fb_access_token")
                                 VALUES($1, $2, $3, $4) RETURNING *;`, [name, profile.id, profile.photos[0].value, accessToken])
                     .then((results) => {
