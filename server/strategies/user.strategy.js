@@ -1,5 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const encryptLib = require('../modules/encryption');
 const pool = require('../modules/pool');
 
@@ -14,7 +15,7 @@ passport.deserializeUser((id, done) => {
 
     if (!user) {
       // user not found
-      done(null, false, { message: 'Incorrect credentials.' });
+      done(null, false, { message: 'Incorrect username or password.' });
     } else {
       // user found
       delete user.password; // remove password so it doesn't get sent
@@ -39,7 +40,7 @@ passport.use('local', new LocalStrategy({
           done(null, user);
         } else if (user) {
           // not good! Passwords don't match!
-          done(null, false, { message: 'Incorrect credentials.' });
+            done(null, false, { message: 'Incorrect username or password.' });
         } else {
           // not good! No user with that name
           done(null, false);
@@ -49,5 +50,19 @@ passport.use('local', new LocalStrategy({
         done(null, {});
       });
   })));
+
+
+passport.use(new FacebookStrategy({
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:3000/auth/facebook/callback"
+},
+    function (accessToken, refreshToken, profile, done) {
+        User.findOrCreate(..., function (err, user) {
+            if (err) { return done(err); }
+            done(null, user);
+        });
+    }
+));
 
 module.exports = passport;
