@@ -1,3 +1,8 @@
+import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+import LogOutButton from '../LogOutButton/LogOutButton';
+
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -12,7 +17,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
-const styles = {
+const styles = theme => ({
     root: {
         flexGrow: 1,
     },
@@ -23,7 +28,7 @@ const styles = {
         marginLeft: -12,
         marginRight: 20,
     },
-};
+});
 
 class MainAppBar extends Component {
     state = {
@@ -50,22 +55,16 @@ class MainAppBar extends Component {
 
         return (
             <div className={classes.root}>
-                {/* <FormGroup>
-                    <FormControlLabel
-                        control={
-                            <Switch checked={auth} onChange={this.handleChange} aria-label="LoginSwitch" />
-                        }
-                        label={auth ? 'Logout' : 'Login'}
-                    />
-                </FormGroup> */}
-                <AppBar position="static">
+                <AppBar className={classes.root} color='default' position="static">
                     <Toolbar>
                         <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="h6" color="inherit" className={classes.grow}>
-                            CoinDock
-                        </Typography>
+                        <NavLink to="/home" className={classes.grow} style={{ textDecoration: 'none', color: 'unset' }}>
+                            <Typography variant="h6" color="inherit" >
+                                CoinDock
+                            </Typography>
+                        </NavLink>
                         {auth && (
                             <div>
                                 <IconButton

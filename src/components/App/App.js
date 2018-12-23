@@ -5,10 +5,8 @@ import {
     Redirect,
     Switch,
 } from 'react-router-dom';
-
 import { connect } from 'react-redux';
 
-import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
 
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute'
@@ -20,28 +18,14 @@ import InfoPage from '../InfoPage/InfoPage';
 import './App.css';
 import 'typeface-roboto';
 
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import lightBlue from '@material-ui/core/colors/lightBlue';
-import deepOrange from '@material-ui/core/colors/deepOrange';
-import red from '@material-ui/core/colors/red';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 import MainAppBar from './MainAppBar';
 
-const accentOrange = deepOrange['700'];
-
-// create color theme wrapper for app
-const theme = createMuiTheme({
-    palette: {
-        type: 'dark',
-        primary: lightBlue,
-        secondary: deepOrange,
-        error: red,
-        contrastThreshold: 3,
-        tonalOffset: 0.2
-    },
-});
-
-
+//imports MUI theme config
+import darkTheme from '../MuiThemes/DarkTheme';
+import greyTheme from '../MuiThemes/greyTheme';
 
 class App extends Component {
     componentDidMount() {
@@ -50,7 +34,8 @@ class App extends Component {
 
     render() {
         return (
-            <MuiThemeProvider theme={theme}>
+            <MuiThemeProvider theme={darkTheme}>
+                <CssBaseline />
                 <Router>
                     <div>
                         <MainAppBar />
