@@ -28,6 +28,9 @@ const styles = theme => ({
         marginLeft: -12,
         marginRight: 20,
     },
+    navSpacing: {
+        paddingRight: theme.spacing.unit * 2,
+    }
 });
 
 class MainAppBar extends Component {
@@ -61,10 +64,22 @@ class MainAppBar extends Component {
                             <MenuIcon />
                         </IconButton>
                         <NavLink to="/home" className={classes.grow} style={{ textDecoration: 'none', color: 'unset' }}>
-                            <Typography variant="h6" color="inherit" >
+                            <Typography variant="h5" color="inherit" >
                                 CoinDock
                             </Typography>
                         </NavLink>
+                        <NavLink to='/home' className={classes.navSpacing} style={{ textDecoration: 'none', color: 'unset' }}>
+                            <Typography variant="h6" color="inherit" >
+                                {this.props.user.id ? 'Home' : 'Login / Register'}
+                            </Typography>
+                        </NavLink>
+                        {this.props.user.id && (
+                            <NavLink to="/info" className={classes.navSpacing} style={{ textDecoration: 'none', color: 'unset' }}>
+                                <Typography variant="h6" color="inherit" >
+                                    Info
+                                </Typography>
+                            </NavLink>
+                        )}
                         {auth && (
                             <div>
                                 <IconButton
@@ -89,6 +104,9 @@ class MainAppBar extends Component {
                                     open={open}
                                     onClose={this.handleClose}
                                 >
+                                    <NavLink to="/about" style={{ textDecoration: 'none', color: 'unset', outline: 'none' }}>
+                                        <MenuItem onClick={this.handleClose}>About</MenuItem>
+                                    </NavLink>
                                     <MenuItem onClick={this.handleClose}>Profile</MenuItem>
                                     <MenuItem onClick={this.handleClose}>My account</MenuItem>
                                 </Menu>
@@ -101,4 +119,8 @@ class MainAppBar extends Component {
     }
 }
 
-export default withStyles(styles)(MainAppBar);
+const mapStateToProps = state => ({
+    user: state.user,
+});
+
+export default connect(mapStateToProps)(withStyles(styles)(MainAppBar));
