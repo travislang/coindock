@@ -12,7 +12,6 @@ passport.deserializeUser((id, done) => {
   pool.query('SELECT * FROM person WHERE id = $1', [id]).then((result) => {
     // Handle Errors
     const user = result && result.rows && result.rows[0];
-
     if (!user) {
       // user not found
       done(null, false, { message: 'Incorrect username or password.' });
@@ -64,6 +63,7 @@ passport.use('facebook', new FacebookStrategy({
         pool.query('SELECT * FROM person WHERE facebook_id = $1', [profile.id])
             .then((result) => {
                 const user = result && result.rows && result.rows[0];
+                 //get first name if one is set otherwise display name
                 let name = profile.name.givenName || profile.displayName;
                 //found facebook id
                 if (user) {
@@ -74,8 +74,6 @@ passport.use('facebook', new FacebookStrategy({
                     })
                 //cant find facebook id -- so create one
                 } else if (!user) {
-                    //get first name if one is set otherwise display name
-                    
                     pool.query(`INSERT INTO "person"("name", "facebook_id", "facebook_image", "fb_access_token")
                                 VALUES($1, $2, $3, $4) RETURNING *;`, [name, profile.id, profile.photos[0].value, accessToken])
                     .then((results) => {
