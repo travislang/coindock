@@ -2,9 +2,12 @@
 
 CREATE TABLE "person" (
     "id" SERIAL PRIMARY KEY,
-    "full_name" VARCHAR (80) NOT NULL,
-    "username" VARCHAR (80) UNIQUE NOT NULL,
-    "password" VARCHAR (1000) NOT NULL
+    "name" VARCHAR (80) NOT NULL,
+    "username" VARCHAR (80) UNIQUE,
+    "password" VARCHAR (1000),
+    "facebook_id" VARCHAR (80) UNIQUE,
+    "fb_access_token" VARCHAR (250) UNIQUE,
+    "facebook_image" VARCHAR(150) NOT NULL DEFAULT 'images/facebook-avatar.jpg';
 );
 
 CREATE TABLE "portfolio" (
