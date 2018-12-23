@@ -2,32 +2,40 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 
-// this could also be written with destructuring parameters as:
-// const UserPage = ({ user }) => (
-// and then instead of `props.user.username` you could use `user.username`
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+
+const styles = theme => ({
+    root: {
+        ...theme.mixins.gutters(),
+        paddingTop: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 2,
+    },
+});
 
 class UserPage extends Component {
     render() {
+        const { classes } = this.props;
         const { user } = this.props;
         return (
-            <div>
-                <h1 id="welcome">
+            <Paper className={classes.root} elevation={1}>
+                <Typography variant="h1">
                     Welcome, {user.name}!
-                </h1>
-                <img style={{borderRadius: '50%'}} src={user.facebook_image} alt="" />
-                <p>Your ID is: {user.id}</p>
-                <LogOutButton className="log-in" />
-            </div>
+                </Typography>
+                <Typography component="p">
+                    Your ID is: {user.id}
+                </Typography>
+            <LogOutButton className="log-in" />
+            </Paper>
+            // <img style={{borderRadius: '50%'}} src={user.facebook_image} alt="" />
         )
     }
 }
 
-// Instead of taking everything from state, we just want the user info.
-// if you wanted you could write this code like this:
-// const mapStateToProps = ({user}) => ({ user });
 const mapStateToProps = state => ({
   user: state.user,
 });
 
 // this allows us to use <App /> in index.js
-export default connect(mapStateToProps)(UserPage);
+export default connect(mapStateToProps)(withStyles(styles)(UserPage));
