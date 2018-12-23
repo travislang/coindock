@@ -21,7 +21,7 @@ import 'typeface-roboto';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import MainAppBar from './MainAppBar';
+import MainAppBar from '../MainAppBar/MainAppBar';
 
 //imports MUI theme config
 import darkTheme from '../MuiThemes/DarkTheme';
