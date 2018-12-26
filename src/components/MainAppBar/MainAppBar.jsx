@@ -82,8 +82,8 @@ class MainAppBar extends Component {
                             <>
                                 <MainTabs className={classes.grow}/>
                                 <NavLink to='/' style={{ textDecoration: 'none', color: 'unset' }}>
-                                    <Typography className={classes.inline} variant="button" color="inherit" >
-                                        Welcome, 
+                                    <Typography className={classes.inline} variant="overline" color="inherit" >
+                                        Welcome 
                                         {user.name}
                                     </Typography>
                                 </NavLink>

@@ -11,6 +11,8 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 
+import green from '@material-ui/core/colors/green';
+
 const styles = theme => ({
     root: {
         width: '100%',
@@ -19,12 +21,16 @@ const styles = theme => ({
         // fontSize: theme.typography.pxToRem(15),
         flexBasis: '50%',
         flexShrink: 0,
+        paddingLeft: 20,
     },
     secondaryHeading: {
-        fontSize: theme.typography.pxToRem(15),
+        // fontSize: theme.typography.pxToRem(15),
         color: theme.palette.text.secondary,
         flexBasis: '25%',
-        alignItems: 'center',
+        textAlign: 'center'
+    },
+    green: {
+        color: green[500],
     },
     column: {
         flexBasis: '33.33%',
@@ -36,12 +42,16 @@ const styles = theme => ({
         textAlign: 'center',
     },
     avatar: {
-        margin: 10,
+        padding: 5,
         width: 30,
         height: 30,
-        display: 'inline-block',
-        filter: 'brightness(200 %)'
+        verticalAlign: 'top',
+        backgroundColor: theme.palette.grey[300]
+        
     },
+    inline: {
+        display: 'inline-block',
+    }
 });
 
 class CoinExpansionItem extends Component {
@@ -61,12 +71,14 @@ class CoinExpansionItem extends Component {
         return (
             <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
                 <ExpansionPanelSummary alignContent='center' expandIcon={<ExpandMoreIcon />}>
-                    <Typography variant='h5' className={classes.heading}>
-                        <Avatar alt="crypto logo" src={coin.logo} className={classes.avatar} />
-                        {coin.symbol_name}
-                    </Typography>
-                    <Typography className={classes.secondaryHeading}>$3458.78</Typography>
-                    <Typography className={classes.secondaryHeading}>+7.14%</Typography>
+                    <div className={classes.heading}>
+                        <Avatar alt="crypto logo" src={coin.logo} className={classNames(classes.avatar, classes.inline)} />
+                        <Typography variant='h5' className={classNames(classes.inline, classes.heading)}>
+                            {coin.symbol_name}
+                        </Typography>
+                    </div>
+                    <Typography variant='h6' className={classNames(classes.secondaryHeading, classes.green)}>$3458.78</Typography>
+                    <Typography variant='h6' className={classes.secondaryHeading}>+7.14%</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <div className={classes.helper}>
