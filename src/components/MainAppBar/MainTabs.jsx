@@ -1,6 +1,5 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { Link } from 'react-router-dom';
@@ -35,11 +34,11 @@ class MainTabs extends React.Component {
                 onChange={this.handleChange}
                 className={classes.root}
                 indicatorColor="primary"
-                textColor="'inherit'"
+                textColor='inherit'
                 centered
             >
                 <Tab component={Link} to='/home' icon={<HomeIcon />} label="Home" />
-        <Tab component={Link} to='/home' icon={<BrokenImage />} label="Portfolio" />
+                <Tab component={Link} to='/home' icon={<BrokenImage />} label="Portfolio" />
                 <Tab component={Link} to='/home' icon={<RssFeed />} label="Alerts" />
             </Tabs>
         );

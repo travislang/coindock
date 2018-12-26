@@ -1,6 +1,5 @@
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import LogOutButton from '../LogOutButton/LogOutButton';
 
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
@@ -11,9 +10,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Avatar from '@material-ui/core/Avatar';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
@@ -45,7 +41,6 @@ const styles = theme => ({
 
 class MainAppBar extends Component {
     state = {
-        auth: true,
         anchorEl: null,
     };
 
@@ -57,43 +52,41 @@ class MainAppBar extends Component {
         this.setState({ anchorEl: null });
     };
 
+    handleLogout = () => {
+        this.setState({ anchorEl: null });
+        this.props.dispatch({ type: 'LOGOUT' })
+    };
+
     render() {
         const { classes, user } = this.props;
-        const { auth, anchorEl } = this.state;
+        const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
 
         return (
             <div className={classes.root}>
-                <AppBar className={classes.root} color='default' position="static">
-                    <Toolbar disableGutters>
+                <AppBar color='default' position="static">
+                    <Toolbar>
                         <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
                             <MenuIcon />
                         </IconButton>
-                        <NavLink to="/home" style={{ textDecoration: 'none', color: 'unset' }}>
+                        {user.id ? <NavLink to="/home" style={{ textDecoration: 'none', color: 'unset' }}>
                             <Typography variant="h5" color="inherit" >
                                 CoinDock
                             </Typography>
-                        </NavLink>
-                        <MainTabs />
-                        {/* <NavLink to='/home' className={classes.navSpacing} style={{ textDecoration: 'none', color: 'unset' }}>
-                            <Typography variant="h6" color="inherit" >
-                                {user.id ? 'Home' : 'Login / Register'}
+                        </NavLink> : <NavLink to="/home" className={classes.grow} style={{ textDecoration: 'none', color: 'unset' }}>
+                                <Typography variant="h5" color="inherit" >
+                                    CoinDock
                             </Typography>
-                        </NavLink>
-                        <NavLink to="/info" className={classes.navSpacing} style={{ textDecoration: 'none', color: 'unset' }}>
-                            <Typography variant="h6" color="inherit" >
-                                Info
-                                </Typography>
-                        </NavLink> */}
-                        {user.id && (
-                            <NavLink to='/' style={{ textDecoration: 'none', color: 'unset' }}>
-                                <Typography className={classes.inline} variant="h6" color="inherit" >
-                                    Welcome, {user.name}
-                                </Typography>
-                            </NavLink>
-                        )}
-                        {auth && (
-                            <div>
+                            </NavLink>}
+                        {user.id ? (
+                            <>
+                                <MainTabs className={classes.grow}/>
+                                <NavLink to='/' style={{ textDecoration: 'none', color: 'unset' }}>
+                                    <Typography className={classes.inline} variant="button" color="inherit" >
+                                        Welcome, 
+                                        {user.name}
+                                    </Typography>
+                                </NavLink>
                                 <IconButton
                                     aria-owns={open ? 'menu-appbar' : undefined}
                                     aria-haspopup="true"
@@ -122,9 +115,14 @@ class MainAppBar extends Component {
                                     </NavLink>
                                     <MenuItem onClick={this.handleClose}>Profile</MenuItem>
                                     <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                                    <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
                                 </Menu>
-                            </div>
-                        )}
+                            </>
+                        ) : (<NavLink to='/home' style={{ textDecoration: 'none',           color: 'unset' }}>
+                                <Typography variant="h6" color="inherit" >
+                                    Login
+                                </Typography>
+                            </NavLink>)}
                     </Toolbar>
                 </AppBar>
             </div>
