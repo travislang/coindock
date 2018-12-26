@@ -9,13 +9,14 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import classNames from 'classnames';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme => ({
     root: {
         width: '100%',
     },
     heading: {
-        fontSize: theme.typography.pxToRem(15),
+        // fontSize: theme.typography.pxToRem(15),
         flexBasis: '50%',
         flexShrink: 0,
     },
@@ -34,9 +35,16 @@ const styles = theme => ({
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
         textAlign: 'center',
     },
+    avatar: {
+        margin: 10,
+        width: 30,
+        height: 30,
+        display: 'inline-block',
+        filter: 'brightness(200 %)'
+    },
 });
 
-class CoinExpansionPanel extends Component {
+class CoinExpansionItem extends Component {
     state = {
         expanded: null,
     };
@@ -47,13 +55,16 @@ class CoinExpansionPanel extends Component {
         });
     };
     render() {
-        const { classes } = this.props;
+        const { classes, coin } = this.props;
         const { expanded } = this.state;
 
         return (
             <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography className={classes.heading}>Bitcoin</Typography>
+                <ExpansionPanelSummary alignContent='center' expandIcon={<ExpandMoreIcon />}>
+                    <Typography variant='h5' className={classes.heading}>
+                        <Avatar alt="crypto logo" src={coin.logo} className={classes.avatar} />
+                        {coin.symbol_name}
+                    </Typography>
                     <Typography className={classes.secondaryHeading}>$3458.78</Typography>
                     <Typography className={classes.secondaryHeading}>+7.14%</Typography>
                 </ExpansionPanelSummary>
@@ -74,27 +85,19 @@ class CoinExpansionPanel extends Component {
                             Market Cap
                             </Typography>
                     </div>
-                    <div className={classes.helper}>
-                        <Typography variant='h5'>
-                            $58,690,281
-                            </Typography>
-                        <Typography color='secondary' variant='overline'>
-                            Market Cap
-                            </Typography>
-                    </div>
                 </ExpansionPanelDetails>
                 <Divider />
                 <ExpansionPanelActions>
                     <Button size="small">Cancel</Button>
                     <Button size="small" color="primary">
                         Save
-                        </Button>
+                    </Button>
                 </ExpansionPanelActions>
             </ExpansionPanel>
         )
     }
 }
 
-export default withStyles(styles)(CoinExpansionPanel);
+export default withStyles(styles)(CoinExpansionItem);
 
 
