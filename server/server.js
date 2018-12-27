@@ -61,53 +61,21 @@ function heartbeat() {
 
 //query symbols fom db and start data streams for each symbol
 function binanceStream() {
-    //get symbols
-    pool.query(`SELECT "symbol" FROM "symbols";`)
-    .then( (result) => {
-        console.log(result.rows);
-        //make sure there is a response
-        if( result && result.rows ) {
-            //map symbols to format needed for stream
-            let tradingSymbols = result.rows.map(symbol => {
-                return `${symbol.symbol.toLowerCase()}@ticker`
-            })
-            console.log(tradingSymbols.join('/'));
-            //open new websocket and pass in symbols 
-            let ws = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${tradingSymbols.join('/')}`);
-            ws.on('open', () => {
-                console.log('binance stream open');
-            });
-            //listen for data stream
-            ws.on('message', function (data) {
-            // let time = moment(JSON.parse(data).E).format('h:mm:ss a')
-            // console.log(time);
-            // console.log(data);
-            
-            // console.log('data', JSON.parse(data).stream);
-            io.emit('priceUpdate', { data })
-            });
-        }
-        
-        // let ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@miniTicker');
-        // //<symbol>@miniTicker
-        // //!miniTicker@arr
-        // ws.on('open', () => {
-        //     console.log('binance stream open');
-        // });
+    let ws = new WebSocket(`wss://stream.binance.com:9443/ws/!ticker@arr`);
+    ws.on('open', () => {
+        console.log('binance stream open');
+    });
+    //listen for data stream
+    ws.on('message', function (data) {
+        // let time = moment(JSON.parse(data).E).format('h:mm:ss a')
+        // console.log(time);
+        // console.log(data);
 
-        // ws.on('ping', heartbeat);
-
-        // //listening for data stream
-        // ws.on('message', function (data) {
-        //     let time = moment(JSON.parse(data).E).format('h:mm:ss a')
-        //     console.log(time);
-        //     io.emit('priceUpdate', { data: JSON.parse(data), time: time })
-        // });
-    }).catch( err => {
-        console.log('error in binanceStream db query:', err);
-    })
+        // console.log('data', JSON.parse(data).stream);
+        io.emit('priceUpdate', { data })
+    });
 }
-// binanceStream();
+binanceStream();
 
 // App Set //
 const PORT = process.env.PORT || 5000;

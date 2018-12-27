@@ -78,12 +78,12 @@ class CoinExpansionItem extends Component {
                         </Typography>
                     </div>
                     <Typography variant='h6' className={classNames(classes.secondaryHeading, classes.green)}>{coin.last_price}</Typography>
-                    <Typography variant='h6' className={classes.secondaryHeading}>+7.14%</Typography>
+                    <Typography variant='h6' className={classes.secondaryHeading}>{coin.price_change}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <div className={classes.helper}>
                         <Typography variant='h5'>
-                            2,548,582
+                            {coin.volume}
                             </Typography>
                         <Typography color='secondary' variant='overline'>
                             24 Hour Volume
