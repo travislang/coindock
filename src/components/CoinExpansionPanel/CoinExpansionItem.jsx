@@ -77,7 +77,7 @@ class CoinExpansionItem extends Component {
                             {coin.symbol_name}
                         </Typography>
                     </div>
-                    <Typography variant='h6' className={classNames(classes.secondaryHeading, classes.green)}>55</Typography>
+                    <Typography variant='h6' className={classNames(classes.secondaryHeading, classes.green)}>{coin.c}</Typography>
                     <Typography variant='h6' className={classes.secondaryHeading}>+7.14%</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>

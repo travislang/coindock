@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import errors from './errorsReducer';
 import loginMode from './loginModeReducer';
 import user from './userReducer';
-import symbols from './tickers.reducer';
 import tickers from './tickers.reducer';
 
 // rootReducer is the primary reducer for our entire project

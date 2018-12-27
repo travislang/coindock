@@ -17,21 +17,18 @@ class CoinExpansionPanel extends Component {
     componentDidMount() {
         const socket = io('http://localhost:5000');
         socket.on('priceUpdate', (data) => {
-            console.log(JSON.parse(data.data).stream);
-            // this.props.dispatch({
-            //     type: 'UPDATE_PRICES', payload:
-            //     {
-            //         data: JSON.parse(data.data).data
-            //     }
-            // });
+            this.props.dispatch({
+                type: 'UPDATE_PRICE', payload:
+                {
+                    data: JSON.parse(data.data).data
+                }
+            });
         })
     }
 
     render() {
         const { classes } = this.props;
         const { tickers } = this.props;
-        console.log('tickers', tickers);
-        
         return (
             <div className={classes.root}>
                 {tickers.map( item => {

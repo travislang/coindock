@@ -3,8 +3,8 @@ import axios from 'axios';
 
 function* fetchTickers() {
     try{
-        const responseSymbols = yield call(axios.get, '/api/crypto/tickers')
-        yield put({type: 'SET_TICKERS', payload: responseSymbols.data})
+        const responseTickers = yield call(axios.get, '/api/crypto/tickers')
+        yield put({type: 'SET_TICKERS', payload: responseTickers.data})
     } 
     catch( err ) {
         console.log('error in symbolsSaga:', err);
