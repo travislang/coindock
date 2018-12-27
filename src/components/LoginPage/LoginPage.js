@@ -33,6 +33,9 @@ const styles = theme => ({
     menu: {
         width: 200,
     },
+    button: {
+        margin: theme.spacing.unit,
+    },
 });
 
 class LoginPage extends Component {
@@ -97,7 +100,9 @@ class LoginPage extends Component {
                             margin="normal"
                             variant="outlined"
                         />
-
+                        <Button variant="contained" color="primary"     className={classes.button}>
+                            LOGIN
+                        </Button>
                     </form>
                 </Grid>
                 <form onSubmit={this.login}>
