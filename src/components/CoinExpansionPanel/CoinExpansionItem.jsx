@@ -67,17 +67,17 @@ class CoinExpansionItem extends Component {
     render() {
         const { classes, coin } = this.props;
         const { expanded } = this.state;
-
+        
         return (
             <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
-                <ExpansionPanelSummary alignContent='center' expandIcon={<ExpandMoreIcon />}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <div className={classes.heading}>
                         <Avatar alt="crypto logo" src={coin.logo} className={classNames(classes.avatar, classes.inline)} />
                         <Typography variant='h5' className={classNames(classes.inline, classes.heading)}>
                             {coin.symbol_name}
                         </Typography>
                     </div>
-                    <Typography variant='h6' className={classNames(classes.secondaryHeading, classes.green)}>$3458.78</Typography>
+                    <Typography variant='h6' className={classNames(classes.secondaryHeading, classes.green)}>55</Typography>
                     <Typography variant='h6' className={classes.secondaryHeading}>+7.14%</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>

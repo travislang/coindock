@@ -3,6 +3,9 @@ import { withStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import CoinExpansionItem from './CoinExpansionItem';
 
+import axios from 'axios';
+import io from 'socket.io-client';
+
 const styles = theme => ({
     root: {
         width: '100%',
@@ -10,13 +13,28 @@ const styles = theme => ({
 });
 
 class CoinExpansionPanel extends Component {
-    
+
+    componentDidMount() {
+        const socket = io('http://localhost:5000');
+        socket.on('priceUpdate', (data) => {
+            console.log(JSON.parse(data.data).stream);
+            // this.props.dispatch({
+            //     type: 'UPDATE_PRICES', payload:
+            //     {
+            //         data: JSON.parse(data.data).data
+            //     }
+            // });
+        })
+    }
+
     render() {
         const { classes } = this.props;
-        const { symbols } = this.props;
+        const { tickers } = this.props;
+        console.log('tickers', tickers);
+        
         return (
             <div className={classes.root}>
-                {symbols.map( item => {
+                {tickers.map( item => {
                     return (
                         <CoinExpansionItem key={item.id} coin={item} />
                     )
@@ -26,8 +44,9 @@ class CoinExpansionPanel extends Component {
     }
 }
 
+
 const mapStateToProps = store => ({
-        symbols: store.symbols
+        tickers: store.tickers,
     })
 
 export default connect(mapStateToProps)(withStyles(styles)(CoinExpansionPanel));

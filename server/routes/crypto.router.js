@@ -2,10 +2,9 @@ const express = require('express');
 const { rejectUnauthenticated } = require('../modules/authentication-middleware');
 const pool = require('../modules/pool');
 
-const moment = require('moment');
+
 const axios = require('axios');
-// const WebSocket = require('ws');
-// const io = require('socket.io')(server);
+
 
 const router = express.Router();
 
@@ -70,7 +69,17 @@ router.get('/binance', (req, res) => {
         })
 })
 
-router.get('/symbols', (req, res) => {
+router.get('/alltickers', (req, res) => {
+    axios.get('https://api.binance.com/api/v1/ticker/24hr')
+    .then( result => {
+        res.send(result.data);
+    }).catch( err => {
+        console.log('error getting 24h data from binance', err);
+        res.sendStatus(500);
+    })
+})
+
+router.get('/tickers', (req, res) => {
     pool.query(`SELECT * FROM "symbols" ORDER BY "id" ASC;`)
     .then( result => {
         res.send(result.rows)
