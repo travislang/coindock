@@ -4,15 +4,17 @@ import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
+        minHeight: '85vh',
+
     },
     paper: {
         padding: theme.spacing.unit * 2,
@@ -22,20 +24,38 @@ const styles = theme => ({
     container: {
         display: 'flex',
         flexWrap: 'wrap',
+        justifyContent: 'center',
+        marginTop: theme.spacing.unit * 2
+    },
+    border: {
+        border: `2px solid ${theme.palette.divider}`,
+        borderRadius: '20px',
+        padding: theme.spacing.unit * 2
     },
     textField: {
+        minWidth: '60%',
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
     },
-    dense: {
-        marginTop: 16,
-    },
-    menu: {
-        width: 200,
+    textColor: {
+        color: theme.palette.text.disabled
     },
     button: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing.unit * 2,
+        minWidth: '60%'
     },
+    fbButton: {
+        margin: theme.spacing.unit,
+        marginBottom: theme.spacing.unit * 2,
+        minWidth: '60%',
+        backgroundColor: '#3b5998',
+    },
+    linkButton: {
+        color: theme.palette.primary.dark
+    },
+    overlap: {
+        marginBottom: -theme.spacing.unit * 2,
+    }
 });
 
 class LoginPage extends Component {
@@ -60,7 +80,7 @@ class LoginPage extends Component {
         }
     } // end login
 
-    handleInputChangeFor = propertyName => (event) => {
+    handleChange = propertyName => (event) => {
         this.setState({
             [propertyName]: event.target.value,
         });
@@ -69,94 +89,77 @@ class LoginPage extends Component {
     render() {
         const { classes } = this.props;
         return (
-            <Grid container className={classes.root}>
-                {this.props.errors.loginMessage && (
+            <div className={classes.root}>
+                <Grid container justify='center' alignItems='center' className={classes.root} >
+                    {/* {this.props.errors.loginMessage && (
                     <h2
                         className="alert"
                         role="alert"
                     >
                         {this.props.errors.loginMessage}
                     </h2>
-                )}
-                <Grid item xs={12} md={9} lg={7}>
-                    <form className={classes.container} noValidate autoComplete="off" onSubmit={this.login}>
-                        <TextField
-                            id="outlined-name"
-                            label="Username"
-                            className={classes.textField}
-                            value={this.state.username}
-                            onChange={this.handleChange('username')}
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <TextField
-                            id="outlined-password-input"
-                            label="Password"
-                            className={classes.textField}
-                            value={this.state.password}
-                            onChange={this.handleChange('password')}
-                            type="password"
-                            autoComplete="current-password"
-                            margin="normal"
-                            variant="outlined"
-                        />
-                        <Button variant="contained" color="primary"     className={classes.button}>
-                            LOGIN
-                        </Button>
-                    </form>
-                </Grid>
-                <form onSubmit={this.login}>
-                    <h1>Login</h1>
-                    <div>
-                        <label htmlFor="username">
-                            Username:
-                            <input
-                                type="text"
-                                name="username"
+                    )} */}
+                    <Grid item className={classes.border} xs={10} md={7} lg={4}>
+                        <div>
+                            <Typography align='center' variant="h4">
+                            USER LOGIN
+                            </Typography>
+                            <Typography align='center' variant="subtitle2" className={classes.textColor} gutterBottom>
+                            Login with your social media account
+                            </Typography>
+                        </div>
+                        <Grid justify='center' container>
+                            <Button href='http://localhost:5000/auth/facebook' variant="contained" className={classes.fbButton}>
+                                Login with Facebook
+                            </Button>
+                        </Grid>
+                        <Typography className={classes.overlap} color='primary' align='center' variant="h6">
+                            OR
+                        </Typography>
+                        <Divider />
+                        <Divider />
+                        <form className={classes.container} noValidate autoComplete="off" onSubmit={this.login}>
+                            <TextField
+                                id="outlined-name"
+                                label="Username"
+                                className={classes.textField}
                                 value={this.state.username}
-                                onChange={this.handleInputChangeFor('username')}
+                                onChange={this.handleChange('username')}
+                                margin="normal"
+                                variant="outlined"
                             />
-                        </label>
-                    </div>
-                    <div>
-                        <label htmlFor="password">
-                            Password:
-              <input
-                                type="password"
-                                name="password"
+                            <TextField
+                                id="outlined-password-input"
+                                label="Password"
+                                className={classes.textField}
                                 value={this.state.password}
-                                onChange={this.handleInputChangeFor('password')}
+                                onChange={this.handleChange('password')}
+                                type="password"
+                                autoComplete="current-password"
+                                margin="normal"
+                                variant="outlined"
                             />
-                        </label>
-                    </div>
-                    <div>
-                        <input
-                            className="log-in"
-                            type="submit"
-                            name="submit"
-                            value="Log In"
-                        />
-                    </div>
-                </form>
-                <center>
-                    <button
-                        type="button"
-                        className="link-button"
-                        onClick={() => { this.props.dispatch({ type: 'SET_TO_REGISTER_MODE' }) }}
-                    >
-                        Register
-                    </button>
-                    <button
-                        type="button"
-                        className="link-button"
-                    >
-                        <a href='http://localhost:5000/auth/facebook'>Login with facebook</a>
-                    </button>
-                    
-
-
-                </center>
-            </Grid>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className={classes.button}
+                                onClick={this.login}
+                                >
+                                LOGIN
+                            </Button>
+                        </form>
+                        <div>
+                            <Typography align='center' variant="body2" className={classes.textColor} gutterBottom>
+                                Not a member?
+                                <Button onClick={() => { this.props.dispatch({ type: 'SET_TO_REGISTER_MODE' }) }}
+                                color="primary" className={classes.linkButton}>
+                                    Register Now
+                                </Button>
+                            </Typography>
+                        </div>
+                    </Grid>
+                </Grid>
+            </div>
         );
     }
 }
@@ -168,4 +171,4 @@ const mapStateToProps = state => ({
     errors: state.errors,
 });
 
-export default connect(mapStateToProps)(LoginPage);
+export default connect(mapStateToProps)(withStyles(styles)(LoginPage));
