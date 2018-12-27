@@ -25,12 +25,11 @@ import MainAppBar from '../MainAppBar/MainAppBar';
 
 //imports MUI theme config
 import darkTheme from '../MuiThemes/DarkTheme';
-import greyTheme from '../MuiThemes/greyTheme';
 
 class App extends Component {
     componentDidMount() {
         this.props.dispatch({ type: 'FETCH_USER' })
-        this.props.dispatch({ type: 'FETCH_SYMBOLS' })
+        this.props.dispatch({ type: 'FETCH_TICKERS' })
     }
 
     render() {

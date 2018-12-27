@@ -67,23 +67,23 @@ class CoinExpansionItem extends Component {
     render() {
         const { classes, coin } = this.props;
         const { expanded } = this.state;
-
+        
         return (
             <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
-                <ExpansionPanelSummary alignContent='center' expandIcon={<ExpandMoreIcon />}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <div className={classes.heading}>
                         <Avatar alt="crypto logo" src={coin.logo} className={classNames(classes.avatar, classes.inline)} />
                         <Typography variant='h5' className={classNames(classes.inline, classes.heading)}>
                             {coin.symbol_name}
                         </Typography>
                     </div>
-                    <Typography variant='h6' className={classNames(classes.secondaryHeading, classes.green)}>$3458.78</Typography>
-                    <Typography variant='h6' className={classes.secondaryHeading}>+7.14%</Typography>
+                    <Typography variant='h6' className={classNames(classes.secondaryHeading, classes.green)}>{coin.last_price}</Typography>
+                    <Typography variant='h6' className={classes.secondaryHeading}>{coin.price_change}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <div className={classes.helper}>
                         <Typography variant='h5'>
-                            2,548,582
+                            {coin.volume}
                             </Typography>
                         <Typography color='secondary' variant='overline'>
                             24 Hour Volume
