@@ -17,20 +17,6 @@ const tickers = (state = [], action) => {
                 }
                     
             })
-            
-            // return state.map(ticker => {
-            //     action.payload.find
-            //     // if (ticker.symbol == action.payload.symbol) {
-            //     //     console.log('matched one', action.payload);
-                    
-            //     //     return {
-            //     //         ...ticker,
-            //     //         ...action.payload
-            //     //     }
-            //     // }
-            //     return ticker
-            // })
-        // 
         default:
             return state;
     }

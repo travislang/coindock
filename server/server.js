@@ -65,6 +65,7 @@ function binanceStream() {
     ws.on('open', () => {
         console.log('binance stream open');
     });
+    ws.on('ping', heartbeat);
     //listen for data stream
     ws.on('message', function (data) {
         // let time = moment(JSON.parse(data).E).format('h:mm:ss a')
@@ -76,6 +77,15 @@ function binanceStream() {
     });
 }
 binanceStream();
+
+
+// TOMORROW
+
+//login
+//search
+// input adornments
+
+
 
 // App Set //
 const PORT = process.env.PORT || 5000;

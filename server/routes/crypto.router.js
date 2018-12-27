@@ -103,8 +103,5 @@ router.get('/alltickers', (req, res) => {
     })
 })
 
-router.get('/tickers', (req, res) => {
-    
-})
 
 module.exports = router;
