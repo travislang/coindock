@@ -17,12 +17,12 @@ class CoinExpansionPanel extends Component {
     componentDidMount() {
         const socket = io('http://localhost:5000');
         socket.on('priceUpdate', (data) => {
-            this.props.dispatch({
-                type: 'UPDATE_PRICE', payload:
-                {
-                    data: JSON.parse(data.data).data
-                }
-            });
+            // this.props.dispatch({
+            //     type: 'UPDATE_PRICE', payload:
+            //     {
+            //         data: JSON.parse(data.data).data
+            //     }
+            // });
         })
     }
 

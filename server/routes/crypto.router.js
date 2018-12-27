@@ -70,9 +70,33 @@ router.get('/binance', (req, res) => {
 })
 
 router.get('/alltickers', (req, res) => {
+    //comment out to keep from hitting api
     axios.get('https://api.binance.com/api/v1/ticker/24hr')
-    .then( result => {
-        res.send(result.data);
+    .then( response => {
+        console.log('response from binance:', typeof response);
+        for( let item of response.data) {
+            const params = [
+                item.lastPrice,
+                item.volume,
+                item.priceChangePercent,
+                item.symbol
+            ]
+            pool.query(`UPDATE "symbols"
+                    SET "last_price" = $1, "volume" = $2, "price_change" = $3
+                    WHERE "symbol" = $4;`, params)
+                .then( result => {
+
+                }).catch( err => {
+                    console.log('error updating db with prices', err);
+                })
+        }
+        pool.query(`SELECT * FROM "symbols" ORDER BY "id" ASC;`)
+            .then(result => {
+                res.send(result.rows)
+            }).catch(err => {
+                console.log('error getting symbols from db:', err);
+                res.sendStatus(500);
+            })
     }).catch( err => {
         console.log('error getting 24h data from binance', err);
         res.sendStatus(500);
@@ -80,13 +104,7 @@ router.get('/alltickers', (req, res) => {
 })
 
 router.get('/tickers', (req, res) => {
-    pool.query(`SELECT * FROM "symbols" ORDER BY "id" ASC;`)
-    .then( result => {
-        res.send(result.rows)
-    }).catch( err => {
-        console.log('error getting symbols from db:', err);
-        res.sendStatus(500);
-    })
+    
 })
 
 module.exports = router;

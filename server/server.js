@@ -81,7 +81,7 @@ function binanceStream() {
             ws.on('message', function (data) {
             // let time = moment(JSON.parse(data).E).format('h:mm:ss a')
             // console.log(time);
-            console.log(data);
+            // console.log(data);
             
             // console.log('data', JSON.parse(data).stream);
             io.emit('priceUpdate', { data })
@@ -107,7 +107,7 @@ function binanceStream() {
         console.log('error in binanceStream db query:', err);
     })
 }
-binanceStream();
+// binanceStream();
 
 // App Set //
 const PORT = process.env.PORT || 5000;
