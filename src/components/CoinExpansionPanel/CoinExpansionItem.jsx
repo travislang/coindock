@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import { withStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -61,9 +63,10 @@ class CoinExpansionItem extends Component {
     };
 
     handleChange = panel => (event, expanded) => {
-        this.setState({
-            expanded: expanded ? panel : false,
-        });
+        console.log('expanded', expanded);
+        console.log('id', panel);
+        
+        this.props.dispatch({type: 'SET_EXPANDED', payload: panel})
     };
 
     addCoin = name => {
@@ -72,10 +75,10 @@ class CoinExpansionItem extends Component {
 
     render() {
         const { classes, coin } = this.props;
-        const { expanded } = this.state;
+        const { expanded } = this.props;
         
         return (
-            <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
+            <ExpansionPanel expanded={expanded === coin.id} onChange={this.handleChange(coin.id)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <div className={classes.heading}>
                         <Avatar alt="crypto logo" src={coin.logo} className={classes.avatar} />
@@ -119,6 +122,10 @@ class CoinExpansionItem extends Component {
     }
 }
 
-export default withStyles(styles)(CoinExpansionItem);
+const mapStateToProps = store => ({
+    expanded: store.expanded,
+})
+
+export default connect(mapStateToProps)(withStyles(styles)(CoinExpansionItem));
 
 
