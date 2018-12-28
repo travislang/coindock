@@ -15,6 +15,8 @@ import Menu from '@material-ui/core/Menu';
 
 import MainTabs from './MainTabs';
 
+import LogoIcon from './LogoIcon';
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -35,6 +37,13 @@ const styles = theme => ({
         margin: theme.spacing.unit,
     },
     inline: {
+        display: 'inline-block',
+    },
+    logo: {
+        fontWeight: theme.typography.fontWeightLight,
+        letterSpacing: '0.1em',
+        fontSize: "1.5rem",
+        lineHeight: '1.33',
         display: 'inline-block',
     }
 });
@@ -70,11 +79,12 @@ class MainAppBar extends Component {
                             <MenuIcon />
                         </IconButton>
                         {user.id ? <NavLink to="/home" style={{ textDecoration: 'none', color: 'unset' }}>
-                            <Typography variant="h5" color="inherit" >
-                                CoinDock
-                            </Typography>
+                            <div>
+                                <LogoIcon />
+                            </div>
+                            
                         </NavLink> : <NavLink to="/home" className={classes.grow} style={{ textDecoration: 'none', color: 'unset' }}>
-                                <Typography variant="h5" color="inherit" >
+                                <Typography className={classes.logo} color="inherit" >
                                     CoinDock
                             </Typography>
                             </NavLink>}

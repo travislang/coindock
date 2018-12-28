@@ -63,10 +63,9 @@ class CoinExpansionItem extends Component {
     };
 
     handleChange = panel => (event, expanded) => {
-        console.log('expanded', expanded);
-        console.log('id', panel);
-        
-        this.props.dispatch({type: 'SET_EXPANDED', payload: panel})
+        let toggle;
+        expanded ? toggle = panel : toggle = false;
+        this.props.dispatch({type: 'SET_EXPANDED', payload: toggle})
     };
 
     addCoin = name => {
