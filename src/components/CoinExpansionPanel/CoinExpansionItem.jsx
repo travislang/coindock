@@ -11,6 +11,7 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 
+import AddIcon from '@material-ui/icons/Add';
 import green from '@material-ui/core/colors/green';
 
 const styles = theme => ({
@@ -18,40 +19,40 @@ const styles = theme => ({
         width: '100%',
     },
     heading: {
-        // fontSize: theme.typography.pxToRem(15),
-        flexBasis: '50%',
-        flexShrink: 0,
-        paddingLeft: 20,
+        flexGrow: 1,
+        display: 'flex'
     },
-    secondaryHeading: {
-        // fontSize: theme.typography.pxToRem(15),
-        color: theme.palette.text.secondary,
-        flexBasis: '25%',
-        textAlign: 'center'
+    textName: {
+        fontSize: theme.typography.pxToRem(20)
     },
-    green: {
-        color: green[500],
+    textPrice: {
+        paddingRight: theme.spacing.unit * 2,
+        
+    },
+    textPercent: {
+        color: green[400],
+        marginRight: theme.spacing.unit * 2,
     },
     column: {
-        flexBasis: '33.33%',
-    },
-    helper: {
-        flexBasis: '33.33%',
+        flexBasis: '30%',
         borderRight: `2px solid ${theme.palette.divider}`,
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
         textAlign: 'center',
+        color: theme.palette.textSecondary
     },
     avatar: {
         padding: 5,
+        marginRight: 10,
         width: 30,
         height: 30,
-        verticalAlign: 'top',
         backgroundColor: theme.palette.grey[300]
-        
     },
-    inline: {
-        display: 'inline-block',
-    }
+    button: {
+        marginRight: theme.spacing.unit * 2,
+    },
+    leftIcon: {
+        marginRight: theme.spacing.unit,
+    },
 });
 
 class CoinExpansionItem extends Component {
@@ -64,6 +65,11 @@ class CoinExpansionItem extends Component {
             expanded: expanded ? panel : false,
         });
     };
+
+    addCoin = name => {
+        console.log('this is id', name)
+    }
+
     render() {
         const { classes, coin } = this.props;
         const { expanded } = this.state;
@@ -72,38 +78,41 @@ class CoinExpansionItem extends Component {
             <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                     <div className={classes.heading}>
-                        <Avatar alt="crypto logo" src={coin.logo} className={classNames(classes.avatar, classes.inline)} />
-                        <Typography variant='h5' className={classNames(classes.inline, classes.heading)}>
+                        <Avatar alt="crypto logo" src={coin.logo} className={classes.avatar} />
+                        <Typography className={classes.textName}>
                             {coin.symbol_name}
                         </Typography>
                     </div>
-                    <Typography variant='h6' className={classNames(classes.secondaryHeading, classes.green)}>{coin.last_price}</Typography>
-                    <Typography variant='h6' className={classes.secondaryHeading}>{coin.price_change}</Typography>
+                    <Typography variant='h4' className={classes.textPrice}>{Number(coin.last_price).toFixed(2)}</Typography>
+                    <Typography variant='overline' className={classes.textPercent}>{Number(coin.price_change).toFixed(2)}%</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                    <div className={classes.helper}>
+                    <div className={classes.column}>
                         <Typography variant='h5'>
                             {coin.volume}
                             </Typography>
-                        <Typography color='secondary' variant='overline'>
+                        <Typography color='textSecondary' variant='overline'>
                             24 Hour Volume
                             </Typography>
                     </div>
-                    <div className={classes.helper}>
+                    <div className={classes.column}>
                         <Typography variant='h5'>
                             $58,690,281
                             </Typography>
-                        <Typography color='secondary' variant='overline'>
+                        <Typography color='textSecondary' variant='overline'>
                             Market Cap
                             </Typography>
+                    </div>
+                    <div className={classes.column}>
+                        
                     </div>
                 </ExpansionPanelDetails>
                 <Divider />
                 <ExpansionPanelActions>
-                    <Button size="small">Cancel</Button>
-                    <Button size="small" color="primary">
-                        Save
-                    </Button>
+                    <Button onClick={() => this.addCoin(coin.id)} variant="contained" color="primary" className={classes.button}>
+                        <AddIcon className={classes.leftIcon} />
+                        Add
+                        </Button>
                 </ExpansionPanelActions>
             </ExpansionPanel>
         )

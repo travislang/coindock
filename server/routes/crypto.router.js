@@ -73,7 +73,6 @@ router.get('/alltickers', (req, res) => {
     //comment out to keep from hitting api
     axios.get('https://api.binance.com/api/v1/ticker/24hr')
     .then( response => {
-        console.log('response from binance:', typeof response);
         for( let item of response.data) {
             const params = [
                 item.lastPrice,
