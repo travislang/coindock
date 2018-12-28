@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import LogOutButton from '../LogOutButton/LogOutButton';
 
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
+
 import CoinExpansionPanel from '../CoinExpansionPanel/CoinExpansionPanels';
+import SearchBar from '../SearchBar/SearchBar';
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
         minHeight: '100vh',
-
     },
     paper: {
         ...theme.mixins.gutters(),
@@ -29,21 +29,13 @@ class UserPage extends Component {
         const { user } = this.props;
         return (
             <div className={classes.root}>
-                <Grid container justify='center' spacing={24}>
-                    <Grid item xs={12} md={9} lg={7}>
+                <Grid container justify='center' spacing={16}>
+                    <SearchBar />
+                    <Grid item xs={11} md={9} lg={7}>
                         <CoinExpansionPanel />
                     </Grid>
                 </Grid>
             </div>
-            // <Paper className={classes.paper} elevation={1}>
-            //     <Typography variant="h2">
-            //         Welcome, {user.name}!
-            //                 </Typography>
-            //     <Typography component="p">
-            //         Your ID is: {user.id}
-            //     </Typography>
-            //     <LogOutButton className="log-in" />
-            // </Paper>
         )
     }
 }
