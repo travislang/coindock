@@ -38,7 +38,7 @@ class MainTabs extends React.Component {
                 centered
             >
                 <Tab component={Link} to='/home' icon={<HomeIcon />} label="Home" />
-                <Tab component={Link} to='/home' icon={<BrokenImage />} label="Portfolio" />
+                <Tab component={Link} to='/portfolio' icon={<BrokenImage />} label="Portfolio" />
                 <Tab component={Link} to='/home' icon={<RssFeed />} label="Alerts" />
             </Tabs>
         );
