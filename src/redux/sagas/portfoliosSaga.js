@@ -11,9 +11,17 @@ function* fetchPortfolioSymbols(action) {
     yield put({ type: 'SET_PORTFOLIO_SYMBOLS', payload: responseSymbols.data })
 }
 
+//sets users active portfolio
+function* setActive(action) {
+    console.log('calling post with:', action.payload);
+    yield call(axios.post, '/api/portfolio', action.payload)
+    yield put({type: 'SET_ACTIVE_PORTFOLIO'})
+}
+
 function* portfolioSaga() {
     yield takeLatest('FETCH_PORTFOLIOS', fetchPortfolios);
     yield takeLatest('FETCH_PORTFOLIO_SYMBOLS', fetchPortfolioSymbols);
+    yield takeLatest('SET_ACTIVE', setActive);
 }
 
 export default portfolioSaga;

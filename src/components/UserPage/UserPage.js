@@ -19,15 +19,15 @@ const styles = theme => ({
 class UserPage extends Component {
 
     componentDidMount() {
-        const socket = io('http://localhost:5000');
-        socket.on('priceUpdate', (data) => {
-            this.props.dispatch({
-                type: 'UPDATE_TICKERS', payload:
-                {
-                    data: JSON.parse(data.data)
-                }
-            });
-        })
+        // const socket = io('http://localhost:5000');
+        // socket.on('priceUpdate', (data) => {
+        //     this.props.dispatch({
+        //         type: 'UPDATE_TICKERS', payload:
+        //         {
+        //             data: JSON.parse(data.data)
+        //         }
+        //     });
+        // })
     }
 
     render() {

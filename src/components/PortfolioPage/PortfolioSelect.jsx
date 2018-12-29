@@ -60,20 +60,21 @@ class PortfolioSelect extends Component {
     handleChange = name => event => {
         this.setState({ [name]: event.target.value });
         this.props.dispatch({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: event.target.value})
+        this.props.dispatch({ type: 'SET_ACTIVE', payload: {data: event.target.value}})
     };
 
     componentDidMount() {
-        console.log(this.props.portfolios);
-        
         this.setState({
             labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth,
-            portfolio: this.props.portfolios.length > 0 ? this.props.portfolios[0].id : 'none'
+            portfolio: this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0] ? this.props.portfolios.activePortfolio[0].id : 'none'
         });
-        
-        
     }
 
     render() {
+
+        console.log('active portfolio', this.props.portfolios.activePortfolio);
+        console.log(this.state);
+        
         const { classes, portfolios } = this.props;
         return (
             <Grid item xs={11} md={9} lg={7}>
@@ -100,7 +101,7 @@ class PortfolioSelect extends Component {
                                 />
                             }
                         >
-                            {portfolios.map( item => {
+                            {portfolios.portfolios && portfolios.portfolios.map( item => {
                                 return (
                                     <option key={item.id} value={item.id}>{item.portfolio_name}</option>
                                 )
