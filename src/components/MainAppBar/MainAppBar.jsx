@@ -87,9 +87,7 @@ class MainAppBar extends Component {
                             </div>
                             
                         </NavLink> : <NavLink to="/home" className={classes.grow} style={{ textDecoration: 'none', color: 'unset' }}>
-                                <Typography className={classes.logo} color="inherit" >
-                                    CoinDock
-                            </Typography>
+                                <LogoIcon />
                             </NavLink>}
                         {user.id ? (
                             <>

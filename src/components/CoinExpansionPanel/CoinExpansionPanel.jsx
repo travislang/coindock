@@ -68,8 +68,15 @@ class CoinExpansionItem extends Component {
         this.props.dispatch({type: 'SET_EXPANDED', payload: toggle})
     };
 
+    // add coin to active portfolio
     addCoin = name => {
-        console.log('this is id', name)
+        this.props.dispatch({
+            type: 'ADD_COIN',
+            payload: {
+                portfolio: this.props.portfolios.activePortfolio[0].id,
+                coin: name
+            }
+        })
     }
 
     render() {
@@ -123,6 +130,7 @@ class CoinExpansionItem extends Component {
 
 const mapStateToProps = store => ({
     expanded: store.expanded,
+    portfolios: store.portfolios
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(CoinExpansionItem));

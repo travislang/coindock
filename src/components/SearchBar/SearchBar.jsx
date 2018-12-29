@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
@@ -15,7 +17,7 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 2,
         borderRadius: '10px',
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'space-between'
     },
     search: {
         position: 'relative',
@@ -24,10 +26,10 @@ const styles = theme => ({
         '&:hover': {
             backgroundColor: fade(theme.palette.common.white, 0.25),
         },
-        width: '100%',
+        width: '65%',
         [theme.breakpoints.up('md')]: {
-            marginLeft: theme.spacing.unit * 5,
-            marginRight: theme.spacing.unit * 5,
+            marginLeft: theme.spacing.unit * 3,
+            marginRight: theme.spacing.unit * 3,
             width: '50%',
         },
     },
@@ -55,14 +57,29 @@ const styles = theme => ({
             width: 200,
         },
     },
+    activePortfolio: {
+        color: theme.palette.primary.dark,
+        [theme.breakpoints.up('md')]: {
+            marginLeft: theme.spacing.unit * 3,
+            marginRight: theme.spacing.unit * 3,
+        },
+    },
 })
 
 class SearchBar extends Component {
     render() {
-        const { classes } = this.props;
+        const { classes, portfolios } = this.props;
         return (
             <Grid item xs={11} md={9} lg={7}>
                 <Paper className={classes.paper} elevation={3}>
+                    <div className={classes.activePortfolio}>
+                        <Typography variant="caption">
+                            Current Portfolio:
+                        </Typography>
+                        <Typography color='inherit' variant="body1">
+                            {portfolios.activePortfolio && portfolios.activePortfolio[0].portfolio_name}
+                        </Typography>
+                    </div>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
                             <SearchIcon />
@@ -81,4 +98,8 @@ class SearchBar extends Component {
     }
 }
 
-export default withStyles(styles)(SearchBar);
+const mapStateToProps = store => ({
+    portfolios: store.portfolios,
+})
+
+export default connect(mapStateToProps)(withStyles(styles)(SearchBar));

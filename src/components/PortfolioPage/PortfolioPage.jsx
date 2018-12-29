@@ -6,8 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
-import CoinExpansionItem from '../CoinExpansionPanel/CoinExpansionItem';
-import CoinExpansionPanel from '../CoinExpansionPanel/CoinExpansionPanels';
+import CoinExpansionPanel from '../CoinExpansionPanel/CoinExpansionPanel';
 import PortfolioSelect from './PortfolioSelect';
 
 const styles = theme => ({
@@ -23,6 +22,7 @@ class PortfolioPage extends Component {
         if (this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0]) {
             this.props.dispatch({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: this.props.portfolios.activePortfolio[0].id })
         }
+        
     }
 
     render() {
@@ -34,7 +34,7 @@ class PortfolioPage extends Component {
                     <Grid item xs={11} md={9} lg={7}>
                         {portfolioSymbols.map(item => {
                             return (
-                                <CoinExpansionItem key={item.id} coin={item} />
+                                <CoinExpansionPanel key={item.id} coin={item} />
                             )
                         })}
                     </Grid>

@@ -18,10 +18,22 @@ function* setActive(action) {
     yield put({type: 'FETCH_PORTFOLIOS'})
 }
 
+function* addCoin(action) {
+    try {
+        console.log('payload', action.payload);
+        yield call(axios.post, '/api/portfolio/add', action.payload);
+        // call snackbar confirmation here
+    } catch ( err ) {
+        console.log('error adding coin to portfolio', err);
+    }
+    
+}
+
 function* portfolioSaga() {
     yield takeLatest('FETCH_PORTFOLIOS', fetchPortfolios);
     yield takeLatest('FETCH_PORTFOLIO_SYMBOLS', fetchPortfolioSymbols);
     yield takeLatest('SET_ACTIVE', setActive);
+    yield takeLatest('ADD_COIN', addCoin);
 }
 
 export default portfolioSaga;

@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
-import CoinExpansionItem from '../CoinExpansionPanel/CoinExpansionItem';
+import CoinExpansionPanel from '../CoinExpansionPanel/CoinExpansionPanel';
 import SearchBar from '../SearchBar/SearchBar';
 
 const styles = theme => ({
@@ -39,7 +39,7 @@ class UserPage extends Component {
                     <Grid item xs={11} md={9} lg={7}>
                         {tickers.map(item => {
                             return (
-                                <CoinExpansionItem key={item.id} coin={item} />
+                                <CoinExpansionPanel key={item.id} coin={item} />
                             )
                         })}
                     </Grid>
