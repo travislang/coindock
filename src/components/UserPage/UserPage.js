@@ -19,6 +19,7 @@ const styles = theme => ({
 class UserPage extends Component {
 
     componentDidMount() {
+        this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
         // const socket = io('http://localhost:5000');
         // socket.on('priceUpdate', (data) => {
         //     this.props.dispatch({

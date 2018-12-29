@@ -143,7 +143,8 @@ class LoginPage extends Component {
                                 variant="contained"
                                 color="primary"
                                 className={classes.button}
-                                onClick={this.login}
+                                // onClick={this.login}
+                                type='submit'
                                 >
                                 LOGIN
                             </Button>

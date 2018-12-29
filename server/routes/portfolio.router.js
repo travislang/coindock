@@ -17,8 +17,8 @@ router.get('/', (req, res) => {
         }
         //user doesnt have any portfolios yet -- create one
         else if (!portfolios) {
-            pool.query(`INSERT INTO "portfolio"("person_id")
-                        VALUES($1) RETURNING *;`, [req.user.id])
+            pool.query(`INSERT INTO "portfolio"("person_id", "active")
+                        VALUES($1, true) RETURNING *;`, [req.user.id])
             .then( result => {
                 console.log(result.rows);
                 res.send( result.rows )
@@ -33,9 +33,11 @@ router.get('/', (req, res) => {
 
 //route to save active portfolio in DB
 router.post('/', (req, res) => {
+    console.log('root post portfolio');
+    
     const id = req.body.data;
-    // set all to false
-    pool.query('UPDATE "portfolio" SET "active" = false')
+    // set all portfolios user owns to false
+    pool.query('UPDATE "portfolio" SET "active" = false WHERE "person_id" = $1', [req.user.id])
     .then( result => {
         pool.query(`UPDATE "portfolio" SET "active" = true
                     WHERE "id" = $1`, [id])
@@ -63,7 +65,7 @@ router.get('/symbols/:id', (req, res) => {
                     WHERE "portfolio".id = $1 AND "portfolio".person_id = $2;`
     pool.query(sqlText, [id, req.user.id])
     .then( result => {
-        const symbols = result.rows && result.rows[0] ? result.rows : 'none'
+        const symbols = result.rows && result.rows[0] ? result.rows : [];
         res.send( symbols )
     })
     .catch( err => {

@@ -77,7 +77,7 @@ class SearchBar extends Component {
                             Current Portfolio:
                         </Typography>
                         <Typography color='inherit' variant="body1">
-                            {portfolios.activePortfolio && portfolios.activePortfolio[0].portfolio_name}
+                            {portfolios.activePortfolio && portfolios.activePortfolio[0] && portfolios.activePortfolio[0].portfolio_name}
                         </Typography>
                     </div>
                     <div className={classes.search}>

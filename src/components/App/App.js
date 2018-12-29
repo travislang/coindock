@@ -31,7 +31,6 @@ class App extends Component {
     componentDidMount() {
         this.props.dispatch({ type: 'FETCH_USER' })
         this.props.dispatch({ type: 'FETCH_TICKERS' })
-        this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
     }
 
     render() {
