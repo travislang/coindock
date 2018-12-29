@@ -6,8 +6,14 @@ function* fetchPortfolios() {
     yield put({type: 'SET_PORTFOLIOS', payload: responsePortfolios.data})
 }
 
-function* tickersSaga() {
-    yield takeLatest('FETCH_PORTFOLIOS', fetchPortfolios);
+function* fetchPortfolioSymbols(action) {
+    const responseSymbols = yield call(axios.get, `/api/portfolio/symbols/${action.payload}`);
+    yield put({ type: 'SET_PORTFOLIO_SYMBOLS', payload: responseSymbols.data })
 }
 
-export default tickersSaga;
+function* portfolioSaga() {
+    yield takeLatest('FETCH_PORTFOLIOS', fetchPortfolios);
+    yield takeLatest('FETCH_PORTFOLIO_SYMBOLS', fetchPortfolioSymbols);
+}
+
+export default portfolioSaga;

@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import io from 'socket.io-client';
 
 import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
-
-import CoinExpansionPanel from '../CoinExpansionPanel/CoinExpansionPanels';
+import CoinExpansionItem from '../CoinExpansionPanel/CoinExpansionItem';
 import SearchBar from '../SearchBar/SearchBar';
 
 const styles = theme => ({
@@ -15,24 +14,34 @@ const styles = theme => ({
         flexGrow: 1,
         minHeight: '100vh',
     },
-    paper: {
-        ...theme.mixins.gutters(),
-        paddingTop: theme.spacing.unit * 2,
-        paddingBottom: theme.spacing.unit * 2,
-        marginTop: theme.spacing.unit * 5,
-    }
 });
 
 class UserPage extends Component {
+
+    componentDidMount() {
+        const socket = io('http://localhost:5000');
+        socket.on('priceUpdate', (data) => {
+            this.props.dispatch({
+                type: 'UPDATE_TICKERS', payload:
+                {
+                    data: JSON.parse(data.data)
+                }
+            });
+        })
+    }
+
     render() {
-        const { classes } = this.props;
-        const { user } = this.props;
+        const { classes, tickers } = this.props;
         return (
             <div className={classes.root}>
                 <Grid container justify='center' spacing={16}>
                     <SearchBar />
                     <Grid item xs={11} md={9} lg={7}>
-                        <CoinExpansionPanel />
+                        {tickers.map(item => {
+                            return (
+                                <CoinExpansionItem key={item.id} coin={item} />
+                            )
+                        })}
                     </Grid>
                 </Grid>
             </div>
@@ -41,7 +50,7 @@ class UserPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.user,
+    tickers: state.tickers,
 });
 
 // this allows us to use <App /> in index.js

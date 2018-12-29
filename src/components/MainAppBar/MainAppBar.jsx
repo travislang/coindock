@@ -33,11 +33,14 @@ const styles = theme => ({
         paddingRight: theme.spacing.unit * 2,
     },
     iconButton: {
-        padding: theme.spacing.unit / 1.5,
+        padding: theme.spacing.unit / 1.72,
         margin: theme.spacing.unit,
     },
     inline: {
         display: 'inline-block',
+    },
+    avatar: {
+        // margin: '5px'
     },
     logo: {
         fontWeight: theme.typography.fontWeightLight,
@@ -104,7 +107,7 @@ class MainAppBar extends Component {
                                     color="inherit"
                                     className={classes.iconButton}
                                 >
-                                    {user.facebook_image !== 'none' ? <Avatar alt="user profile image" src={user.facebook_image} /> : <AccountCircle />}
+                                    {user.facebook_image !== 'none' ? <Avatar className={classes.avatar} alt="user profile image" src={user.facebook_image} /> : <AccountCircle />}
                                 </IconButton>
                                 <Menu
                                     id="menu-appbar"
