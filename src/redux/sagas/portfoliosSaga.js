@@ -15,7 +15,7 @@ function* fetchPortfolioSymbols(action) {
 function* setActive(action) {
     console.log('calling post with:', action.payload);
     yield call(axios.post, '/api/portfolio', action.payload)
-    yield put({type: 'SET_ACTIVE_PORTFOLIO'})
+    yield put({type: 'FETCH_PORTFOLIOS'})
 }
 
 function* portfolioSaga() {

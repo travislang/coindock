@@ -7,13 +7,6 @@ const portfolios = (state = {}, action) => {
                     return item.active;
                 })
             }
-        case 'SET_ACTIVE_PORTFOLIO':
-            return {
-                ...state,
-                activePortfolio: state.portfolios.filter(item => {
-                    return item.active;
-                })
-            }
         default:
             return state;
     }
