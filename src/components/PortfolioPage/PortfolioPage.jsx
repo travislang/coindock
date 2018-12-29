@@ -20,8 +20,9 @@ const styles = theme => ({
 class PortfolioPage extends Component {
 
     componentDidMount() {
-        this.props.dispatch({type: 'FETCH_PORTFOLIOS'})
-        // this.props.dispatch({type: 'FETCH_PORTFOLIO_SYMBOLS'})
+        if (this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0]) {
+            this.props.dispatch({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: this.props.portfolios.activePortfolio[0].id })
+        }
     }
 
     render() {

@@ -11,11 +11,8 @@ router.get('/', (req, res) => {
                 WHERE "person_id" = $1`, [req.user.id])
     .then( result => {
         const portfolios = result && result.rows && result.rows[0];
-        console.log('portfolios', portfolios);
         //user has portfolios -- send them back
         if (portfolios) {
-            console.log('sent back');
-            
             res.send( result.rows )
         }
         //user doesnt have any portfolios yet -- create one
@@ -34,8 +31,32 @@ router.get('/', (req, res) => {
     })
 })
 
+//route to save active portfolio in DB
+router.post('/', (req, res) => {
+    const id = req.body.data;
+    // set all to false
+    pool.query('UPDATE "portfolio" SET "active" = false')
+    .then( result => {
+        pool.query(`UPDATE "portfolio" SET "active" = true
+                    WHERE "id" = $1`, [id])
+        .then( () => {
+            res.sendStatus(201);
+        })
+        .catch( err => {
+            console.log('error setting active portfolio', err);
+            res.sendStatus(500);
+        })
+    })
+    .catch( err => {
+        console.log('error setting active tag', err);
+        res.sendStatus(500);
+    })
+})
+
 router.get('/symbols/:id', (req, res) => {
+    // capture portfolio id
     let id = req.params.id
+    // get all symbols for portfolio that user owns
     let sqlText = `SELECT "symbols".* FROM "symbols"
                     JOIN "portfolio_symbols" ON "symbols".id = "portfolio_symbols".symbol_id
                     JOIN "portfolio" ON "portfolio_symbols".portfolio_id = "portfolio".id
@@ -52,6 +73,7 @@ router.get('/symbols/:id', (req, res) => {
 })
 
 router.post('/add:id', (req, res) => {
+    const portfolioId = 
     pool.query(`INSERT INTO "portfolio_symbols"("symbol_id", "portfolio_id")
                 VALUES($1, $2);`)
 });

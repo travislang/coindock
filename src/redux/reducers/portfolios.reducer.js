@@ -1,7 +1,12 @@
-const portfolios = (state = [], action) => {
+const portfolios = (state = {}, action) => {
     switch (action.type) {
         case 'SET_PORTFOLIOS':
-            return action.payload;
+            return {
+                portfolios: action.payload,
+                activePortfolio: action.payload.filter(item => {
+                    return item.active;
+                })
+            }
         default:
             return state;
     }
