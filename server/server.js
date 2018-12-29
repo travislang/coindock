@@ -18,6 +18,7 @@ const passport = require('./strategies/user.strategy');
 const userRouter = require('./routes/user.router');
 const authRouter = require('./routes/auth.router');
 const cryptoRouter = require('./routes/crypto.router');
+const portfolioRouter = require('./routes/portfolio.router');
 
 //cors middleware
 // const corsOptions = {
@@ -39,6 +40,7 @@ app.use(passport.session());
 /* Routes */
 app.use('/api/user', userRouter);
 app.use('/api/crypto', cryptoRouter);
+app.use('/api/portfolio', portfolioRouter);
 app.use('/auth', authRouter);
 
 // Serve static files

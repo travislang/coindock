@@ -89,7 +89,7 @@ router.get('/alltickers', (req, res) => {
                     console.log('error updating db with prices', err);
                 })
         }
-        pool.query(`SELECT * FROM "symbols" ORDER BY "id" ASC;`)
+        pool.query(`SELECT * FROM "symbols" ORDER BY "id" ASC LIMIT 10;`)
             .then(result => {
                 res.send(result.rows)
             }).catch(err => {

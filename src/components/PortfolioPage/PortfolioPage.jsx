@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import io from 'socket.io-client';
+import axios from 'axios';
 
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
 import CoinExpansionItem from '../CoinExpansionPanel/CoinExpansionItem';
-import SearchBar from '../SearchBar/SearchBar';
+import CoinExpansionPanel from '../CoinExpansionPanel/CoinExpansionPanels';
+import PortfolioSelect from './PortfolioSelect';
 
 const styles = theme => ({
     root: {
@@ -16,28 +17,21 @@ const styles = theme => ({
     },
 });
 
-class UserPage extends Component {
+class PortfolioPage extends Component {
 
     componentDidMount() {
-        const socket = io('http://localhost:5000');
-        socket.on('priceUpdate', (data) => {
-            this.props.dispatch({
-                type: 'UPDATE_TICKERS', payload:
-                {
-                    data: JSON.parse(data.data)
-                }
-            });
-        })
+        this.props.dispatch({type: 'FETCH_PORTFOLIOS'})
+        // this.props.dispatch({type: 'FETCH_PORTFOLIO_SYMBOLS'})
     }
 
     render() {
-        const { classes, tickers } = this.props;
+        const { classes, portfolioSymbols } = this.props;
         return (
             <div className={classes.root}>
                 <Grid container justify='center' spacing={16}>
-                    <SearchBar />
+                    <PortfolioSelect />
                     <Grid item xs={11} md={9} lg={7}>
-                        {tickers.map(item => {
+                        {portfolioSymbols.map(item => {
                             return (
                                 <CoinExpansionItem key={item.id} coin={item} />
                             )
@@ -49,9 +43,9 @@ class UserPage extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    tickers: state.tickers,
-});
+const mapStateToProps = store => ({
+    portfolios: store.portfolios,
+    portfolioSymbols: store.portfolioSymbols
+})
 
-// this allows us to use <App /> in index.js
-export default connect(mapStateToProps)(withStyles(styles)(UserPage));
+export default connect(mapStateToProps)(withStyles(styles)(PortfolioPage));

@@ -15,6 +15,8 @@ import Menu from '@material-ui/core/Menu';
 
 import MainTabs from './MainTabs';
 
+import LogoIcon from './LogoIcon';
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -31,10 +33,20 @@ const styles = theme => ({
         paddingRight: theme.spacing.unit * 2,
     },
     iconButton: {
-        padding: theme.spacing.unit / 1.5,
+        padding: theme.spacing.unit / 1.72,
         margin: theme.spacing.unit,
     },
     inline: {
+        display: 'inline-block',
+    },
+    avatar: {
+        // margin: '5px'
+    },
+    logo: {
+        fontWeight: theme.typography.fontWeightLight,
+        letterSpacing: '0.1em',
+        fontSize: "1.5rem",
+        lineHeight: '1.33',
         display: 'inline-block',
     }
 });
@@ -70,11 +82,12 @@ class MainAppBar extends Component {
                             <MenuIcon />
                         </IconButton>
                         {user.id ? <NavLink to="/home" style={{ textDecoration: 'none', color: 'unset' }}>
-                            <Typography variant="h5" color="inherit" >
-                                CoinDock
-                            </Typography>
+                            <div>
+                                <LogoIcon />
+                            </div>
+                            
                         </NavLink> : <NavLink to="/home" className={classes.grow} style={{ textDecoration: 'none', color: 'unset' }}>
-                                <Typography variant="h5" color="inherit" >
+                                <Typography className={classes.logo} color="inherit" >
                                     CoinDock
                             </Typography>
                             </NavLink>}
@@ -94,7 +107,7 @@ class MainAppBar extends Component {
                                     color="inherit"
                                     className={classes.iconButton}
                                 >
-                                    {user.facebook_image !== 'none' ? <Avatar alt="user profile image" src={user.facebook_image} /> : <AccountCircle />}
+                                    {user.facebook_image !== 'none' ? <Avatar className={classes.avatar} alt="user profile image" src={user.facebook_image} /> : <AccountCircle />}
                                 </IconButton>
                                 <Menu
                                     id="menu-appbar"
