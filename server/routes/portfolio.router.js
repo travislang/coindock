@@ -72,10 +72,18 @@ router.get('/symbols/:id', (req, res) => {
     })
 })
 
-router.post('/add:id', (req, res) => {
-    const portfolioId = 
+router.post('/add', (req, res) => {
+    const portfolioId = req.body.portfolio;
+    const coinId = req.body.coin;
     pool.query(`INSERT INTO "portfolio_symbols"("symbol_id", "portfolio_id")
-                VALUES($1, $2);`)
+                VALUES($1, $2);`, [coinId, portfolioId])
+        .then( () => {
+            res.sendStatus(201);
+        })
+        .catch( err => {
+            console.log('error adding coin to portfolio:', err);
+            res.sendStatus(500);
+        })
 });
 
 /**

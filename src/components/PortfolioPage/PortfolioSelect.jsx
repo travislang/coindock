@@ -65,7 +65,9 @@ class PortfolioSelect extends Component {
 
     componentDidMount() {
         this.setState({
+            // setting width for select labels
             labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth,
+            // setting state to active porfolio if it has returned from DB
             portfolio: this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0] ? this.props.portfolios.activePortfolio[0].id : 'none'
         });
     }
