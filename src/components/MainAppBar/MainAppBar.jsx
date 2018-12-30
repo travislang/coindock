@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import React, { Component } from 'react';
@@ -12,7 +12,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import Avatar from '@material-ui/core/Avatar';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Button from '@material-ui/core/Button';
 import MainTabs from './MainTabs';
 
 import LogoIcon from './LogoIcon';
@@ -25,6 +26,9 @@ const styles = theme => ({
     grow: {
         flexGrow: 1,
     },
+    button: {
+        // margin: theme.spacing.unit,
+    },
     menuButton: {
         marginLeft: -12,
         marginRight: 20,
@@ -36,11 +40,11 @@ const styles = theme => ({
         padding: theme.spacing.unit / 1.72,
         margin: theme.spacing.unit,
     },
+    avatar: {
+        marginRight: theme.spacing.unit * 1.5,
+    },
     inline: {
         display: 'inline-block',
-    },
-    avatar: {
-        // margin: '5px'
     },
     logo: {
         fontWeight: theme.typography.fontWeightLight,
@@ -48,7 +52,11 @@ const styles = theme => ({
         fontSize: "1.5rem",
         lineHeight: '1.33',
         display: 'inline-block',
-    }
+    },
+    rightIcon: {
+        marginLeft: theme.spacing.unit / 2,
+        color: theme.palette.text.disabled,
+    },
 });
 
 class MainAppBar extends Component {
@@ -73,7 +81,6 @@ class MainAppBar extends Component {
         const { classes, user } = this.props;
         const { anchorEl } = this.state;
         const open = Boolean(anchorEl);
-
         return (
             <div className={classes.root}>
                 <AppBar color='default' position="static">
@@ -82,36 +89,31 @@ class MainAppBar extends Component {
                             <MenuIcon />
                         </IconButton>
                         {user.id ? <NavLink to="/home" style={{ textDecoration: 'none', color: 'unset' }}>
-                            <div>
-                                <LogoIcon />
-                            </div>
-                            
+                            <LogoIcon />
+                            {/* need this to add flex grow to logo if not logged in */}
                         </NavLink> : <NavLink to="/home" className={classes.grow} style={{ textDecoration: 'none', color: 'unset' }}>
                                 <LogoIcon />
                             </NavLink>}
                         {user.id ? (
                             <>
                                 <MainTabs className={classes.grow}/>
-                                <NavLink to='/' style={{ textDecoration: 'none', color: 'unset' }}>
-                                    <Typography className={classes.inline} variant="overline" color="inherit" >
-                                        Welcome 
-                                        {user.name}
-                                    </Typography>
-                                </NavLink>
-                                <IconButton
+                                <Button  
+                                    size='small' 
                                     aria-owns={open ? 'menu-appbar' : undefined}
-                                    aria-haspopup="true"
                                     onClick={this.handleMenu}
-                                    color="inherit"
-                                    className={classes.iconButton}
+                                    color="default" 
+                                    className={classes.button}
                                 >
                                     {user.facebook_image !== 'none' ? <Avatar className={classes.avatar} alt="user profile image" src={user.facebook_image} /> : <AccountCircle />}
-                                </IconButton>
+                                    {user.name}
+                                    <ExpandMoreIcon className={classes.rightIcon} />
+                                </Button>
                                 <Menu
+                                    getContentAnchorEl={null}
                                     id="menu-appbar"
                                     anchorEl={anchorEl}
                                     anchorOrigin={{
-                                        vertical: 'top',
+                                        vertical: 'bottom',
                                         horizontal: 'right',
                                     }}
                                     transformOrigin={{
@@ -121,11 +123,10 @@ class MainAppBar extends Component {
                                     open={open}
                                     onClose={this.handleClose}
                                 >
-                                    <NavLink to="/about" style={{ textDecoration: 'none', color: 'unset', outline: 'none' }}>
-                                        <MenuItem onClick={this.handleClose}>About</MenuItem>
-                                    </NavLink>
-                                    <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                                    <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                                    <MenuItem component={Link}
+                                    to="/about" onClick={this.handleClose} >About</MenuItem>
+                                    <MenuItem component={Link} 
+                                    to="/profile" onClick={this.handleClose}>Profile</MenuItem>
                                     <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
                                 </Menu>
                             </>

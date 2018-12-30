@@ -8,7 +8,6 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import classNames from 'classnames';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';

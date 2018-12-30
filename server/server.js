@@ -83,8 +83,7 @@ binanceStream();
 
 // TOMORROW
 
-//login
-//search
+//dialog for portfolios
 // input adornments
 
 

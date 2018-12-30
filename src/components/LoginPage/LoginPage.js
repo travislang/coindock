@@ -16,6 +16,9 @@ const styles = theme => ({
         minHeight: '85vh',
 
     },
+    rootContainer: {
+        marginTop: theme.spacing.unit * 5,
+    },
     paper: {
         padding: theme.spacing.unit * 2,
         textAlign: 'center',
@@ -90,7 +93,7 @@ class LoginPage extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <Grid container justify='center' alignItems='center' className={classes.root} >
+                <Grid container justify='center' alignItems='center' className={classes.rootContainer} >
                     {/* {this.props.errors.loginMessage && (
                     <h2
                         className="alert"
@@ -99,7 +102,7 @@ class LoginPage extends Component {
                         {this.props.errors.loginMessage}
                     </h2>
                     )} */}
-                    <Grid item className={classes.border} xs={10} md={7} lg={4}>
+                    <Grid item className={classes.border} xs={10} sm={8} md={7} lg={4}>
                         <div>
                             <Typography align='center' variant="h4">
                             USER LOGIN
