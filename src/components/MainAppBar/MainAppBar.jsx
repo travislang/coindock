@@ -12,6 +12,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import Avatar from '@material-ui/core/Avatar';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import MainTabs from './MainTabs';
 
@@ -24,6 +25,9 @@ const styles = theme => ({
     },
     grow: {
         flexGrow: 1,
+    },
+    button: {
+        margin: theme.spacing.unit,
     },
     menuButton: {
         marginLeft: -12,
@@ -48,7 +52,10 @@ const styles = theme => ({
         fontSize: "1.5rem",
         lineHeight: '1.33',
         display: 'inline-block',
-    }
+    },
+    rightIcon: {
+        marginLeft: theme.spacing.unit,
+    },
 });
 
 class MainAppBar extends Component {
@@ -92,6 +99,10 @@ class MainAppBar extends Component {
                         {user.id ? (
                             <>
                                 <MainTabs className={classes.grow}/>
+                                <Button component={Profile} to="/open-collective" color="default" className={classes.button}>
+                                    Upload
+                                    <ExpandMoreIcon className={classes.rightIcon} />
+                                </Button>
                                 <NavLink to='/' style={{ textDecoration: 'none', color: 'unset' }}>
                                     <Typography className={classes.inline} variant="overline" color="inherit" >
                                         Welcome 
