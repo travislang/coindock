@@ -13,6 +13,9 @@ const styles = theme => ({
         flexGrow: 1,
         minHeight: '85vh',
     },
+    rootContainer: {
+        marginTop: theme.spacing.unit * 5,
+    },
     paper: {
         padding: theme.spacing.unit * 2,
         textAlign: 'center',
@@ -86,7 +89,7 @@ class RegisterPage extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <Grid container justify='center' alignItems='center' className={classes.root} >
+                <Grid container justify='center' alignItems='center' className={classes.rootContainer} >
                     {/* {this.props.errors.loginMessage && (
                     <h2
                         className="alert"
