@@ -4,6 +4,10 @@ import axios from 'axios';
 function* fetchPortfolios() {
     const responsePortfolios = yield call(axios.get, '/api/portfolio');
     yield put({type: 'SET_PORTFOLIOS', payload: responsePortfolios.data})
+    const portfolioId = responsePortfolios.data.filter(item => {
+        return item.active;
+    })
+    yield put({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: portfolioId[0].id})
 }
 
 function* fetchPortfolioSymbols(action) {
@@ -22,6 +26,7 @@ function* addCoin(action) {
     try {
         console.log('payload', action.payload);
         yield call(axios.post, '/api/portfolio/add', action.payload);
+        yield put({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: action.payload.portfolio })
         // call snackbar confirmation here
     } catch ( err ) {
         console.log('error adding coin to portfolio', err);

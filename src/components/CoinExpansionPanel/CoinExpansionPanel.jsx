@@ -6,12 +6,15 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
+
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 
+import Chip from '@material-ui/core/Chip';
+import DoneAll from '@material-ui/icons/DoneAll';
 import AddIcon from '@material-ui/icons/Add';
 import green from '@material-ui/core/colors/green';
 
@@ -21,7 +24,8 @@ const styles = theme => ({
     },
     heading: {
         flexGrow: 1,
-        display: 'flex'
+        display: 'flex',
+        alignItems: 'center'
     },
     textName: {
         fontSize: theme.typography.pxToRem(20)
@@ -54,9 +58,12 @@ const styles = theme => ({
     leftIcon: {
         marginRight: theme.spacing.unit,
     },
+    chip: {
+        marginLeft: theme.spacing.unit * 2,
+    },
 });
 
-class CoinExpansionItem extends Component {
+class CoinExpansionPanel extends Component {
     state = {
         expanded: null,
     };
@@ -79,9 +86,22 @@ class CoinExpansionItem extends Component {
     }
 
     render() {
-        const { classes, coin } = this.props;
+        const { classes, coin, portfolioSymbols } = this.props;
         const { expanded } = this.props;
-        
+        let addedChip = '';
+        if (portfolioSymbols.length > 0) {
+            let match = portfolioSymbols.filter( item => {
+                return item.id === coin.id
+            })
+            if (match.length === 1) {
+                addedChip = (<Chip
+                    icon={<DoneAll />}
+                    label="Added to Portfolio"
+                    className={classes.chip}
+                    variant="outlined"
+                />)
+            }
+        }
         return (
             <ExpansionPanel expanded={expanded === coin.id} onChange={this.handleChange(coin.id)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -90,6 +110,7 @@ class CoinExpansionItem extends Component {
                         <Typography className={classes.textName}>
                             {coin.symbol_name}
                         </Typography>
+                        {addedChip}
                     </div>
                     <Typography variant='h4' className={classes.textPrice}>{Number(coin.last_price).toFixed(2)}</Typography>
                     <Typography variant='overline' className={classes.textPercent}>{Number(coin.price_change).toFixed(2)}%</Typography>
@@ -129,9 +150,10 @@ class CoinExpansionItem extends Component {
 
 const mapStateToProps = store => ({
     expanded: store.expanded,
+    portfolioSymbols: store.portfolioSymbols,
     portfolios: store.portfolios
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(CoinExpansionItem));
+export default connect(mapStateToProps)(withStyles(styles)(CoinExpansionPanel));
 
 
