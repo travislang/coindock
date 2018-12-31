@@ -31,10 +31,12 @@ router.get('/', (req, res) => {
     })
 })
 
+//svg icons for landing page
+
+
+
 //route to save active portfolio in DB
 router.post('/', (req, res) => {
-    console.log('root post portfolio');
-    
     const id = req.body.data;
     // set all portfolios user owns to false
     pool.query('UPDATE "portfolio" SET "active" = false WHERE "person_id" = $1', [req.user.id])

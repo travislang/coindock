@@ -27,7 +27,7 @@ const styles = theme => ({
         flexGrow: 1,
     },
     button: {
-        // margin: theme.spacing.unit,
+        margin: theme.spacing.unit,
     },
     menuButton: {
         marginLeft: -12,
@@ -130,11 +130,15 @@ class MainAppBar extends Component {
                                     <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
                                 </Menu>
                             </>
-                        ) : (<NavLink to='/home' style={{ textDecoration: 'none',           color: 'unset' }}>
-                                <Typography variant="h6" color="inherit" >
-                                    Login
-                                </Typography>
-                            </NavLink>)}
+                        ) : <Button 
+                                component={Link}
+                                to='/home'
+                                focusRipple
+                                color="primary" 
+                                className={classes.button}
+                            >
+                                Login
+                            </Button> }
                     </Toolbar>
                 </AppBar>
             </div>

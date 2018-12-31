@@ -5,11 +5,14 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddCircle from '@material-ui/icons/AddCircle';
+import SettingsIcon from '@material-ui/icons/Settings';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
@@ -37,80 +40,92 @@ const styles = theme => ({
             width: '50%',
         },
     },
+    heading: {
+        marginRight: theme.spacing.unit * 2
+    },
     root: {
         display: 'flex',
         flexWrap: 'wrap',
+        alignItems: 'center'
     },
-    formControl: {
-        margin: theme.spacing.unit,
-        minWidth: 250,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing.unit * 2,
+    button: {
+        color: 'rgba(255, 255, 255, 0.3)',
+        padding: theme.spacing.unit
     },
 })
 
 class PortfolioSelect extends Component {
 
     state = {
-        portfolio: 'none',
-        labelWidth: 0,
+        anchorEl: null,
+        anchorElSettings: null
     }
 
-    handleChange = name => event => {
-        this.setState({ [name]: event.target.value });
-        this.props.dispatch({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: event.target.value})
-        this.props.dispatch({ type: 'SET_ACTIVE', payload: {data: event.target.value}})
+    handleClick = event => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+    handleClickSettings = event => {
+        this.setState({ anchorElSettings: event.currentTarget });
     };
 
-    componentDidMount() {
-        this.setState({
-            // setting width for select labels
-            labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth,
-            // setting state to active porfolio if it has returned from DB
-            portfolio: this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0] ? this.props.portfolios.activePortfolio[0].id : 'none'
-        });
-    }
+    handleClose = (id) => {
+        console.log('click menu id', id);
+        this.setState({ anchorEl: null });
+        // check to make sure user closed menu by clicking a portfolio item
+        if( Number(id) ) {
+            this.props.dispatch({ type: 'SET_ACTIVE', payload: { data: id } })
+        }
+    };
+
 
     render() {
-
-        console.log('active portfolio', this.props.portfolios.activePortfolio);
-        console.log(this.state);
-        
         const { classes, portfolios } = this.props;
+        const { anchorEl, anchorElSettings } = this.state;
         return (
             <Grid item xs={11} md={9} lg={7}>
                 <Paper className={classes.paper} elevation={3}>
-                    <FormControl margin='dense' variant="outlined" className={classes.formControl}>
-                        <InputLabel
-                            ref={ref => {
-                                this.InputLabelRef = ref;
-                            }}
-                            htmlFor="portfolio-select"
+                    <div className={classes.root}>
+                        <Typography className={classes.heading} variant='h6' color='textSecondary'>
+                            Current Portfolio:
+                        </Typography>
+                        <Typography color='primary' variant='overline'>
+                            {portfolios.activePortfolio && portfolios.activePortfolio[0] && portfolios.activePortfolio[0].portfolio_name}
+                        </Typography>
+                        <IconButton 
+                            size='small'
+                            className={classes.button} 
+                            aria-owns={anchorEl ? 'simple-menu' : undefined}
+                            aria-haspopup="true"
+                            onClick={this.handleClick}
+                            >
+                            <SettingsIcon fontSize='small' />
+                        </IconButton>
+                        <Menu
+                            id="simple-menu"
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={this.handleClose}
                         >
-                            Current Portfolio
-                        </InputLabel>
-                        <Select
-                            native
-                            value={this.state.portfolio}
-                            onChange={this.handleChange('portfolio')}
-                            input={
-                                <OutlinedInput
-                                    autoFocus
-                                    name="portfolio"
-                                    labelWidth={this.state.labelWidth}
-                                    id="portfolio-select"
-                                />
-                            }
-                        >
-                            {portfolios.portfolios && portfolios.portfolios.map( item => {
+                            {portfolios.portfolios && portfolios.portfolios.map(item => {
                                 return (
-                                    <option key={item.id} value={item.id}>{item.portfolio_name}</option>
+                                    <MenuItem key={item.id} onClick={() => this.handleClose(item.id)}>{item.portfolio_name}</MenuItem>
                                 )
                             })}
-                            <option value="none">Select One</option>
-                        </Select>
-                    </FormControl>
+                        </Menu>
+                        <div>
+                            <IconButton
+                                size='small'
+                                className={classes.button}
+                                aria-owns={anchorEl ? 'simple-menu' : undefined}
+                                aria-haspopup="true"
+                                onClick={this.handleClick}
+                            >
+                                <SettingsIcon fontSize='small' />
+                            </IconButton>
+                        </div>
+                    </div>
+                    
+                    
                 </Paper>
             </Grid>
         )
