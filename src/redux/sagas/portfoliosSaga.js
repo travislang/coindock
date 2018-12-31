@@ -38,6 +38,7 @@ function* deletePortfolio(action) {
     })
 }
 
+
 function* addCoin(action) {
     try {
         console.log('payload', action.payload);
