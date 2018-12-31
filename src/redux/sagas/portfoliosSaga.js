@@ -30,6 +30,14 @@ function* setActive(action) {
     yield put({type: 'FETCH_PORTFOLIOS'})
 }
 
+function* deletePortfolio(action) {
+    yield call(axios.delete, `/api/portfolio/${action.payload.portfolioId}`)
+    yield put({type: 'SET_ACTIVE', payload: {
+            data: action.payload.portfolioToMakeActive
+        }
+    })
+}
+
 function* addCoin(action) {
     try {
         console.log('payload', action.payload);
@@ -47,6 +55,7 @@ function* portfolioSaga() {
     yield takeLatest('FETCH_PORTFOLIO_SYMBOLS', fetchPortfolioSymbols);
     yield takeLatest('SET_ACTIVE', setActive);
     yield takeLatest('ADD_COIN', addCoin);
+    yield takeLatest('DELETE_PORTFOLIO', deletePortfolio);
 }
 
 export default portfolioSaga;

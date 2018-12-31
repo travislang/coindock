@@ -57,6 +57,24 @@ router.post('/', (req, res) => {
     })
 })
 
+router.delete( '/:id', (req, res) => {
+    const id = req.params.id;
+    console.log('id', id);
+    // gets rid of references to portfolio
+    pool.query(`DELETE FROM "portfolio_symbols" WHERE "portfolio_id" = $1`, [id])
+    .then( () => {
+        // deletes the portfolio
+        pool.query(`DELETE FROM "portfolio" WHERE "id" = $1`, [id])
+        .then( () => {
+            res.sendStatus(200);
+        })
+    })
+    .catch( err => {
+        console.log('error deleting portfolio from DB', err);
+        res.sendStatus(500);
+    })
+})
+
 router.get('/symbols/:id', (req, res) => {
     // capture portfolio id
     let id = req.params.id

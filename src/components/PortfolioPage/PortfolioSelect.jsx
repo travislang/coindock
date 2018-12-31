@@ -6,11 +6,12 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-
+import classNames from 'classnames';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircle from '@material-ui/icons/AddCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
+import LayersIcon from '@material-ui/icons/LayersOutlined';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -40,17 +41,35 @@ const styles = theme => ({
             width: '50%',
         },
     },
-    heading: {
-        marginRight: theme.spacing.unit * 2
-    },
     root: {
         display: 'flex',
         flexWrap: 'wrap',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    column: {
+        flexBasis: '33%'
     },
     button: {
-        color: 'rgba(255, 255, 255, 0.3)',
-        padding: theme.spacing.unit
+        color: 'rgba(255, 255, 255, 0.5)',
+        padding: theme.spacing.unit,
+        '&:hover': {
+            color: theme.palette.primary.main,
+        },
+    },
+    deleteButton: {
+        color: 'rgba(255, 255, 255, 0.5)',
+        padding: theme.spacing.unit,
+        '&:hover': {
+            color: theme.palette.error.dark,
+        },
+    },
+    editButtons: {
+        display: 'flex',
+        justifyContent: 'flex-end'
+    },
+    layerIcon: {
+        marginRight: theme.spacing.unit * 2
     },
 })
 
@@ -77,27 +96,46 @@ class PortfolioSelect extends Component {
         }
     };
 
+    handleAdd = () => {
+
+    }
+
+    handleDelete = () => {
+        // find next portfolio user has that isnt active
+        let portfolioToMakeActive = this.props.portfolios.portfolios.find( item => {
+            return item.active === false;
+        })
+        this.props.dispatch({ 
+            type: 'DELETE_PORTFOLIO', 
+            payload: {
+                portfolioId: this.props.portfolios.activePortfolio[0].id,
+                portfolioToMakeActive: portfolioToMakeActive.id
+            }
+        })
+    }
 
     render() {
         const { classes, portfolios } = this.props;
-        const { anchorEl, anchorElSettings } = this.state;
+        const { anchorEl } = this.state;
         return (
             <Grid item xs={11} md={9} lg={7}>
                 <Paper className={classes.paper} elevation={3}>
-                    <div className={classes.root}>
-                        <Typography className={classes.heading} variant='h6' color='textSecondary'>
-                            Current Portfolio:
+                    <div className={classNames(classes.column)}>
+                    </div>
+                    <div className={classNames(classes.root, classes.column)}>
+                        <LayersIcon className={classes.layerIcon} fontSize='small' />
+                        <Typography color='primary' variant='h6'>
+                            {portfolios.activePortfolio && portfolios.activePortfolio[0] && portfolios.activePortfolio[0].portfolio_name || 'No Portfolio Selected'}
                         </Typography>
-                        <Typography color='primary' variant='overline'>
-                            {portfolios.activePortfolio && portfolios.activePortfolio[0] && portfolios.activePortfolio[0].portfolio_name}
-                        </Typography>
-                        <IconButton 
+                    </div>
+                    <div className={classNames(classes.column, classes.editButtons)}>
+                        <IconButton
                             size='small'
-                            className={classes.button} 
+                            className={classes.button}
                             aria-owns={anchorEl ? 'simple-menu' : undefined}
                             aria-haspopup="true"
                             onClick={this.handleClick}
-                            >
+                        >
                             <SettingsIcon fontSize='small' />
                         </IconButton>
                         <Menu
@@ -112,29 +150,25 @@ class PortfolioSelect extends Component {
                                 )
                             })}
                         </Menu>
-                        <div>
-                            <IconButton
-                                size='small'
-                                className={classes.button}
-                                aria-owns={anchorEl ? 'simple-menu' : undefined}
-                                aria-haspopup="true"
-                                onClick={this.handleClick}
-                            >
-                                <DeleteIcon fontSize='small' />
-                            </IconButton>
-                            <IconButton
-                                size='small'
-                                className={classes.button}
-                                aria-owns={anchorEl ? 'simple-menu' : undefined}
-                                aria-haspopup="true"
-                                onClick={this.handleClick}
-                            >
-                                <AddCircle fontSize='small' />
-                            </IconButton>
-                        </div>
+                        <IconButton
+                            size='small'
+                            className={classes.deleteButton}
+                            aria-owns={anchorEl ? 'simple-menu' : undefined}
+                            aria-haspopup="true"
+                            onClick={this.handleDelete}
+                        >
+                            <DeleteIcon fontSize='small' />
+                        </IconButton>
+                        <IconButton
+                            size='small'
+                            className={classes.button}
+                            aria-owns={anchorEl ? 'simple-menu' : undefined}
+                            aria-haspopup="true"
+                            onClick={this.handleAdd}
+                        >
+                            <AddCircle fontSize='small' />
+                        </IconButton>
                     </div>
-                    
-                    
                 </Paper>
             </Grid>
         )
