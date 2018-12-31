@@ -120,7 +120,16 @@ class PortfolioSelect extends Component {
                                 aria-haspopup="true"
                                 onClick={this.handleClick}
                             >
-                                <SettingsIcon fontSize='small' />
+                                <DeleteIcon fontSize='small' />
+                            </IconButton>
+                            <IconButton
+                                size='small'
+                                className={classes.button}
+                                aria-owns={anchorEl ? 'simple-menu' : undefined}
+                                aria-haspopup="true"
+                                onClick={this.handleClick}
+                            >
+                                <AddCircle fontSize='small' />
                             </IconButton>
                         </div>
                     </div>
