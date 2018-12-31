@@ -51,11 +51,17 @@ const styles = theme => ({
             width: '50%',
         },
     },
-    root: {
+    title: {
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        border: `1px solid ${theme.palette.primary.dark}`,
+        borderRadius: '30px'
+    },
+    titleText: {
+        letterSpacing: '1px',
+        fontSize: '1rem'
     },
     column: {
         flexBasis: '33%'
@@ -153,9 +159,8 @@ class PortfolioSelect extends Component {
                 <Paper className={classes.paper} elevation={3}>
                     <div className={classNames(classes.column)}>
                     </div>
-                    <div className={classNames(classes.root, classes.column)}>
-                        <LayersIcon className={classes.layerIcon} fontSize='small' />
-                        <Typography color='primary' variant='h6'>
+                    <div className={classNames(classes.title, classes.column)}>
+                        <Typography className={classes.titleText} color='textPrimary' variant='body1'>
                             {portfolios.activePortfolio && portfolios.activePortfolio[0] && portfolios.activePortfolio[0].portfolio_name || 'No Portfolio Selected'}
                         </Typography>
                     </div>

@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 
 import HomeIcon from '@material-ui/icons/Home';
 import RssFeed from '@material-ui/icons/RssFeed';
-import Layers from '@material-ui/icons/Layers';
 import BrokenImage from '@material-ui/icons/BrokenImage';
 
 
