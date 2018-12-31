@@ -33,8 +33,6 @@ router.get('/', (req, res) => {
 
 //svg icons for landing page
 
-
-
 //route to save active portfolio in DB
 router.post('/', (req, res) => {
     const id = req.body.data;
