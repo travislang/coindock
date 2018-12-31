@@ -39,7 +39,10 @@ function* deletePortfolio(action) {
 }
 
 function* addPortfolio(action) {
-    yield call(axios.post, '/api/portfolio/new', action.payload)
+    const responseId = yield call(axios.post, '/api/portfolio/new', action.payload)
+    yield put({type: 'SET_ACTIVE', payload: {
+        data: responseId.data[0].id
+    }})
 }
 
 function* addCoin(action) {
@@ -60,6 +63,7 @@ function* portfolioSaga() {
     yield takeLatest('SET_ACTIVE', setActive);
     yield takeLatest('ADD_COIN', addCoin);
     yield takeLatest('DELETE_PORTFOLIO', deletePortfolio);
+    yield takeLatest('ADD_PORTFOLIO', addPortfolio);
 }
 
 export default portfolioSaga;

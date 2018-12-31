@@ -57,9 +57,9 @@ router.post('/', (req, res) => {
     })
 })
 
+// delete portfolio from db
 router.delete( '/:id', (req, res) => {
     const id = req.params.id;
-    console.log('id', id);
     // gets rid of references to portfolio
     pool.query(`DELETE FROM "portfolio_symbols" WHERE "portfolio_id" = $1`, [id])
     .then( () => {
@@ -75,10 +75,20 @@ router.delete( '/:id', (req, res) => {
     })
 })
 
+// add new portfolio to db
 router.post('/new', (req, res) => {
-    
+    pool.query(`INSERT INTO "portfolio"("portfolio_name", "person_id")
+                VALUES($1, $2) RETURNING id`, [req.body.data, req.user.id])
+        .then( result => {
+            res.send(result.rows);
+        })
+        .catch( err => {
+            console.log('error adding new portfolio to the DB', err);
+            res.sendStatus(500);
+        })
 })
 
+// get all coins in a portfolio
 router.get('/symbols/:id', (req, res) => {
     // capture portfolio id
     let id = req.params.id
@@ -98,6 +108,7 @@ router.get('/symbols/:id', (req, res) => {
     })
 })
 
+// add new coin to db
 router.post('/add', (req, res) => {
     const portfolioId = req.body.portfolio;
     const coinId = req.body.coin;
@@ -112,9 +123,6 @@ router.post('/add', (req, res) => {
         })
 });
 
-/**
- * POST route template
- */
 router.post('/', (req, res) => {
 
 });

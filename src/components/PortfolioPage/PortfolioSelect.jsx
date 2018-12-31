@@ -88,7 +88,8 @@ class PortfolioSelect extends Component {
     state = {
         open: false,
         anchorEl: null,
-        anchorElSettings: null
+        anchorElSettings: null,
+        newPortfolio: ''
     }
 
     handleClick = event => {
@@ -115,8 +116,19 @@ class PortfolioSelect extends Component {
         this.setState({ open: false });
     }
 
-    handleAdd = () => {
+    handleNewPortfolio = (e) => {
+        this.setState({
+            newPortfolio: e.target.value
+        })
+    }
 
+    handleAdd = () => {
+        this.props.dispatch({type: 'ADD_PORTFOLIO', payload: {data: this.state.newPortfolio}})
+        this.handleCloseDialog();
+        this.setState({
+            newPortfolio: ''
+        })
+        
     }
 
     handleDelete = () => {
@@ -200,6 +212,8 @@ class PortfolioSelect extends Component {
                                     id="name"
                                     label="Portfolio Name"
                                     type="text"
+                                    value={this.state.newPortfolio}
+                                    onChange={this.handleNewPortfolio}
                                     fullWidth
                                 />
                             </DialogContent>
