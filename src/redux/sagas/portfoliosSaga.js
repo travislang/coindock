@@ -38,6 +38,9 @@ function* deletePortfolio(action) {
     })
 }
 
+function* addPortfolio(action) {
+    yield call(axios.post, '/api/portfolio/new', action.payload)
+}
 
 function* addCoin(action) {
     try {

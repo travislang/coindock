@@ -75,6 +75,10 @@ router.delete( '/:id', (req, res) => {
     })
 })
 
+router.post('/new', (req, res) => {
+    
+})
+
 router.get('/symbols/:id', (req, res) => {
     // capture portfolio id
     let id = req.params.id
