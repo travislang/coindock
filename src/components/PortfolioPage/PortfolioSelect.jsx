@@ -5,13 +5,27 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import classNames from 'classnames';
+import IconButton from '@material-ui/core/IconButton';
 
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import DeleteIcon from '@material-ui/icons/Delete';
+import AddCircle from '@material-ui/icons/AddCircle';
+import SettingsIcon from '@material-ui/icons/Settings';
+import LayersIcon from '@material-ui/icons/LayersOutlined';
 
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+
+// dialog dependencies
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = theme => ({
     paper: {
@@ -40,77 +54,179 @@ const styles = theme => ({
     root: {
         display: 'flex',
         flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
-    formControl: {
-        margin: theme.spacing.unit,
-        minWidth: 250,
+    column: {
+        flexBasis: '33%'
     },
-    selectEmpty: {
-        marginTop: theme.spacing.unit * 2,
+    button: {
+        color: 'rgba(255, 255, 255, 0.5)',
+        padding: theme.spacing.unit,
+        '&:hover': {
+            color: theme.palette.primary.main,
+        },
+    },
+    deleteButton: {
+        color: 'rgba(255, 255, 255, 0.5)',
+        padding: theme.spacing.unit,
+        '&:hover': {
+            color: theme.palette.error.dark,
+        },
+    },
+    editButtons: {
+        display: 'flex',
+        justifyContent: 'flex-end'
+    },
+    layerIcon: {
+        marginRight: theme.spacing.unit * 2
     },
 })
 
 class PortfolioSelect extends Component {
 
     state = {
-        portfolio: 'none',
-        labelWidth: 0,
+        open: false,
+        anchorEl: null,
+        anchorElSettings: null,
+        newPortfolio: ''
     }
 
-    handleChange = name => event => {
-        this.setState({ [name]: event.target.value });
-        this.props.dispatch({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: event.target.value})
-        this.props.dispatch({ type: 'SET_ACTIVE', payload: {data: event.target.value}})
+    handleClick = event => {
+        this.setState({ anchorEl: event.currentTarget });
+    };
+    handleClickSettings = event => {
+        this.setState({ anchorElSettings: event.currentTarget });
     };
 
-    componentDidMount() {
+    handleClose = (id) => {
+        console.log('click menu id', id);
+        this.setState({ anchorEl: null });
+        // check to make sure user closed menu by clicking a portfolio item
+        if (Number(id)) {
+            this.props.dispatch({ type: 'SET_ACTIVE', payload: { data: id } })
+        }
+    };
+
+    handleOpenDialog = () => {
+        this.setState({ open: true });
+    }
+
+    handleCloseDialog = () => {
+        this.setState({ open: false });
+    }
+
+    handleNewPortfolio = (e) => {
         this.setState({
-            // setting width for select labels
-            labelWidth: ReactDOM.findDOMNode(this.InputLabelRef).offsetWidth,
-            // setting state to active porfolio if it has returned from DB
-            portfolio: this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0] ? this.props.portfolios.activePortfolio[0].id : 'none'
-        });
+            newPortfolio: e.target.value
+        })
+    }
+
+    handleAdd = () => {
+        this.props.dispatch({type: 'ADD_PORTFOLIO', payload: {data: this.state.newPortfolio}})
+        this.handleCloseDialog();
+        this.setState({
+            newPortfolio: ''
+        })
+        
+    }
+
+    handleDelete = () => {
+        // find next portfolio user has that isnt active
+        let portfolioToMakeActive = this.props.portfolios.portfolios.find(item => {
+            return item.active === false;
+        })
+        this.props.dispatch({
+            type: 'DELETE_PORTFOLIO',
+            payload: {
+                portfolioId: this.props.portfolios.activePortfolio[0].id,
+                portfolioToMakeActive: portfolioToMakeActive.id
+            }
+        })
     }
 
     render() {
-
-        console.log('active portfolio', this.props.portfolios.activePortfolio);
-        console.log(this.state);
-        
         const { classes, portfolios } = this.props;
+        const { anchorEl } = this.state;
         return (
             <Grid item xs={11} md={9} lg={7}>
                 <Paper className={classes.paper} elevation={3}>
-                    <FormControl margin='dense' variant="outlined" className={classes.formControl}>
-                        <InputLabel
-                            ref={ref => {
-                                this.InputLabelRef = ref;
-                            }}
-                            htmlFor="portfolio-select"
+                    <div className={classNames(classes.column)}>
+                    </div>
+                    <div className={classNames(classes.root, classes.column)}>
+                        <LayersIcon className={classes.layerIcon} fontSize='small' />
+                        <Typography color='primary' variant='h6'>
+                            {portfolios.activePortfolio && portfolios.activePortfolio[0] && portfolios.activePortfolio[0].portfolio_name || 'No Portfolio Selected'}
+                        </Typography>
+                    </div>
+                    <div className={classNames(classes.column, classes.editButtons)}>
+                        <IconButton
+                            size='small'
+                            className={classes.button}
+                            aria-owns={anchorEl ? 'simple-menu' : undefined}
+                            aria-haspopup="true"
+                            onClick={this.handleClick}
                         >
-                            Current Portfolio
-                        </InputLabel>
-                        <Select
-                            native
-                            value={this.state.portfolio}
-                            onChange={this.handleChange('portfolio')}
-                            input={
-                                <OutlinedInput
-                                    autoFocus
-                                    name="portfolio"
-                                    labelWidth={this.state.labelWidth}
-                                    id="portfolio-select"
-                                />
-                            }
+                            <SettingsIcon fontSize='small' />
+                        </IconButton>
+                        <Menu
+                            id="simple-menu"
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={this.handleClose}
                         >
-                            {portfolios.portfolios && portfolios.portfolios.map( item => {
+                            {portfolios.portfolios && portfolios.portfolios.map(item => {
                                 return (
-                                    <option key={item.id} value={item.id}>{item.portfolio_name}</option>
+                                    <MenuItem key={item.id} onClick={() => this.handleClose(item.id)}>{item.portfolio_name}</MenuItem>
                                 )
                             })}
-                            <option value="none">Select One</option>
-                        </Select>
-                    </FormControl>
+                        </Menu>
+                        <IconButton
+                            size='small'
+                            className={classes.deleteButton}
+                            aria-owns={anchorEl ? 'simple-menu' : undefined}
+                            aria-haspopup="true"
+                            onClick={this.handleDelete}
+                        >
+                            <DeleteIcon fontSize='small' />
+                        </IconButton>
+                        <IconButton
+                            size='small'
+                            className={classes.button}
+                            aria-owns={anchorEl ? 'simple-menu' : undefined}
+                            aria-haspopup="true"
+                            onClick={this.handleOpenDialog}
+                        >
+                            <AddCircle fontSize='small' />
+                        </IconButton>
+                        <Dialog
+                            open={this.state.open}
+                            onClose={this.handleCloseDialog}
+                            aria-labelledby="form-dialog-title"
+                        >
+                            <DialogTitle id="form-dialog-title">Add New Portfolio</DialogTitle>
+                            <DialogContent>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="name"
+                                    label="Portfolio Name"
+                                    type="text"
+                                    value={this.state.newPortfolio}
+                                    onChange={this.handleNewPortfolio}
+                                    fullWidth
+                                />
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={this.handleCloseDialog} color="default">
+                                    Cancel
+                                </Button>
+                                <Button onClick={this.handleAdd} color="primary">
+                                    Add
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                    </div>
                 </Paper>
             </Grid>
         )

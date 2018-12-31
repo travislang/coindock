@@ -19,17 +19,11 @@ const styles = theme => ({
 class PortfolioPage extends Component {
 
     componentDidMount() {
-        console.log('active', this.props.portfolios.activePortfolio);
-        
-        if (this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0]) {
-            this.props.dispatch({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: this.props.portfolios.activePortfolio[0].id })
-        }
-        
+        this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
     }
 
     render() {
         const { classes, portfolioSymbols } = this.props;
-        console.log(portfolioSymbols.length > 0);
         return (
             <div className={classes.root}>
                 <Grid container justify='center' spacing={16}>
