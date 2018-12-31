@@ -8,14 +8,24 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import classNames from 'classnames';
 import IconButton from '@material-ui/core/IconButton';
+
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircle from '@material-ui/icons/AddCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
 import LayersIcon from '@material-ui/icons/LayersOutlined';
+
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
 import { fade } from '@material-ui/core/styles/colorManipulator';
+
+// dialog dependencies
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = theme => ({
     paper: {
@@ -76,8 +86,10 @@ const styles = theme => ({
 class PortfolioSelect extends Component {
 
     state = {
+        open: false,
         anchorEl: null,
-        anchorElSettings: null
+        anchorElSettings: null,
+        newPortfolio: ''
     }
 
     handleClick = event => {
@@ -91,22 +103,41 @@ class PortfolioSelect extends Component {
         console.log('click menu id', id);
         this.setState({ anchorEl: null });
         // check to make sure user closed menu by clicking a portfolio item
-        if( Number(id) ) {
+        if (Number(id)) {
             this.props.dispatch({ type: 'SET_ACTIVE', payload: { data: id } })
         }
     };
 
-    handleAdd = () => {
+    handleOpenDialog = () => {
+        this.setState({ open: true });
+    }
 
+    handleCloseDialog = () => {
+        this.setState({ open: false });
+    }
+
+    handleNewPortfolio = (e) => {
+        this.setState({
+            newPortfolio: e.target.value
+        })
+    }
+
+    handleAdd = () => {
+        this.props.dispatch({type: 'ADD_PORTFOLIO', payload: {data: this.state.newPortfolio}})
+        this.handleCloseDialog();
+        this.setState({
+            newPortfolio: ''
+        })
+        
     }
 
     handleDelete = () => {
         // find next portfolio user has that isnt active
-        let portfolioToMakeActive = this.props.portfolios.portfolios.find( item => {
+        let portfolioToMakeActive = this.props.portfolios.portfolios.find(item => {
             return item.active === false;
         })
-        this.props.dispatch({ 
-            type: 'DELETE_PORTFOLIO', 
+        this.props.dispatch({
+            type: 'DELETE_PORTFOLIO',
             payload: {
                 portfolioId: this.props.portfolios.activePortfolio[0].id,
                 portfolioToMakeActive: portfolioToMakeActive.id
@@ -164,10 +195,37 @@ class PortfolioSelect extends Component {
                             className={classes.button}
                             aria-owns={anchorEl ? 'simple-menu' : undefined}
                             aria-haspopup="true"
-                            onClick={this.handleAdd}
+                            onClick={this.handleOpenDialog}
                         >
                             <AddCircle fontSize='small' />
                         </IconButton>
+                        <Dialog
+                            open={this.state.open}
+                            onClose={this.handleCloseDialog}
+                            aria-labelledby="form-dialog-title"
+                        >
+                            <DialogTitle id="form-dialog-title">Add New Portfolio</DialogTitle>
+                            <DialogContent>
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    id="name"
+                                    label="Portfolio Name"
+                                    type="text"
+                                    value={this.state.newPortfolio}
+                                    onChange={this.handleNewPortfolio}
+                                    fullWidth
+                                />
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={this.handleCloseDialog} color="default">
+                                    Cancel
+                                </Button>
+                                <Button onClick={this.handleAdd} color="primary">
+                                    Add
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
                     </div>
                 </Paper>
             </Grid>
