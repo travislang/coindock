@@ -16,6 +16,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import DoneAll from '@material-ui/icons/DoneAll';
 import AddIcon from '@material-ui/icons/Add';
+import TapAndPlay from '@material-ui/icons/TapAndPlay';
+import DeleteIcon from '@material-ui/icons/Delete';
 import green from '@material-ui/core/colors/green';
 
 const styles = theme => ({
@@ -32,14 +34,14 @@ const styles = theme => ({
     },
     textPrice: {
         paddingRight: theme.spacing.unit * 2,
-        
+
     },
     textPercent: {
         color: green[400],
         marginRight: theme.spacing.unit * 2,
     },
     column: {
-        flexBasis: '30%',
+        flexBasis: '33%',
         borderRight: `2px solid ${theme.palette.divider}`,
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
         textAlign: 'center',
@@ -63,49 +65,40 @@ const styles = theme => ({
     },
 });
 
-class CoinExpansionPanel extends Component {
+class PortfolioExpansionPanel extends Component {
     state = {
         expanded: null,
+    };
+
+    handleChange = panel => (event, expanded) => {
+        let toggle;
+        expanded ? toggle = panel : toggle = false;
+        this.props.dispatch({ type: 'SET_EXPANDED', payload: toggle })
     };
 
     componentDidMount() {
         this.props.dispatch({ type: 'SET_EXPANDED', payload: false })
     }
 
-    handleChange = panel => (event, expanded) => {
-        let toggle;
-        expanded ? toggle = panel : toggle = false;
-        this.props.dispatch({type: 'SET_EXPANDED', payload: toggle})
-    };
-
     // add coin to active portfolio
-    addCoin = name => {
-        this.props.dispatch({
-            type: 'ADD_COIN',
-            payload: {
-                portfolio: this.props.portfolios.activePortfolio[0].id,
-                coin: name
-            }
-        })
-    }
 
     render() {
         const { classes, coin, portfolioSymbols } = this.props;
         const { expanded } = this.props;
-        let addedChip = '';
-        if (portfolioSymbols.length > 0) {
-            let match = portfolioSymbols.filter( item => {
-                return item.id === coin.id
-            })
-            if (match.length === 1) {
-                addedChip = (<Chip
-                    icon={<DoneAll />}
-                    label="Added to Portfolio"
-                    className={classes.chip}
-                    variant="outlined"
-                />)
-            }
-        }
+        // let addedChip = '';
+        // if (portfolioSymbols.length > 0) {
+        //     let match = portfolioSymbols.filter(item => {
+        //         return item.id === coin.id
+        //     })
+        //     if (match.length === 1) {
+        //         addedChip = (<Chip
+        //             icon={<DoneAll />}
+        //             label="Added to Portfolio"
+        //             className={classes.chip}
+        //             variant="outlined"
+        //         />)
+        //     }
+        // }
         return (
             <ExpansionPanel expanded={expanded === coin.id} onChange={this.handleChange(coin.id)}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon color='disabled' />}>
@@ -114,7 +107,7 @@ class CoinExpansionPanel extends Component {
                         <Typography className={classes.textName}>
                             {coin.symbol_name}
                         </Typography>
-                        {addedChip}
+                        {/* {addedChip} */}
                     </div>
                     <Typography variant='h4' className={classes.textPrice}>{Number(coin.last_price).toFixed(2)}</Typography>
                     <Typography variant='overline' className={classes.textPercent}>{Number(coin.price_change).toFixed(2)}%</Typography>
@@ -123,7 +116,7 @@ class CoinExpansionPanel extends Component {
                     <div className={classes.column}>
                         <Typography variant='h5'>
                             {coin.volume}
-                            </Typography>
+                        </Typography>
                         <Typography color='textSecondary' variant='overline'>
                             24 Hour Volume
                             </Typography>
@@ -137,15 +130,19 @@ class CoinExpansionPanel extends Component {
                             </Typography>
                     </div>
                     <div className={classes.column}>
-                        
+
                     </div>
                 </ExpansionPanelDetails>
                 <Divider />
                 <ExpansionPanelActions>
                     <Button onClick={() => this.addCoin(coin.id)} variant="contained" color="primary" className={classes.button}>
-                        <AddIcon className={classes.leftIcon} />
-                        Add
-                        </Button>
+                        <DeleteIcon className={classes.leftIcon} />
+                        Remove
+                    </Button>
+                    <Button onClick={() => this.addCoin(coin.id)} variant="contained" color="primary" className={classes.button}>
+                        <TapAndPlay className={classes.leftIcon} />
+                        Set Alert
+                    </Button>
                 </ExpansionPanelActions>
             </ExpansionPanel>
         )
@@ -158,6 +155,4 @@ const mapStateToProps = store => ({
     portfolios: store.portfolios
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(CoinExpansionPanel));
-
-
+export default connect(mapStateToProps)(withStyles(styles)(PortfolioExpansionPanel))

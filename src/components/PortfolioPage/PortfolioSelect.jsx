@@ -60,8 +60,9 @@ const styles = theme => ({
         borderRadius: '30px'
     },
     titleText: {
-        letterSpacing: '1px',
-        fontSize: '1rem'
+        letterSpacing: '2px',
+        fontSize: '1rem',
+        lineHeight: 'normal'
     },
     column: {
         flexBasis: '33%'
@@ -160,7 +161,7 @@ class PortfolioSelect extends Component {
                     <div className={classNames(classes.column)}>
                     </div>
                     <div className={classNames(classes.title, classes.column)}>
-                        <Typography className={classes.titleText} color='textPrimary' variant='body1'>
+                        <Typography className={classes.titleText} color='textPrimary' variant='overline'>
                             {portfolios.activePortfolio && portfolios.activePortfolio[0] && portfolios.activePortfolio[0].portfolio_name || 'No Portfolio Selected'}
                         </Typography>
                     </div>
