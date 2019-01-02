@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import AlertsHeading from './AlertsHeading';
+import AlertsList from './AlertsList';
 
 const styles = theme => ({
     root: {
@@ -22,7 +23,7 @@ class AlertsPage extends Component {
                 <Grid container justify='center' spacing={16}>
                     <AlertsHeading />
                     <Grid item xs={11} md={9} lg={7}>
-                        
+                        <AlertsList />
                     </Grid>
                 </Grid>
             </div>

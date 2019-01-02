@@ -5,7 +5,7 @@ import userSaga from './userSaga';
 import facebookSaga from './facebookSaga';
 import tickersSaga from './tickersSaga';
 import portfoliosSaga from './portfoliosSaga';
-import alertsSage from './alertsSaga';
+import alertsSaga from './alertsSaga';
 
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.

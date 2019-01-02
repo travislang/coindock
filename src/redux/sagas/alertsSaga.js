@@ -3,10 +3,11 @@ import axios from 'axios';
 
 function* fetchAlerts() {
     try {
-        
+        const alerts = yield call(axios.get, '/api/alerts')
+        yield put({type: 'SET_ALERTS', payload: alerts.data})
     }
     catch (err) {
-        console.log('error in ', err);
+        console.log('error in fetch alerts saga', err);
     }
 }
 
