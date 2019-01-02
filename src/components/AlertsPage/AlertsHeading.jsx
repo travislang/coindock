@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -44,14 +44,12 @@ const styles = theme => ({
     },
     button: {
         color: 'rgba(255, 255, 255, 0.5)',
-        padding: theme.spacing.unit,
         '&:hover': {
             color: theme.palette.primary.main,
         },
     },
     deleteButton: {
         color: 'rgba(255, 255, 255, 0.5)',
-        padding: theme.spacing.unit,
         '&:hover': {
             color: theme.palette.error.dark,
         },
@@ -115,6 +113,8 @@ class AlertsHeading extends Component {
                         </IconButton>
                         <IconButton
                             size='small'
+                            component={Link}
+                            to='/new-alert'
                             className={classes.button}
                             onClick={this.handleAddAlert}
                         >

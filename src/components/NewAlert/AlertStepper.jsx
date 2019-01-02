@@ -14,17 +14,18 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
+import Fab from '@material-ui/core/Fab';
+import ArrowForward from '@material-ui/icons/ArrowForward';
+import SendIcon from '@material-ui/icons/Send';
+import Icon from '@material-ui/core/Icon';
+
 const styles = theme => ({
     root: {
         width: '100%',
-        marginBottom: theme.spacing.unit * 3
+        position: 'relative',
     },
     button: {
         marginRight: theme.spacing.unit,
-    },
-    instructions: {
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit,
     },
     formControl: {
         margin: theme.spacing.unit * 3,
@@ -37,29 +38,23 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
         width: 200,
     },
+    fab: {
+        position: 'absolute',
+        bottom: theme.spacing.unit * 2,
+        right: theme.spacing.unit * 2,
+    },
 });
 
 function getSteps() {
     return ['Select cryptocurrency', 'Choose price direction', 'Set price level'];
 }
 
-function getStepContent(step) {
-    switch (step) {
-        case 0:
-            return 'Select cryptocurrency';
-        case 1:
-            return 'Choose price direction';
-        case 2:
-            return 'Set price level';
-        default:
-            return 'Unknown step';
-    }
-}
 
 class AlertStepper extends Component {
     state = {
-        activeStep: 1,
-        direction: ''
+        activeStep: 0,
+        direction: '',
+        price: ''
     };
 
     handleNext = () => {
@@ -83,10 +78,18 @@ class AlertStepper extends Component {
 
     handleRadioChange = event => {
         this.setState({ direction: event.target.value });
-        this.setState({
-            activeStep: 2,
-        });
     };
+
+    handleChange = name => e => {
+        this.setState({
+            [name]: e.target.value
+        })
+    }
+
+    handleSubmit = () => {
+        this.handleReset();
+
+    }
 
     render() {
         const { classes } = this.props;
@@ -97,11 +100,9 @@ class AlertStepper extends Component {
             <div className={classes.root}>
                 <Stepper activeStep={activeStep}>
                     {steps.map((label, index) => {
-                        const props = {};
-                        const labelProps = {};
                         return (
-                            <Step key={label} {...props}>
-                                <StepLabel {...labelProps}>{label}</StepLabel>
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
                             </Step>
                         );
                     })}
@@ -115,6 +116,7 @@ class AlertStepper extends Component {
                         label="Cryptocurrency"
                         className={classes.textField}
                         value={this.state.name}
+                        
                         placeholder='Pick a coin'
                         margin="normal"
                         autoFocus
@@ -122,10 +124,9 @@ class AlertStepper extends Component {
                             shrink: true,
                         }}
                     />
-                    {activeStep === 1 ? (
+                    {activeStep >= 1 && (
                         <div>
                             <FormControl component="fieldset" className={classes.formControl}>
-                                <FormLabel component="legend">Price direction</FormLabel>
                                 <RadioGroup
                                     aria-label="price direction"
                                     name="price direction"
@@ -133,14 +134,49 @@ class AlertStepper extends Component {
                                     value={this.state.direction}
                                     onChange={this.handleRadioChange}
                                 >
-                                    <FormControlLabel value="down" control={<Radio />} label="Less Than" />
-                                    <FormControlLabel value="up" control={<Radio />} label="More Than" />
+                                    <FormControlLabel value="down" control={<Radio color="primary" />} label="Less Than" />
+                                    <FormControlLabel value="up" control={<Radio color="primary" />} label="More Than" />
                                 </RadioGroup>
                             </FormControl>
                         </div>
+                    )}
+                    {activeStep >= 2 && (
+                        <div>
+                            <TextField
+                                id="outlined-number"
+                                label="Set Price"
+                                value={this.state.age}
+                                onChange={this.handleChange('price')}
+                                type="number"
+                                className={classes.textField}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                helperText="Enter a price with 2 decimal places"
+                                margin="normal"
+                                variant="outlined"
+                            />
+                        </div>
+                    )}
+                    {activeStep === steps.length - 1 ? (
+                        <div>
+                            <Fab
+                                className={classes.fab}
+                                color='primary'
+                                onClick={this.handleSubmit}
+                            >
+                                <SendIcon />
+                            </Fab>
+                        </div>
                     ) : (
                         <div>
-
+                            <Fab 
+                                className={classes.fab} 
+                                color='primary'
+                                onClick={this.handleNext}
+                                >
+                                <ArrowForward />
+                            </Fab>
                         </div>
                     )}
                 </div>
