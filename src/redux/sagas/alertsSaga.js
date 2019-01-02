@@ -11,8 +11,19 @@ function* fetchAlerts() {
     }
 }
 
+function* toggleCoinAlerts(action) {
+    try {
+        yield call(axios.put, `/api/alerts/toggle-alert/${action.payload}`);
+        yield put({type: 'FETCH_ALERTS'})
+    }
+    catch (err) {
+        console.log('error in toggle coin alerts saga', err);
+    }
+}
+
 function* alertsSaga() {
     yield takeLatest('FETCH_ALERTS', fetchAlerts);
+    yield takeLatest('TOGGLE_COIN_ALERTS', toggleCoinAlerts);
 }
 
 export default alertsSaga;

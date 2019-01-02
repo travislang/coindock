@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 
 // worker Saga: will be fired on "FETCH_USER" actions
 function* fetchUser() {
@@ -24,8 +24,14 @@ function* fetchUser() {
   }
 }
 
+function* toggleAlerts() {
+    yield call(axios.put, '/api/user/toggle-alerts')
+    yield put({type: 'FETCH_USER'})
+}
+
 function* userSaga() {
   yield takeLatest('FETCH_USER', fetchUser);
+  yield takeLatest('TOGGLE_ALERTS', toggleAlerts);
 }
 
 export default userSaga;

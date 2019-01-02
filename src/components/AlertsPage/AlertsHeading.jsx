@@ -12,6 +12,9 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircle from '@material-ui/icons/AddCircle';
 
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 const styles = theme => ({
     paper: {
@@ -33,7 +36,7 @@ const styles = theme => ({
     },
     titleText: {
         letterSpacing: '2px',
-        fontSize: '1rem',
+        fontSize: '0.85rem',
         lineHeight: 'normal'
     },
     column: {
@@ -57,9 +60,15 @@ const styles = theme => ({
         display: 'flex',
         justifyContent: 'flex-end'
     },
+    toggleSwitch: {
+        display: 'flex',
+        justifyContent: 'flex-start'
+    },
 })
 
 class PortfolioSelect extends Component {
+
+    state
 
     handleAddAlert = () => {
         
@@ -69,12 +78,29 @@ class PortfolioSelect extends Component {
         
     }
 
+    handleToggle =  () => {
+        this.props.dispatch({type: 'TOGGLE_ALERTS'})
+    };
+
     render() {
-        const { classes } = this.props;
+        const { classes, user } = this.props;
         return (
             <Grid item xs={11} md={9} lg={7}>
                 <Paper className={classes.paper} elevation={3}>
-                    <div className={classNames(classes.column)}>
+                    <div className={classNames(classes.column, classes.toggleSwitch)}>
+                        <FormGroup row>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={user.alerts_on}
+                                        onChange={this.handleToggle}
+                                        value="alerts on"
+                                        color="primary"
+                                    />
+                                }
+                                label="Toggle All Alerts"
+                            />
+                        </FormGroup>
                     </div>
                     <div className={classNames(classes.title, classes.column)}>
                         <Typography className={classes.titleText} color='textPrimary' variant='overline'>
@@ -105,6 +131,7 @@ class PortfolioSelect extends Component {
 
 const mapStateToProps = store => ({
     portfolios: store.portfolios,
+    user: store.user
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(PortfolioSelect));

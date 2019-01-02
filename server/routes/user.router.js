@@ -43,4 +43,15 @@ router.post('/logout', (req, res) => {
     res.sendStatus(200);
 });
 
+router.put('/toggle-alerts', (req, res) => {
+    pool.query(`UPDATE "person" SET "alerts_on" = NOT "alerts_on" WHERE "id" =               $1`, [req.user.id])
+        .then( result => {
+            res.sendStatus(201);
+        })
+        .catch( err => {
+            console.log('error toggling alerts', err);
+            res.sendStatus(500);
+        })
+})
+
 module.exports = router;
