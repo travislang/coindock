@@ -48,9 +48,9 @@ class AlertsListItem extends Component {
     };
 
     render() {
-        const { classes, coin } = this.props;
+        const { classes, coin, user } = this.props;
         return (
-            <ListItem disabled={coin.alerts_on ? false : true} key={coin.id} button>
+            <ListItem disabled={user.alerts_on && coin.alerts_on ? false : true} key={coin.id} button>
                 <ListItemAvatar>
                     <Avatar
                         alt={`cryptocurrency logo`}
@@ -81,15 +81,11 @@ class AlertsListItem extends Component {
                         <DeleteIcon fontSize='small' />
                     </IconButton>
                     <Switch
-                        checked={coin.alerts_on}
+                        checked={user.alerts_on && coin.alerts_on}
                         onChange={this.handleToggle(coin.id)}
                         value="alerts on"
                         color="primary"
                     />
-                    {/* <Checkbox
-                                onChange={this.handleToggle(item.id)}
-                                checked={this.state.checked.indexOf(item.id) !== -1}
-                            /> */}
                 </ListItemSecondaryAction>
             </ListItem>
         )
@@ -97,6 +93,7 @@ class AlertsListItem extends Component {
 }
 
 const mapStateToProps = store => ({
+    user: store.user,
     alerts: store.alerts
 })
 

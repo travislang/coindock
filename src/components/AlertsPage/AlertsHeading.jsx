@@ -66,9 +66,7 @@ const styles = theme => ({
     },
 })
 
-class PortfolioSelect extends Component {
-
-    state
+class AlertsHeading extends Component {
 
     handleAddAlert = () => {
         
@@ -134,4 +132,4 @@ const mapStateToProps = store => ({
     user: store.user
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(PortfolioSelect));
+export default connect(mapStateToProps)(withStyles(styles)(AlertsHeading));

@@ -23,25 +23,8 @@ class AlertsList extends Component {
         this.props.dispatch({type: 'FETCH_ALERTS'})
     }
 
-    handleToggle = value => () => {
-        const { checked } = this.state;
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
-
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-
-        this.setState({
-            checked: newChecked,
-        });
-    };
-
     render() {
         const { classes, alerts } = this.props;
-        
         return (
             <List dense className={classes.root}>
                 {alerts.map(item => (
@@ -53,6 +36,7 @@ class AlertsList extends Component {
 }
 
 const mapStateToProps = store => ({
+    user: store.user,
     alerts: store.alerts
 })
 
