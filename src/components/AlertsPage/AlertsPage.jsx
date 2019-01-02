@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import PortfolioExpansionPanel from '../CoinExpansionPanel/PortfolioExpansionPanel';
-import PortfolioSelect from './PortfolioSelect';
+import AlertsHeading from './AlertsHeading';
+import AlertsList from './AlertsList';
 
 const styles = theme => ({
     root: {
@@ -14,24 +14,16 @@ const styles = theme => ({
     },
 });
 
-class PortfolioPage extends Component {
-
-    componentDidMount() {
-        this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
-    }
+class AlertsPage extends Component {
 
     render() {
         const { classes, portfolioSymbols } = this.props;
         return (
             <div className={classes.root}>
                 <Grid container justify='center' spacing={16}>
-                    <PortfolioSelect />
+                    <AlertsHeading />
                     <Grid item xs={11} md={9} lg={7}>
-                        {portfolioSymbols.map(item => {
-                            return (
-                                <PortfolioExpansionPanel key={item.id} coin={item} />
-                            )
-                        })}
+                        <AlertsList />
                     </Grid>
                 </Grid>
             </div>
@@ -44,4 +36,4 @@ const mapStateToProps = store => ({
     portfolioSymbols: store.portfolioSymbols
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(PortfolioPage));
+export default connect(mapStateToProps)(withStyles(styles)(AlertsPage));

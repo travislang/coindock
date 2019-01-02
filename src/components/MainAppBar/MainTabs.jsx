@@ -41,7 +41,7 @@ class MainTabs extends React.Component {
             >
                 <Tab className={classes.small} component={Link} to='/home' icon={<HomeIcon />} label="Home" />
                 <Tab className={classes.small} component={Link} to='/portfolio' icon={<BrokenImage />} label="Portfolio" />
-                <Tab className={classes.small} component={Link} to='/home' icon={<RssFeed />} label="Alerts" />
+                <Tab className={classes.small} component={Link} to='/alerts' icon={<RssFeed />} label="Alerts" />
             </Tabs>
         );
     }

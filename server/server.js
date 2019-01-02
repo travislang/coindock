@@ -19,6 +19,7 @@ const userRouter = require('./routes/user.router');
 const authRouter = require('./routes/auth.router');
 const cryptoRouter = require('./routes/crypto.router');
 const portfolioRouter = require('./routes/portfolio.router');
+const alertsRouter = require('./routes/alerts.router');
 
 //cors middleware
 // const corsOptions = {
@@ -38,10 +39,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 /* Routes */
+app.use('/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/crypto', cryptoRouter);
 app.use('/api/portfolio', portfolioRouter);
-app.use('/auth', authRouter);
+app.use('/api/alerts', alertsRouter);
+
 
 // Serve static files
 app.use(express.static('build'));

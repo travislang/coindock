@@ -16,6 +16,8 @@ import UserPage from '../UserPage/UserPage';
 import InfoPage from '../InfoPage/InfoPage';
 import PortfolioPage from '../PortfolioPage/PortfolioPage';
 import ProfilePage from '../ProfilePage/ProfilePage';
+import AlertsPage from '../AlertsPage/AlertsPage';
+import NewAlert from '../NewAlert/NewAlert';
 
 import './App.css';
 import 'typeface-roboto';
@@ -70,6 +72,14 @@ class App extends Component {
                             <ProtectedRoute
                                 path="/portfolio"
                                 component={PortfolioPage}
+                            />
+                            <ProtectedRoute
+                                path="/alerts"
+                                component={AlertsPage}
+                            />
+                            <ProtectedRoute
+                                path="/new-alert"
+                                component={NewAlert}
                             />
                             <ProtectedRoute
                                 path="/profile"
