@@ -80,37 +80,52 @@ router.get('/tickernames', (req, res) => {
 })
 
 router.get('/alltickers', (req, res) => {
+    const amount = req.query.q;
     //comment out to keep from hitting api
-    axios.get('https://api.binance.com/api/v1/ticker/24hr')
-    .then( response => {
-        for( let item of response.data) {
-            const params = [
-                item.lastPrice,
-                item.volume,
-                item.priceChangePercent,
-                item.symbol
-            ]
-            pool.query(`UPDATE "symbols"
-                    SET "last_price" = $1, "volume" = $2, "price_change" = $3
-                    WHERE "symbol" = $4;`, params)
-                .then( result => {
+    // axios.get('https://api.binance.com/api/v1/ticker/24hr')
+    // .then( response => {
+    //     for( let item of response.data) {
+    //         const params = [
+    //             item.lastPrice,
+    //             item.volume,
+    //             item.priceChangePercent,
+    //             item.symbol
+    //         ]
+    //         pool.query(`UPDATE "symbols"
+    //                 SET "last_price" = $1, "volume" = $2, "price_change" = $3
+    //                 WHERE "symbol" = $4;`, params)
+    //             .then( result => {
 
-                }).catch( err => {
-                    console.log('error updating db with prices', err);
+    //             }).catch( err => {
+    //                 console.log('error updating db with prices', err);
+    //             })
+    //     }
+        // query based on where the request is coming from - if it has offset param in query
+        if(amount != 'undefined') {
+            pool.query(`SELECT * FROM "symbols" ORDER BY "id" ASC LIMIT 20 OFFSET $1;`, [amount])
+                .then(result => {
+                    res.send(result.rows)
+                }).catch(err => {
+                    console.log('error getting symbols from db:', err);
+                    res.sendStatus(500);
                 })
         }
-        pool.query(`SELECT * FROM "symbols" ORDER BY "id" ASC LIMIT 10;`)
-            .then(result => {
-                res.send(result.rows)
-            }).catch(err => {
-                console.log('error getting symbols from db:', err);
-                res.sendStatus(500);
-            })
-    }).catch( err => {
-        console.log('error getting 24h data from binance', err);
-        res.sendStatus(500);
+        else {
+            pool.query(`SELECT * FROM "symbols" ORDER BY "id" ASC LIMIT 20;`)
+                .then(result => {
+                    res.send(result.rows)
+                }).catch(err => {
+                    console.log('error getting symbols from db:', err);
+                    res.sendStatus(500);
+                })
+        }
+        
     })
-})
+//     .catch( err => {
+//         console.log('error getting 24h data from binance', err);
+//         res.sendStatus(500);
+//     })
+// })
 
 
 module.exports = router;

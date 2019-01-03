@@ -3,7 +3,6 @@ require('dotenv').config();
 
 const app = express();
 const server = require('http').Server(app);
-const cors = require('cors')
 const bodyParser = require('body-parser');
 const sessionMiddleware = require('./modules/session-middleware');
 
@@ -20,12 +19,6 @@ const authRouter = require('./routes/auth.router');
 const cryptoRouter = require('./routes/crypto.router');
 const portfolioRouter = require('./routes/portfolio.router');
 const alertsRouter = require('./routes/alerts.router');
-
-//cors middleware
-// const corsOptions = {
-//     credentials: true,
-// };
-// app.use(cors(corsOptions));
 
 // Body parser middleware
 app.use(bodyParser.json());

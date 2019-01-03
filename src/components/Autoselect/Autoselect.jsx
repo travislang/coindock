@@ -174,7 +174,7 @@ function IntegrationDownshift(props) {
                             })}
                             <div {...getMenuProps()}>
                                 {isOpen ? (
-                                    <Paper className={classes.paper} elevation={10} square>
+                                    <Paper className={classes.paper} elevation={10}>
                                         {getSuggestions({inputValue, ...props}).map((suggestion, index) =>
                                             renderSuggestion({
                                                 suggestion,

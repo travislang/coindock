@@ -1,9 +1,9 @@
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest, takeEvery } from 'redux-saga/effects';
 import axios from 'axios';
 
-function* fetchTickers() {
+function* fetchTickers(action) {
     try{
-        const responseTickers = yield call(axios.get, '/api/crypto/alltickers')
+        const responseTickers = yield call(axios.get, `/api/crypto/alltickers?q=${action.payload}`)
         yield put({ type: 'SET_TICKERS', payload: responseTickers.data })
     } 
     catch( err ) {
@@ -22,7 +22,7 @@ function* fetchTickerNames() {
 }
 
 function* tickersSaga() {
-    yield takeLatest('FETCH_TICKERS', fetchTickers);
+    yield takeEvery('FETCH_TICKERS', fetchTickers);
     yield takeLatest('FETCH_TICKER_NAMES', fetchTickerNames);
 }
 

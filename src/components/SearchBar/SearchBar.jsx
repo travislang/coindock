@@ -84,18 +84,6 @@ class SearchBar extends Component {
                         </Typography>
                     </div>
                     <IntegrationDownshift />
-                    {/* <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
-                        <InputBase
-                            placeholder="Filter Coins..."
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                        />
-                    </div> */}
                 </Paper>
             </Grid>
         )

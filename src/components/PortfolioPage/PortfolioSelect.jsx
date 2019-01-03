@@ -8,11 +8,11 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import classNames from 'classnames';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircle from '@material-ui/icons/AddCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
-import LayersIcon from '@material-ui/icons/LayersOutlined';
 
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -166,15 +166,17 @@ class PortfolioSelect extends Component {
                         </Typography>
                     </div>
                     <div className={classNames(classes.column, classes.editButtons)}>
-                        <IconButton
-                            size='small'
-                            className={classes.button}
-                            aria-owns={anchorEl ? 'simple-menu' : undefined}
-                            aria-haspopup="true"
-                            onClick={this.handleClick}
-                        >
-                            <SettingsIcon fontSize='small' />
-                        </IconButton>
+                        <Tooltip title="Switch Portfolio" aria-label="Switch Portfolio">
+                            <IconButton
+                                size='small'
+                                className={classes.button}
+                                aria-owns={anchorEl ? 'simple-menu' : undefined}
+                                aria-haspopup="true"
+                                onClick={this.handleClick}
+                            >
+                                <SettingsIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
                         <Menu
                             id="simple-menu"
                             anchorEl={anchorEl}
@@ -187,24 +189,29 @@ class PortfolioSelect extends Component {
                                 )
                             })}
                         </Menu>
-                        <IconButton
-                            size='small'
-                            className={classes.deleteButton}
-                            aria-owns={anchorEl ? 'simple-menu' : undefined}
-                            aria-haspopup="true"
-                            onClick={this.handleDelete}
-                        >
-                            <DeleteIcon fontSize='small' />
-                        </IconButton>
-                        <IconButton
-                            size='small'
-                            className={classes.button}
-                            aria-owns={anchorEl ? 'simple-menu' : undefined}
-                            aria-haspopup="true"
-                            onClick={this.handleOpenDialog}
-                        >
-                            <AddCircle fontSize='small' />
-                        </IconButton>
+                        <Tooltip title="Delete Portfolio" aria-label="Delete Portfolio">
+                            <IconButton
+                                size='small'
+                                className={classes.deleteButton}
+                                aria-owns={anchorEl ? 'simple-menu' : undefined}
+                                aria-haspopup="true"
+                                onClick={this.handleDelete}
+                            >
+                                <DeleteIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="New Portfolio" aria-label="New Portfolio">
+                            <IconButton
+                                size='small'
+                                className={classes.button}
+                                aria-owns={anchorEl ? 'simple-menu' : undefined}
+                                aria-haspopup="true"
+                                onClick={this.handleOpenDialog}
+                            >
+                                <AddCircle fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
+                        
                         <Dialog
                             open={this.state.open}
                             onClose={this.handleCloseDialog}
