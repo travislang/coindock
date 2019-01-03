@@ -7,6 +7,7 @@ import portfolios from './portfolios.reducer';
 import expanded from './expanded.reducer';
 import portfolioSymbols from './portfolioSymbols.reducer';
 import alerts from './alerts.reducer';
+import tickerNames from './tickerNames.reducer';
 
 const rootReducer = combineReducers({
   errors, // contains registrationMessage and loginMessage
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   expanded, // used to control accordian expansion items
   portfolioSymbols,
   alerts,
+  tickerNames
 });
 
 export default rootReducer;

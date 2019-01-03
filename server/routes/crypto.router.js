@@ -69,6 +69,16 @@ router.get('/binance', (req, res) => {
         })
 })
 
+router.get('/tickernames', (req, res) => {
+    pool.query(`SELECT "id", "symbol_name" FROM "symbols" ORDER BY "id" ASC;`)
+        .then(result => {
+            res.send(result.rows)
+        }).catch(err => {
+            console.log('error getting symbol names from db:', err);
+            res.sendStatus(500);
+        })
+})
+
 router.get('/alltickers', (req, res) => {
     //comment out to keep from hitting api
     axios.get('https://api.binance.com/api/v1/ticker/24hr')

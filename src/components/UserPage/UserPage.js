@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import CoinExpansionPanel from '../CoinExpansionPanel/CoinExpansionPanel';
 import SearchBar from '../SearchBar/SearchBar';
 
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -20,6 +21,7 @@ class UserPage extends Component {
 
     componentDidMount() {
         this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
+        this.props.dispatch({ type: 'FETCH_TICKER_NAMES' })
         // const socket = io('http://localhost:5000');
         // socket.on('priceUpdate', (data) => {
         //     this.props.dispatch({
@@ -37,7 +39,9 @@ class UserPage extends Component {
             <div className={classes.root}>
                 <Grid container justify='center' spacing={16}>
                     <SearchBar />
+                    
                     <Grid item xs={11} md={9} lg={7}>
+                        
                         {tickers.map(item => {
                             return (
                                 <CoinExpansionPanel key={item.id} coin={item} />
