@@ -48,11 +48,9 @@ const styles = theme => ({
         color: theme.palette.textSecondary
     },
     avatar: {
-        padding: 5,
         marginRight: 10,
         width: 30,
         height: 30,
-        backgroundColor: theme.palette.grey[300]
     },
     button: {
         marginRight: theme.spacing.unit * 2,

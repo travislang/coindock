@@ -9,6 +9,8 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
+import IntegrationDownshift from '../Autoselect/Autoselect';
+
 const styles = theme => ({
     paper: {
         padding: theme.spacing.unit,
@@ -67,6 +69,7 @@ const styles = theme => ({
 })
 
 class SearchBar extends Component {
+
     render() {
         const { classes, portfolios } = this.props;
         return (
@@ -80,18 +83,7 @@ class SearchBar extends Component {
                             {portfolios.activePortfolio && portfolios.activePortfolio[0] && portfolios.activePortfolio[0].portfolio_name}
                         </Typography>
                     </div>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
-                        <InputBase
-                            placeholder="Filter Coins..."
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                        />
-                    </div>
+                    <IntegrationDownshift />
                 </Paper>
             </Grid>
         )
