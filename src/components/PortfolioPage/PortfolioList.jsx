@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import AlertListItem from './AlertListItem';
+import PortfolioExpansionPanel from '../CoinExpansionPanel/PortfolioExpansionPanel';
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -24,13 +24,14 @@ const reorder = (list, startIndex, endIndex) => {
 const getItemStyle = (isDragging, draggableStyle) => ({
     userSelect: 'none',
     listStyle: 'none',
+    borderBottom: `2px solid rgba(255, 255, 255, 0.12)`,
     backgroundColor: isDragging ? '#444444' : '#303030',
     // styles needed on draggables
     ...draggableStyle,
 });
 
 
-class AlertsList extends Component {
+class PortfolioList extends Component {
     constructor(props) {
         super(props);
         this.onDragEnd = this.onDragEnd.bind(this);
@@ -38,30 +39,29 @@ class AlertsList extends Component {
 
     // reorder alerts and send new array to redux
     onDragEnd = (result) => {
-        const { alerts } = this.props;
-        
+        const { portfolioSymbols } = this.props;
         // dropped outside the list
         if (!result.destination) {
             return;
         }
         const items = reorder(
-            alerts,
+            portfolioSymbols,
             result.source.index,
             result.destination.index
         );
-        this.props.dispatch({type: 'SET_ALERTS', payload: items})
+        this.props.dispatch({ type: 'SET_PORTFOLIO_SYMBOLS', payload: items })
     }
 
     componentDidMount() {
-        this.props.dispatch({type: 'FETCH_ALERTS'})
+        this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
     }
     // sends new list order to server to save in db
     componentWillUnmount() {
-        this.props.dispatch({ type: 'UPDATE_ALERTS_ORDER', payload: this.props.alerts})
+        
     }
 
     render() {
-        const { classes, alerts } = this.props;
+        const { classes, portfolioSymbols } = this.props;
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
                 <Droppable droppableId="droppable">
@@ -70,7 +70,7 @@ class AlertsList extends Component {
                             className={classes.root}
                             ref={provided.innerRef}
                         >
-                            {alerts.map((item, index) => (
+                            {portfolioSymbols.map((item, index) => (
                                 <Draggable key={item.id} draggableId={item.id} index={index}>
                                     {(provided, snapshot) => (
                                         <div
@@ -82,7 +82,7 @@ class AlertsList extends Component {
                                                 provided.draggableProps.style
                                             )}
                                         >
-                                            <AlertListItem coin={item} />
+                                            <PortfolioExpansionPanel  coin={item} />
                                         </div>
                                     )}
                                 </Draggable>
@@ -97,8 +97,7 @@ class AlertsList extends Component {
 }
 
 const mapStateToProps = store => ({
-    user: store.user,
-    alerts: store.alerts
+    portfolioSymbols: store.portfolioSymbols
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(AlertsList));
+export default connect(mapStateToProps)(withStyles(styles)(PortfolioList));

@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import PortfolioExpansionPanel from '../CoinExpansionPanel/PortfolioExpansionPanel';
+
 import PortfolioSelect from './PortfolioSelect';
+import PortfolioList from './PortfolioList';
 
 const styles = theme => ({
     root: {
@@ -27,11 +28,7 @@ class PortfolioPage extends Component {
                 <Grid container justify='center' spacing={16}>
                     <PortfolioSelect />
                     <Grid item xs={11} md={9} lg={7}>
-                        {portfolioSymbols.map(item => {
-                            return (
-                                <PortfolioExpansionPanel key={item.id} coin={item} />
-                            )
-                        })}
+                        <PortfolioList />
                     </Grid>
                 </Grid>
             </div>
