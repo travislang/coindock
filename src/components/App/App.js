@@ -39,6 +39,8 @@ class App extends Component {
     componentDidMount() {
         this.props.dispatch({ type: 'FETCH_USER' })
         this.props.dispatch({ type: 'FETCH_TICKERS' })
+        //so its loaded by the time user goes to alerts page
+        this.props.dispatch({ type: 'FETCH_ALERTS' })
     }
 
     render() {

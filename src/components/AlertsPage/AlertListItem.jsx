@@ -50,7 +50,7 @@ class AlertsListItem extends Component {
     render() {
         const { classes, coin, user } = this.props;
         return (
-            <ListItem disabled={user.alerts_on && coin.alerts_on ? false : true} key={coin.id} button>
+            <ListItem disabled={user.alerts_on && coin.alerts_on ? false : true} key={coin.id}>
                 <ListItemAvatar>
                     <Avatar
                         alt={`cryptocurrency logo`}
