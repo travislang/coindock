@@ -21,9 +21,17 @@ function* toggleCoinAlerts(action) {
     }
 }
 
+//this function updates db to match the list order user set
+function* updateAlertsOrder(action) {
+    yield call(axios.put, '/api/alerts/update-order', {data: action.payload})
+}
+
 function* alertsSaga() {
     yield takeLatest('FETCH_ALERTS', fetchAlerts);
     yield takeLatest('TOGGLE_COIN_ALERTS', toggleCoinAlerts);
+    yield takeLatest('UPDATE_ALERTS_ORDER', updateAlertsOrder);
 }
+
+
 
 export default alertsSaga;
