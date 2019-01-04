@@ -11,6 +11,9 @@ import Grid from '@material-ui/core/Grid';
 import CoinExpansionPanel from '../CoinExpansionPanel/CoinExpansionPanel';
 import SearchBar from '../SearchBar/SearchBar';
 
+import Snackbar from '@material-ui/core/Snackbar';
+import AlertSnackbar from '../AlertSnackbar/AlertSnackbar';
+import Slide from '@material-ui/core/Slide';
 
 const styles = theme => ({
     root: {
@@ -20,13 +23,55 @@ const styles = theme => ({
 });
 
 class UserPage extends Component {
+    queue = [];
 
+    state = {
+        expanded: null,
+        open: false,
+        messageInfo: {}
+    };
+
+    //function to fetch more coins as user scrolls
     loadCoins = (page) => {
-        console.log('in loadcoins');
-        
         const amount = page * 20;
         this.props.dispatch({type: 'FETCH_TICKERS', payload: amount})
     }
+    // handles snackbar close
+    handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        this.setState({ open: false })
+    };
+
+    openSnackbar = (name) => {
+        console.log('in open snackbar');
+        
+        this.queue.push({
+            name: name,
+            key: new Date().getTime(),
+        });
+        if (this.state.open) {
+            // immediately begin dismissing current message
+            // to start showing new one
+            this.setState({ open: false });
+        } else {
+            this.processQueue();
+        }
+    }
+
+    processQueue = () => {
+        if (this.queue.length > 0) {
+            this.setState({
+                messageInfo: this.queue.shift(),
+                open: true,
+            });
+        }
+    };
+
+    handleExited = () => {
+        this.processQueue();
+    };
 
     componentDidMount() {
         this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
@@ -61,11 +106,30 @@ class UserPage extends Component {
                         >
                             {tickers.map(item => {
                                 return (
-                                    <CoinExpansionPanel key={item.id} coin={item} />
+                                    <CoinExpansionPanel key={item.id} coin={item} openSnackbar={this.openSnackbar} />
                                 )
                             })}
                         </InfiniteScroll>
-                        
+                        <Snackbar
+                            key={this.state.messageInfo.key}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+                            TransitionComponent={Slide}
+                            TransitionProps={{ direction: "right" }}
+                            open={this.state.open}
+                            autoHideDuration={5000}
+                            onClose={this.handleClose}
+                            onExited={this.handleExited}
+                        >
+                            <AlertSnackbar
+                                variant='success'
+                                message='added to portfolio'
+                                name={this.state.messageInfo.name}
+                                handleClose={this.handleClose}
+                            />
+                        </Snackbar>
                     </Grid>
                 </Grid>
             </div>

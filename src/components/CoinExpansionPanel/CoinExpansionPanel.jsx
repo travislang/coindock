@@ -57,11 +57,16 @@ const styles = theme => ({
         marginRight: theme.spacing.unit,
     },
     chip: {
+        color: theme.palette.text.disabled,
         marginLeft: theme.spacing.unit * 2,
     },
+    chipIcon: {
+        color: theme.palette.text.disabled,
+    }
 });
 
 class CoinExpansionPanel extends Component {
+
     state = {
         expanded: null,
     };
@@ -77,19 +82,19 @@ class CoinExpansionPanel extends Component {
     };
 
     // add coin to active portfolio
-    addCoin = name => {
+    addCoin = ({id, symbol_name}) => {
         this.props.dispatch({
             type: 'ADD_COIN',
             payload: {
                 portfolio: this.props.portfolios.activePortfolio[0].id,
-                coin: name
+                coin: id
             }
         })
+        this.props.openSnackbar(symbol_name)
     }
 
     render() {
-        const { classes, coin, portfolioSymbols } = this.props;
-        const { expanded } = this.props;
+        const { classes, coin, portfolioSymbols, portfolios, expanded } = this.props;
         let addedChip = '';
         if (portfolioSymbols.length > 0) {
             let match = portfolioSymbols.filter( item => {
@@ -97,7 +102,7 @@ class CoinExpansionPanel extends Component {
             })
             if (match.length === 1) {
                 addedChip = (<Chip
-                    icon={<DoneAll />}
+                    icon={<DoneAll className={classes.chipIcon} />}
                     label="Added to Portfolio"
                     className={classes.chip}
                     variant="outlined"
@@ -140,7 +145,7 @@ class CoinExpansionPanel extends Component {
                 </ExpansionPanelDetails>
                 <Divider />
                 <ExpansionPanelActions>
-                    <Button onClick={() => this.addCoin(coin.id)} variant="contained" color="primary" className={classes.button}>
+                    <Button onClick={() => this.addCoin(coin)} variant="contained" color="primary" className={classes.button}>
                         <AddIcon className={classes.leftIcon} />
                         Add
                         </Button>
@@ -153,7 +158,7 @@ class CoinExpansionPanel extends Component {
 const mapStateToProps = store => ({
     expanded: store.expanded,
     portfolioSymbols: store.portfolioSymbols,
-    portfolios: store.portfolios
+    portfolios: store.portfolios,
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(CoinExpansionPanel));
