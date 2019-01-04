@@ -83,7 +83,7 @@ class SearchBar extends Component {
                             {portfolios.activePortfolio && portfolios.activePortfolio[0] && portfolios.activePortfolio[0].portfolio_name}
                         </Typography>
                     </div>
-                    <IntegrationDownshift />
+                    <IntegrationDownshift message='Filter Coins...' />
                 </Paper>
             </Grid>
         )

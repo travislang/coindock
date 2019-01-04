@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import deburr from 'lodash/deburr';
@@ -14,11 +14,10 @@ import SearchIcon from '@material-ui/icons/Search';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
 function renderInput(inputProps) {
-    const { InputProps, classes, ref, ...other } = inputProps;
+    const { InputProps, classes, ref, message, ...other } = inputProps;
 
     return (
         <TextField
-            placeholder="Filter Coins..."
             InputProps={{
                 inputRef: ref,
                 classes: {
@@ -34,7 +33,8 @@ function renderInput(inputProps) {
 
 function renderSuggestion({ suggestion, index, itemProps, highlightedIndex, selectedItem }) {
     const isHighlighted = highlightedIndex === index;
-    const isSelected = (selectedItem || '').indexOf(suggestion.label) > -1;
+    const isSelected = (selectedItem || '').indexOf(suggestion.symbol_name) > -1;
+    console.log(suggestion);
     return (
         <MenuItem
             {...itemProps}
@@ -59,8 +59,6 @@ renderSuggestion.propTypes = {
 };
 
 function getSuggestions(props) {
-    console.log('in get suggestions. value:', props);
-    
     const inputValue = props.inputValue.trim().toLowerCase();
     const inputLength = inputValue.length;
     let count = 0;
@@ -148,50 +146,73 @@ const styles = theme => ({
     }
 });
 
-function IntegrationDownshift(props) {
-    const { classes } = props;
 
-    return (
-        <div className={classes.container}>
-            <Downshift id="downshift-simple">
-                {({
-                    getInputProps,
-                    getItemProps,
-                    getMenuProps,
-                    highlightedIndex,
-                    inputValue,
-                    isOpen,
-                    selectedItem,
-                }) => (
-                        <div>
-                            <div className={classes.searchIcon}>
-                                <SearchIcon />
+
+class IntegrationDownshift extends Component {
+    
+
+    handleSelection = (selected) => {
+        try {
+            if (this.props.handleSelection) {
+                this.props.handleSelection(selected);
+            }
+            else {
+                throw 'no selection function was passed down in props to AustoSelect component'
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    render() {
+        const { classes, message, coinId } = this.props;
+        return (
+            <div className={classes.container}>
+                <Downshift
+                    id="downshift-simple"
+                    onChange={(selection) => this.handleSelection(selection)}
+                    itemToString={item => (item ? item.symbol_name : '')}
+                >
+                    {({
+                        getInputProps,
+                        getItemProps,
+                        getMenuProps,
+                        highlightedIndex,
+                        inputValue,
+                        isOpen,
+                        selectedItem,
+                    }) => (
+                            <div>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon />
+                                </div>
+                                {renderInput({
+                                    fullWidth: true,
+                                    classes,
+                                    InputProps: getInputProps({
+                                        placeholder: message
+                                    }),
+                                })}
+                                <div {...getMenuProps()}>
+                                    {isOpen ? (
+                                        <Paper className={classes.paper} elevation={10}>
+                                            {getSuggestions({ inputValue, ...this.props }).map((suggestion, index) =>
+                                                renderSuggestion({
+                                                    suggestion,
+                                                    index,
+                                                    itemProps: getItemProps({ item: suggestion }),
+                                                    highlightedIndex,
+                                                    selectedItem,
+                                                }),
+                                            )}
+                                        </Paper>
+                                    ) : null}
+                                </div>
                             </div>
-                            {renderInput({
-                                fullWidth: true,
-                                classes,
-                                InputProps: getInputProps(),
-                            })}
-                            <div {...getMenuProps()}>
-                                {isOpen ? (
-                                    <Paper className={classes.paper} elevation={10}>
-                                        {getSuggestions({inputValue, ...props}).map((suggestion, index) =>
-                                            renderSuggestion({
-                                                suggestion,
-                                                index,
-                                                itemProps: getItemProps({ item: suggestion.symbol_name }),
-                                                highlightedIndex,
-                                                selectedItem,
-                                            }),
-                                        )}
-                                    </Paper>
-                                ) : null}
-                            </div>
-                        </div>
-                    )}
-            </Downshift>
-        </div>
-    );
+                        )}
+                </Downshift>
+            </div>
+        )
+    }
 }
 
 IntegrationDownshift.propTypes = {

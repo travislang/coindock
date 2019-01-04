@@ -8,8 +8,11 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
+
 import CoinExpansionPanel from '../CoinExpansionPanel/CoinExpansionPanel';
 import SearchBar from '../SearchBar/SearchBar';
+
+import { withSnackbar } from 'notistack';
 
 
 const styles = theme => ({
@@ -26,6 +29,14 @@ class UserPage extends Component {
         
         const amount = page * 20;
         this.props.dispatch({type: 'FETCH_TICKERS', payload: amount})
+    }
+
+    snackbarControl = (name) => {
+        const { enqueueSnackbar } = this.props;
+        enqueueSnackbar(`${name} was added to portfolio`, {
+            variant: 'success',
+            autoHideDuration: 5000
+        })
     }
 
     componentDidMount() {
@@ -61,7 +72,11 @@ class UserPage extends Component {
                         >
                             {tickers.map(item => {
                                 return (
-                                    <CoinExpansionPanel key={item.id} coin={item} />
+                                    <CoinExpansionPanel 
+                                        key={item.id} 
+                                        coin={item} 
+                                        snackbarControl={this.snackbarControl}
+                                        />
                                 )
                             })}
                         </InfiniteScroll>
@@ -79,4 +94,4 @@ const mapStateToProps = state => ({
 });
 
 // this allows us to use <App /> in index.js
-export default connect(mapStateToProps)(withStyles(styles)(UserPage));
+export default connect(mapStateToProps)(withStyles(styles)(withSnackbar(UserPage)));

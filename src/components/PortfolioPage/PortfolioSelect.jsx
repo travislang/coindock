@@ -17,6 +17,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import { withSnackbar } from 'notistack';
 
 // dialog dependencies
 import Button from '@material-ui/core/Button';
@@ -85,9 +86,6 @@ const styles = theme => ({
         display: 'flex',
         justifyContent: 'flex-end'
     },
-    layerIcon: {
-        marginRight: theme.spacing.unit * 2
-    },
 })
 
 class PortfolioSelect extends Component {
@@ -106,12 +104,13 @@ class PortfolioSelect extends Component {
         this.setState({ anchorElSettings: event.currentTarget });
     };
 
-    handleClose = (id) => {
-        console.log('click menu id', id);
+    handleClose = (item) => {
+        const { enqueueSnackbar } = this.props;
+        const currentPortfolio = this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0];
         this.setState({ anchorEl: null });
         // check to make sure user closed menu by clicking a portfolio item
-        if (Number(id)) {
-            this.props.dispatch({ type: 'SET_ACTIVE', payload: { data: id } })
+        if (Number(item.id) && currentPortfolio.id != item.id ) {
+            this.props.dispatch({ type: 'SET_ACTIVE', payload: { data: item.id }})
         }
     };
 
@@ -129,13 +128,17 @@ class PortfolioSelect extends Component {
         })
     }
 
+    // add new portfolio 
     handleAdd = () => {
         this.props.dispatch({type: 'ADD_PORTFOLIO', payload: {data: this.state.newPortfolio}})
         this.handleCloseDialog();
         this.setState({
             newPortfolio: ''
         })
-        
+        this.props.enqueueSnackbar(`added new portfolio`, {
+            variant: 'success',
+            autoHideDuration: 5000
+        })
     }
 
     handleDelete = () => {
@@ -149,6 +152,10 @@ class PortfolioSelect extends Component {
                 portfolioId: this.props.portfolios.activePortfolio[0].id,
                 portfolioToMakeActive: portfolioToMakeActive.id
             }
+        })
+        this.props.enqueueSnackbar(`portfolio ${this.props.portfolios.activePortfolio[0].portfolio_name} deleted`, {
+            variant: 'success',
+            autoHideDuration: 5000
         })
     }
 
@@ -185,7 +192,7 @@ class PortfolioSelect extends Component {
                         >
                             {portfolios.portfolios && portfolios.portfolios.map(item => {
                                 return (
-                                    <MenuItem key={item.id} onClick={() => this.handleClose(item.id)}>{item.portfolio_name}</MenuItem>
+                                    <MenuItem key={item.id} onClick={() => this.handleClose(item)}>{item.portfolio_name}</MenuItem>
                                 )
                             })}
                         </Menu>
@@ -213,6 +220,7 @@ class PortfolioSelect extends Component {
                         </Tooltip>
                         
                         <Dialog
+                            className={classes.dialog}
                             open={this.state.open}
                             onClose={this.handleCloseDialog}
                             aria-labelledby="form-dialog-title"
@@ -250,4 +258,4 @@ const mapStateToProps = store => ({
     portfolios: store.portfolios,
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(PortfolioSelect));
+export default connect(mapStateToProps)(withStyles(styles)(withSnackbar(PortfolioSelect)));

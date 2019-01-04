@@ -5,7 +5,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
+import AutoSelect from '../Autoselect/Autoselect';
 import TextField from '@material-ui/core/TextField';
 
 import Radio from '@material-ui/core/Radio';
@@ -23,6 +23,11 @@ const styles = theme => ({
     root: {
         width: '100%',
         position: 'relative',
+    },
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
     },
     button: {
         marginRight: theme.spacing.unit,
@@ -53,6 +58,7 @@ function getSteps() {
 class AlertStepper extends Component {
     state = {
         activeStep: 0,
+        coinName: '',
         direction: '',
         price: ''
     };
@@ -91,10 +97,20 @@ class AlertStepper extends Component {
 
     }
 
+    // called when user selects item from search form
+    handleSelection = (name) => {
+        this.setState({
+            coin: name.id,
+            activeStep: 1
+        })
+    }
+
     render() {
-        const { classes } = this.props;
+        // coinId is passed in as prop
+        const { classes, coinId } = this.props;
         const steps = getSteps();
         const { activeStep } = this.state;
+        console.log('alert stepper', coinId)
 
         return (
             <div className={classes.root}>
@@ -107,22 +123,14 @@ class AlertStepper extends Component {
                         );
                     })}
                 </Stepper>
-                <div>
+                <div className={classes.container}>
                     <Typography align='center' variant="h5" gutterBottom>
                         ADD NEW ALERT
-                            </Typography>
-                    <TextField
-                        id="standard-name"
-                        label="Cryptocurrency"
-                        className={classes.textField}
-                        value={this.state.name}
-                        
-                        placeholder='Pick a coin'
-                        margin="normal"
-                        autoFocus
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
+                    </Typography>
+                    <AutoSelect 
+                        message='search for a coin...'
+                        handleSelection={this.handleSelection}
+                        coinId={coinId}
                     />
                     {activeStep >= 1 && (
                         <div>
@@ -170,13 +178,6 @@ class AlertStepper extends Component {
                         </div>
                     ) : (
                         <div>
-                            <Fab 
-                                className={classes.fab} 
-                                color='primary'
-                                onClick={this.handleNext}
-                                >
-                                <ArrowForward />
-                            </Fab>
                         </div>
                     )}
                 </div>

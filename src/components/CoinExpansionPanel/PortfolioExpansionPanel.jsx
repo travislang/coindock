@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
+
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -74,6 +75,10 @@ class PortfolioExpansionPanel extends Component {
         this.props.dispatch({ type: 'SET_EXPANDED', payload: toggle })
     };
 
+    addAlert = (coinId) => {
+
+    }
+
     componentDidMount() {
         this.props.dispatch({ type: 'SET_EXPANDED', payload: false })
     }
@@ -83,6 +88,7 @@ class PortfolioExpansionPanel extends Component {
     render() {
         const { classes, coin, portfolioSymbols } = this.props;
         const { expanded } = this.props;
+        const alertUrl = `/new-alert/${coin.id}`;
         // let addedChip = '';
         // if (portfolioSymbols.length > 0) {
         //     let match = portfolioSymbols.filter(item => {
@@ -137,7 +143,7 @@ class PortfolioExpansionPanel extends Component {
                         <DeleteIcon className={classes.leftIcon} />
                         Remove
                     </Button>
-                    <Button onClick={() => this.addCoin(coin.id)} variant="contained" color="primary" className={classes.button}>
+                    <Button component={Link} to={alertUrl} variant="contained" color="primary" className={classes.button}>
                         <TapAndPlay className={classes.leftIcon} />
                         Set Alert
                     </Button>

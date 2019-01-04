@@ -45,14 +45,15 @@ class NewAlert extends Component {
 
 
     render() {
+        //get coinId passed as param in router
+        const match = this.props.match.params;
         const { classes } = this.props;
         return (
             <div className={classes.root}>
                 <Grid container justify='center' alignItems='center' className={classes.rootContainer} >
                     <Grid item xs={12} sm={10} md={9} lg={7}>
                         <Paper className={classes.paper} elevation={5}>
-                            <AlertStepper />
-                            
+                            <AlertStepper coinId={match.id}/>
                         </Paper>
                     </Grid>
                 </Grid>

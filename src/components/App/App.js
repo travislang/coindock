@@ -85,7 +85,7 @@ class App extends Component {
                                 component={AlertsPage}
                             />
                             <ProtectedRoute
-                                path="/new-alert"
+                                path="/new-alert/:id"
                                 component={NewAlert}
                             />
                             <ProtectedRoute
