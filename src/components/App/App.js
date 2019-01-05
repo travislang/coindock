@@ -39,6 +39,7 @@ class App extends Component {
     componentDidMount() {
         this.props.dispatch({ type: 'FETCH_USER' })
         this.props.dispatch({ type: 'FETCH_TICKERS' })
+        this.props.dispatch({ type: 'FETCH_TICKER_NAMES' })
         //so its loaded by the time user goes to alerts page
         this.props.dispatch({ type: 'FETCH_ALERTS' })
     }
@@ -85,7 +86,7 @@ class App extends Component {
                                 component={AlertsPage}
                             />
                             <ProtectedRoute
-                                path="/new-alert"
+                                path="/new-alert/:id"
                                 component={NewAlert}
                             />
                             <ProtectedRoute

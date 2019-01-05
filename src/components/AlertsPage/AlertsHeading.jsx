@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
+import { withSnackbar } from 'notistack';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -75,7 +76,13 @@ class AlertsHeading extends Component {
     }
 
     handleToggle =  () => {
+        const { enqueueSnackbar } = this.props;
+        const toggle = this.props.user.alerts_on ? 'off' : 'on';
         this.props.dispatch({type: 'TOGGLE_ALERTS'})
+        enqueueSnackbar(`all alerts turned ${toggle}`, {
+            variant: 'warning',
+            autoHideDuration: 4000
+        })
     };
 
     render() {
@@ -114,7 +121,7 @@ class AlertsHeading extends Component {
                         <IconButton
                             size='small'
                             component={Link}
-                            to='/new-alert'
+                            to='/new-alert/new'
                             className={classes.button}
                             onClick={this.handleAddAlert}
                         >
@@ -132,4 +139,4 @@ const mapStateToProps = store => ({
     user: store.user
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(AlertsHeading));
+export default connect(mapStateToProps)(withStyles(styles)(withSnackbar(AlertsHeading)));

@@ -16,6 +16,8 @@ const styles = theme => ({
 
 class AlertsPage extends Component {
 
+    
+
     render() {
         const { classes, portfolioSymbols } = this.props;
         return (

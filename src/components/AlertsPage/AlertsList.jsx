@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AlertListItem from './AlertListItem';
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import ReorderIcon from '@material-ui/icons/Reorder';
 
 const styles = theme => ({
     root: {
@@ -76,13 +77,12 @@ class AlertsList extends Component {
                                         <div
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
-                                            {...provided.dragHandleProps}
                                             style={getItemStyle(
                                                 snapshot.isDragging,
                                                 provided.draggableProps.style
                                             )}
                                         >
-                                            <AlertListItem coin={item} />
+                                            <AlertListItem dragHandleProps={provided.dragHandleProps} coin={item} />
                                         </div>
                                     )}
                                 </Draggable>

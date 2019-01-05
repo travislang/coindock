@@ -14,11 +14,15 @@ import green from '@material-ui/core/colors/green';
 
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ReorderIcon from '@material-ui/icons/Reorder';
 
 const styles = theme => ({
     root: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
+    },
+    listItem: {
+        borderBottom: `1px solid ${theme.palette.divider}`
     },
     inline: {
         display: 'inline',
@@ -39,6 +43,15 @@ const styles = theme => ({
             color: theme.palette.error.dark,
         },
     },
+    icon: {
+        margin: theme.spacing.unit,
+        // fontSize: 32,
+    },
+    centerButtons: {
+        display: 'flex',
+        alignItems: 'center'
+    }
+
 });
 
 class AlertsListItem extends Component {
@@ -50,7 +63,7 @@ class AlertsListItem extends Component {
     render() {
         const { classes, coin, user } = this.props;
         return (
-            <ListItem disabled={user.alerts_on && coin.alerts_on ? false : true} key={coin.id}>
+            <ListItem className={classes.listItem} disabled={user.alerts_on && coin.alerts_on ? false : true} key={coin.id}>
                 <ListItemAvatar>
                     <Avatar
                         alt={`cryptocurrency logo`}
@@ -72,7 +85,7 @@ class AlertsListItem extends Component {
                         </React.Fragment>
                     }
                 />
-                <ListItemSecondaryAction>
+                <ListItemSecondaryAction className={classes.centerButtons}>
                     <IconButton
                         size='small'
                         className={classes.button}
@@ -86,6 +99,15 @@ class AlertsListItem extends Component {
                         value="alerts on"
                         color="primary"
                     />
+                    <div 
+                        style={{display: 'inline-block'}}
+                        {...this.props.dragHandleProps}>
+                        <ReorderIcon
+                            className={classes.icon}
+                            color="disabled"
+                        />
+                    </div>
+                    
                 </ListItemSecondaryAction>
             </ListItem>
         )

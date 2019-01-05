@@ -5,7 +5,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
+import AutoSelect from '../Autoselect/Autoselect';
 import TextField from '@material-ui/core/TextField';
 
 import Radio from '@material-ui/core/Radio';
@@ -23,6 +23,14 @@ const styles = theme => ({
     root: {
         width: '100%',
         position: 'relative',
+    },
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    heading: {
+        marginBottom: theme.spacing.unit * 3
     },
     button: {
         marginRight: theme.spacing.unit,
@@ -53,9 +61,20 @@ function getSteps() {
 class AlertStepper extends Component {
     state = {
         activeStep: 0,
+        coinName: '',
         direction: '',
         price: ''
     };
+
+    componentDidMount() {
+        const { activeStep } = this.state;
+        if(!Number(this.props.coinId).isNan) {
+            this.setState({
+                coinName: this.props.coinId,
+                activeStep: activeStep + 1
+            })
+        }
+    }
 
     handleNext = () => {
         const { activeStep } = this.state;
@@ -77,7 +96,11 @@ class AlertStepper extends Component {
     };
 
     handleRadioChange = event => {
-        this.setState({ direction: event.target.value });
+        const { activeStep } = this.state;
+        this.setState({
+            direction: event.target.value,
+            activeStep: activeStep + 1,
+        });
     };
 
     handleChange = name => e => {
@@ -91,11 +114,20 @@ class AlertStepper extends Component {
 
     }
 
+    // called when user selects item from search form
+    handleSelection = (name) => {
+        console.log('in handle selection', name);
+        this.setState({
+            coinName: name.id,
+            activeStep: 1
+        })
+    }
+
     render() {
-        const { classes } = this.props;
+        // coinId is passed in as prop
+        const { classes, coinId } = this.props;
         const steps = getSteps();
         const { activeStep } = this.state;
-
         return (
             <div className={classes.root}>
                 <Stepper activeStep={activeStep}>
@@ -107,22 +139,14 @@ class AlertStepper extends Component {
                         );
                     })}
                 </Stepper>
-                <div>
-                    <Typography align='center' variant="h5" gutterBottom>
+                <div className={classes.container}>
+                    <Typography align='center' variant="h5" className={classes.heading}>
                         ADD NEW ALERT
-                            </Typography>
-                    <TextField
-                        id="standard-name"
-                        label="Cryptocurrency"
-                        className={classes.textField}
-                        value={this.state.name}
-                        
-                        placeholder='Pick a coin'
-                        margin="normal"
-                        autoFocus
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
+                    </Typography>
+                    <AutoSelect 
+                        message='search for a coin...'
+                        handleSelection={this.handleSelection}
+                        coinId={coinId}
                     />
                     {activeStep >= 1 && (
                         <div>
@@ -170,13 +194,6 @@ class AlertStepper extends Component {
                         </div>
                     ) : (
                         <div>
-                            <Fab 
-                                className={classes.fab} 
-                                color='primary'
-                                onClick={this.handleNext}
-                                >
-                                <ArrowForward />
-                            </Fab>
                         </div>
                     )}
                 </div>
