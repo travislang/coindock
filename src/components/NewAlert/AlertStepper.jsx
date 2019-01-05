@@ -29,6 +29,9 @@ const styles = theme => ({
         flexDirection: 'column',
         alignItems: 'center'
     },
+    heading: {
+        marginBottom: theme.spacing.unit * 3
+    },
     button: {
         marginRight: theme.spacing.unit,
     },
@@ -63,6 +66,16 @@ class AlertStepper extends Component {
         price: ''
     };
 
+    componentDidMount() {
+        const { activeStep } = this.state;
+        if(!Number(this.props.coinId).isNan) {
+            this.setState({
+                coinName: this.props.coinId,
+                activeStep: activeStep + 1
+            })
+        }
+    }
+
     handleNext = () => {
         const { activeStep } = this.state;
         this.setState({
@@ -83,7 +96,11 @@ class AlertStepper extends Component {
     };
 
     handleRadioChange = event => {
-        this.setState({ direction: event.target.value });
+        const { activeStep } = this.state;
+        this.setState({
+            direction: event.target.value,
+            activeStep: activeStep + 1,
+        });
     };
 
     handleChange = name => e => {
@@ -99,8 +116,9 @@ class AlertStepper extends Component {
 
     // called when user selects item from search form
     handleSelection = (name) => {
+        console.log('in handle selection', name);
         this.setState({
-            coin: name.id,
+            coinName: name.id,
             activeStep: 1
         })
     }
@@ -110,8 +128,6 @@ class AlertStepper extends Component {
         const { classes, coinId } = this.props;
         const steps = getSteps();
         const { activeStep } = this.state;
-        console.log('alert stepper', coinId)
-
         return (
             <div className={classes.root}>
                 <Stepper activeStep={activeStep}>
@@ -124,7 +140,7 @@ class AlertStepper extends Component {
                     })}
                 </Stepper>
                 <div className={classes.container}>
-                    <Typography align='center' variant="h5" gutterBottom>
+                    <Typography align='center' variant="h5" className={classes.heading}>
                         ADD NEW ALERT
                     </Typography>
                     <AutoSelect 

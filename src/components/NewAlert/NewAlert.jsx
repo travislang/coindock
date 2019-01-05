@@ -37,13 +37,7 @@ const styles = theme => ({
 });
 
 class NewAlert extends Component {
-    state = {
-        name: '',
-        password: '',
-    };
-
-
-
+   
     render() {
         //get coinId passed as param in router
         const match = this.props.match.params;

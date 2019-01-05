@@ -59,13 +59,15 @@ renderSuggestion.propTypes = {
 };
 
 function getSuggestions(props) {
+    console.log('sugges', props);
+    
     const inputValue = props.inputValue.trim().toLowerCase();
     const inputLength = inputValue.length;
     let count = 0;
 
     return inputLength === 0
         ? []
-        : props.tickers.filter(suggestion => {
+        : props.tickerNames.filter(suggestion => {
             const keep =
                 count < 5 && suggestion.symbol_name.slice(0, inputLength).toLowerCase() === inputValue;
 
@@ -149,7 +151,10 @@ const styles = theme => ({
 
 
 class IntegrationDownshift extends Component {
-    
+
+    componentDidMount() {
+        this.props.dispatch({ type: 'FETCH_TICKER_NAMES' });
+    }
 
     handleSelection = (selected) => {
         try {
@@ -157,7 +162,7 @@ class IntegrationDownshift extends Component {
                 this.props.handleSelection(selected);
             }
             else {
-                throw 'no selection function was passed down in props to AustoSelect component'
+                throw 'no selection function was passed down in props to AutoSelect component'
             }
         } catch (err) {
             console.log(err)
@@ -165,12 +170,20 @@ class IntegrationDownshift extends Component {
     }
     render() {
         const { classes, message, coinId } = this.props;
+        let initialId = this.props.tickerNames.filter(item => {
+            return item.id === Number(coinId)
+        });
+        initialId = initialId.length > 0 ? initialId[0].symbol_name : ''
+        console.log(initialId);
+        
+        
         return (
             <div className={classes.container}>
                 <Downshift
                     id="downshift-simple"
                     onChange={(selection) => this.handleSelection(selection)}
                     itemToString={item => (item ? item.symbol_name : '')}
+                    initialInputValue={initialId}
                 >
                     {({
                         getInputProps,
@@ -220,7 +233,7 @@ IntegrationDownshift.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    tickers: state.tickerNames,
+    tickerNames: state.tickerNames,
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(IntegrationDownshift));

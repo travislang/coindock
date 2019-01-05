@@ -13,6 +13,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
+import ReorderIcon from '@material-ui/icons/Reorder';
 
 import Chip from '@material-ui/core/Chip';
 import DoneAll from '@material-ui/icons/DoneAll';
@@ -21,9 +22,14 @@ import TapAndPlay from '@material-ui/icons/TapAndPlay';
 import DeleteIcon from '@material-ui/icons/Delete';
 import green from '@material-ui/core/colors/green';
 
+
 const styles = theme => ({
     root: {
         width: '100%',
+    },
+    summaryRoot: {
+        paddingRight: 8,
+        
     },
     heading: {
         flexGrow: 1,
@@ -39,7 +45,7 @@ const styles = theme => ({
     },
     textPercent: {
         color: green[400],
-        marginRight: theme.spacing.unit * 2,
+        marginRight: theme.spacing.unit * 6,
     },
     column: {
         flexBasis: '33%',
@@ -61,6 +67,12 @@ const styles = theme => ({
     },
     chip: {
         marginLeft: theme.spacing.unit * 2,
+    },
+    expandIcon: {
+        marginRight: theme.spacing.unit * 4
+    },
+    icon: {
+        margin: theme.spacing.unit,
     },
 });
 
@@ -105,7 +117,7 @@ class PortfolioExpansionPanel extends Component {
         // }
         return (
             <ExpansionPanel expanded={expanded === coin.id} onChange={this.handleChange(coin.id)}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon color='disabled' />}>
+                <ExpansionPanelSummary classes={{ expandIcon: classes.expandIcon, root: classes.summaryRoot}} expandIcon={<ExpandMoreIcon color='disabled' />}>
                     <div className={classes.heading}>
                         <Avatar alt="crypto logo" src={coin.logo} className={classes.avatar} />
                         <Typography className={classes.textName}>
@@ -115,6 +127,14 @@ class PortfolioExpansionPanel extends Component {
                     </div>
                     <Typography variant='h4' className={classes.textPrice}>{Number(coin.last_price).toFixed(2)}</Typography>
                     <Typography variant='overline' className={classes.textPercent}>{Number(coin.price_change).toFixed(2)}%</Typography>
+                    <div
+                        style={{ display: 'inline-block', paddingRight: 0 }}
+                        {...this.props.dragHandleProps}>
+                        <ReorderIcon
+                            className={classes.icon}
+                            color="disabled"
+                        />
+                    </div>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <div className={classes.column}>
