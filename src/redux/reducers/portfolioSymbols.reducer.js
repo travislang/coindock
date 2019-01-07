@@ -5,9 +5,6 @@ const portfolioSymbols = (state = [], action) => {
         case 'UPDATE_PORTFOLIO_SYMBOLS':
             const tempState = state.map(ticker => {
                 let temp = action.payload.msg.find(item => ticker.symbol == item.data.s);
-                console.log('this is temp', temp);
-                console.log('this is action', action.payload.msg);
-                
                 if (temp) {
                     return {
                         ...ticker,
@@ -50,7 +47,7 @@ function calculateUsd(btc, eth, coins) {
             }
         }
         else if (ticker.quote_asset === 'ETH') {
-            let usdPrice = eth * ticker.last_price;
+            let usdPrice = ethPrice * ticker.last_price;
             return {
                 ...ticker,
                 usd_price: usdPrice,

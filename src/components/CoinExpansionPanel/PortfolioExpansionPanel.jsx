@@ -21,7 +21,7 @@ import AddIcon from '@material-ui/icons/Add';
 import TapAndPlay from '@material-ui/icons/TapAndPlay';
 import DeleteIcon from '@material-ui/icons/Delete';
 import green from '@material-ui/core/colors/green';
-
+import red from '@material-ui/core/colors/red';
 
 const styles = theme => ({
     root: {
@@ -43,9 +43,17 @@ const styles = theme => ({
         paddingRight: theme.spacing.unit * 2,
 
     },
-    textPercent: {
+    textPercentPos: {
+        paddingRight: 25,
+        paddingLeft: 10,
         color: green[400],
-        marginRight: theme.spacing.unit * 6,
+        marginRight: theme.spacing.unit * 2,
+    },
+    textPercentNeg: {
+        paddingRight: 25,
+        paddingLeft: 10,
+        color: red[400],
+        marginRight: theme.spacing.unit * 2,
     },
     column: {
         flexBasis: '33%',
@@ -126,9 +134,9 @@ class PortfolioExpansionPanel extends Component {
                         {/* {addedChip} */}
                     </div>
                     <Typography variant='h4' className={classes.textPrice}>{Number(coin.usd_price).toFixed(2)}</Typography>
-                    <Typography variant='overline' className={classes.textPercent}>{Number(coin.price_change).toFixed(2)}%</Typography>
+                    <Typography variant='overline' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
                     <div
-                        style={{ display: 'inline-block', paddingRight: 0 }}
+                        style={{ display: 'flex', alignItems: 'center', paddingRight: 0 }}
                         {...this.props.dragHandleProps}>
                         <ReorderIcon
                             className={classes.icon}

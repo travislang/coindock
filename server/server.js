@@ -58,8 +58,15 @@ io.on('connection', function (socket) {
         socket.leave('allTickers');
     })
     socket.on('portfolioStream', (data) => {
-        console.log(socket.id, 'started portfolio stream');
-        startPortfolioStream(data, socket);
+        if(data.length > 0) {
+            startPortfolioStream(data, socket);
+            console.log(socket.id, 'started portfolio stream');
+        }
+        else {
+            console.log(socket.id, 'no symbols in this portfolio');
+            return;
+        }
+        
     })
     socket.on('disconnect', function (reason) {
         console.log('a user disconnected, reason:', reason)
@@ -72,19 +79,22 @@ function startPortfolioStream(coins, socket) {
     const symbolsToSend = [];
     let btcPrice;
     let ethPrice;
+    const intervialId = setInterval(() => {
+        socket.emit('portfolioUpdate', { msg: symbolsToSend, btc: btcPrice, eth: ethPrice })
+    }, 3000);
     //get symbols out of obj
     let portfolioSymbols = coins.map(item => {
         return `${item.symbol.toLowerCase()}@ticker`
     })
     //join together in a way binance socket can use
     portfolioSymbols = portfolioSymbols.join('/');
-    console.log('port symbols', portfolioSymbols);
-    
+
     //open new socket and pass in symbols we need
-    let ws = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${portfolioSymbols}/btcusdt@ticker/ethbtc@ticker`);
+    let ws = portfolioSymbols ? new WebSocket(`wss://stream.binance.com:9443/stream?streams=${portfolioSymbols}/btcusdt@ticker/ethbtc@ticker`) : new WebSocket(`wss://stream.binance.com:9443/stream?streams=btcusdt@ticker/ethbtc@ticker`);
     ws.on('open', () => {
         console.log('binance portfolio symbols stream open');
     });
+    
     ws.on('message', (data) => {
         const dataObj = JSON.parse(data)
         let foundIndex = symbolsToSend.findIndex( el => {
@@ -103,22 +113,25 @@ function startPortfolioStream(coins, socket) {
         else if (dataObj.data.s === 'ETHBTC') {
             ethPrice = dataObj.data.c
         }
-        console.log(symbolsToSend, btcPrice, ethPrice);
         
     })
+
+    //need to close socket and start new one on button click event portfolio c hange client side
     
     
-    const intervialId = setInterval(() => {
-        socket.emit('portfolioUpdate', {msg: symbolsToSend, btc: btcPrice, eth: ethPrice})
-    }, 3000);
+    
     socket.on('closePortfolioWs', () => {
-        console.log('recieved the close emit');
+        console.log('recieved the close portfolio emit');
         ws.close();
         clearInterval(intervialId);
     })
     ws.on('close', function() {
         console.log('portfolio ws closed');
     });
+    ws.on('error', (err) => {
+        console.log('error in ws,', err);
+        
+    })
     
 }
 

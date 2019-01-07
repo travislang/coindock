@@ -35,7 +35,6 @@ class UserPage extends Component {
     // static contextType = ThemeContext;
     loadCoins = (page) => {
         console.log('in loadcoins');
-        
         const amount = page * 20;
         this.props.dispatch({type: 'FETCH_TICKERS', payload: amount})
     }

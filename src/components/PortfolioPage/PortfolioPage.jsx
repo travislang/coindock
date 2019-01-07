@@ -27,12 +27,11 @@ class PortfolioPage extends Component {
         // //make sure the client has the data before sending it
         setTimeout(() => {
             socket.emit('portfolioStream', this.props.portfolioSymbols)
-        }, 3000)
+        }, 2000)
         socket.on('portfolioUpdate', ({msg, btc, eth}) => {
             console.log('portfolio price update:', msg, btc, eth);
             this.props.dispatch({ type: 'UPDATE_PORTFOLIO_SYMBOLS', payload: {msg, btc, eth}})
         })
-        
     }
 
     componentWillUnmount() {

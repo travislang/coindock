@@ -107,6 +107,7 @@ class CoinExpansionPanel extends Component {
             })
             if (match.length === 1) {
                 addedChip = (<Chip
+                    key={match.id}
                     icon={<DoneAll className={classes.chipIcon} />}
                     label="Added to Portfolio"
                     className={classes.chip}
