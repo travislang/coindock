@@ -38,6 +38,24 @@ let socket = io('http://localhost:5000');
 
 class App extends Component {
     componentDidMount() {
+        // check for service worker and notification support and install sw
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            console.log('Service Worker and Push is supported');
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(function (swReg) {
+                        console.log('Service Worker is registered', swReg);
+                        let swRegistration = swReg;
+                    })
+                    .catch(function (error) {
+                        console.error('Service Worker Error', error);
+                    });
+            })
+            
+        }
+        else {
+            console.warn('Push messaging is not supported');
+        }
         //start socket connection
         socket.on('connect', () => {
             console.log('the client connected');

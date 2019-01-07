@@ -44,8 +44,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "nodemon": "^1.17.2",
-    "sw-precache": "^5.2.1"
+    "nodemon": "^1.17.2"
   },
   "browserslist": [
     ">0.2%",

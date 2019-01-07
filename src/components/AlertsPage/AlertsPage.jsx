@@ -7,6 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import AlertsHeading from './AlertsHeading';
 import AlertsList from './AlertsList';
 
+import sw from '../../customServiceWorker';
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -16,7 +18,14 @@ const styles = theme => ({
 
 class AlertsPage extends Component {
 
-    
+    askPermission() {
+        // browser asks user for notification permissions
+        sw.askPermission();
+    }
+
+    componentDidMount() {
+        // sw.askPermission();
+    }
 
     render() {
         const { classes, portfolioSymbols } = this.props;
