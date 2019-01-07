@@ -38,6 +38,8 @@ app.use('/api/crypto', cryptoRouter);
 app.use('/api/portfolio', portfolioRouter);
 app.use('/api/alerts', alertsRouter);
 
+//placeholder for incoming binance tickers
+let allTickers;
 
 // Serve static files
 app.use(express.static('build'));
@@ -45,11 +47,80 @@ app.use(express.static('build'));
 /* WebSockets */
 //**SOCKET.IO FOR CLIENT/SERVER COMMUNICATION**//
 io.on('connection', function (socket) {
+    let intClear;
     console.log('a user connected');
-    socket.on('disconnect', function () {
-        console.log('user disconnected')
+    //joins room for alltickers stream
+    socket.on('joinAllTickers', () => {
+        socket.join('allTickers');
+    })
+    //leaves room when data isnt needed on client side
+    socket.on('leaveAllTickers', () => {
+        socket.leave('allTickers');
+    })
+    socket.on('portfolioStream', (data) => {
+        console.log(socket.id, 'started portfolio stream');
+        startPortfolioStream(data, socket);
+    })
+    socket.on('disconnect', function (reason) {
+        console.log('a user disconnected, reason:', reason)
+        clearInterval(intClear);
     })
 });
+
+function startPortfolioStream(coins, socket) {
+    //placeholder to store symbols that will be sent by socket to client
+    const symbolsToSend = [];
+    let btcPrice;
+    let ethPrice;
+    //get symbols out of obj
+    let portfolioSymbols = coins.map(item => {
+        return `${item.symbol.toLowerCase()}@ticker`
+    })
+    //join together in a way binance socket can use
+    portfolioSymbols = portfolioSymbols.join('/');
+    console.log('port symbols', portfolioSymbols);
+    
+    //open new socket and pass in symbols we need
+    let ws = new WebSocket(`wss://stream.binance.com:9443/stream?streams=${portfolioSymbols}/btcusdt@ticker/ethbtc@ticker`);
+    ws.on('open', () => {
+        console.log('binance portfolio symbols stream open');
+    });
+    ws.on('message', (data) => {
+        const dataObj = JSON.parse(data)
+        let foundIndex = symbolsToSend.findIndex( el => {
+            return el.data.s === dataObj.data.s
+        })
+        if (foundIndex !== -1) {
+            symbolsToSend[foundIndex] = dataObj
+        }
+        else {
+            console.log('in else');
+            symbolsToSend.push(dataObj);
+        }
+        if (dataObj.data.s === 'BTCUSDT') {
+            btcPrice = dataObj.data.c
+        }
+        else if (dataObj.data.s === 'ETHBTC') {
+            ethPrice = dataObj.data.c
+        }
+        console.log(symbolsToSend, btcPrice, ethPrice);
+        
+    })
+    
+    
+    const intervialId = setInterval(() => {
+        socket.emit('portfolioUpdate', {msg: symbolsToSend, btc: btcPrice, eth: ethPrice})
+    }, 3000);
+    socket.on('closePortfolioWs', () => {
+        console.log('recieved the close emit');
+        ws.close();
+        clearInterval(intervialId);
+    })
+    ws.on('close', function() {
+        console.log('portfolio ws closed');
+    });
+    
+}
 
 //**WEBSOCKET FOR API DATA**//
 // function to make sure socket is still connected
@@ -57,11 +128,11 @@ function heartbeat() {
     console.log('recieved ping from server');
 }
 
-//query symbols fom db and start data streams for each symbol
-function binanceStream() {
+//gets all symbols that have changed every second in an array
+function binanceAllTickers() {
     let ws = new WebSocket(`wss://stream.binance.com:9443/ws/!ticker@arr`);
     ws.on('open', () => {
-        console.log('binance stream open');
+        console.log('binance all symbols stream open');
     });
     ws.on('ping', heartbeat);
     //listen for data stream
@@ -69,12 +140,16 @@ function binanceStream() {
         // let time = moment(JSON.parse(data).E).format('h:mm:ss a')
         // console.log(time);
         // console.log(data);
-
         // console.log('data', JSON.parse(data).stream);
-        io.emit('priceUpdate', { data })
+        // io.emit('priceUpdate', { data })
+        allTickers = data;
     });
+    //sends out updated data every 3 seconds to 'allTickers' socket room
+    const intervalClear = setInterval(() => {
+        io.to('allTickers').emit('allTickers', {msg: allTickers})
+    }, 3000);
 }
-binanceStream();
+binanceAllTickers();
 
 
 // TOMORROW
@@ -89,5 +164,5 @@ const PORT = process.env.PORT || 5000;
 
 /** Listen - need server not app for ws **/
 server.listen(PORT, () => {
-  console.log(`Listening on port: ${PORT}`);
+    console.log(`Listening on port: ${PORT}`);
 });

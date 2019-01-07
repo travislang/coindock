@@ -22,18 +22,29 @@ function heartbeat() {
     console.log('recieved ping from server');
 }
 
-let ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@miniTicker');
-//<symbol>@miniTicker
-//!miniTicker@arr
-ws.on('open', () => {
-    console.log('binance stream open');
-});
+//query symbols fom db and start data streams for each symbol
+function binanceStream() {
+    let ws = new WebSocket(`wss://stream.binance.com:9443/ws/!ticker@arr`);
+    ws.on('open', () => {
+        console.log('binance stream open');
+    });
+    ws.on('ping', heartbeat);
+    //listen for data stream
+    ws.on('message', function (data) {
+        // let time = moment(JSON.parse(data).E).format('h:mm:ss a')
+        // console.log(time);
+        // console.log(data);
+        // console.log('data', JSON.parse(data).stream);
+        io.emit('priceUpdate', { data })
+    });
+}
+binanceStream();
 
-ws.on('ping', heartbeat);
+
 
 //listening for data stream
-ws.on('message', function (data) {
-    let time = moment(JSON.parse(data).E).format('h:mm:ss a')
-    console.log(time);
-    io.emit('priceUpdate', { data: JSON.parse(data), time: time })
-});
+// ws.on('message', function (data) {
+//     let time = moment(JSON.parse(data).E).format('h:mm:ss a')
+//     console.log(time);
+//     io.emit('priceUpdate', { data: JSON.parse(data), time: time })
+// });

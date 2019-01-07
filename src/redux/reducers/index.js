@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
   expanded, // used to control accordian expansion items
   portfolioSymbols,
   alerts,
-  tickerNames
+  tickerNames,
 });
 
 export default rootReducer;

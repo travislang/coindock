@@ -125,7 +125,7 @@ class PortfolioExpansionPanel extends Component {
                         </Typography>
                         {/* {addedChip} */}
                     </div>
-                    <Typography variant='h4' className={classes.textPrice}>{Number(coin.last_price).toFixed(2)}</Typography>
+                    <Typography variant='h4' className={classes.textPrice}>{Number(coin.usd_price).toFixed(2)}</Typography>
                     <Typography variant='overline' className={classes.textPercent}>{Number(coin.price_change).toFixed(2)}%</Typography>
                     <div
                         style={{ display: 'inline-block', paddingRight: 0 }}
