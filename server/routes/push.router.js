@@ -3,6 +3,8 @@ const pool = require('../modules/pool');
 const router = express.Router();
 const webpush = require('../modules/web-push.module');
 
+
+// saves users push subscription to db
 router.post('/save-subscription', (req, res) => {
     console.log('hit sav sub route', req.body);
     if (!req.body || !req.body.endpoint) {

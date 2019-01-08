@@ -4,8 +4,6 @@ const tickers = (state = [], action) => {
             return [...state, ...action.payload];
         case 'UPDATE_TICKERS':
             const tempState = state.map( ticker => {
-                console.log('this iss tickers', action.payload);
-                
                 let temp = action.payload.data.find(item => ticker.symbol == item.s);
                 if( temp ) {
                     return {
@@ -26,7 +24,6 @@ const tickers = (state = [], action) => {
 };
 // working but work on optimization for only 2 digit price to reduce state updates
 function calculateUsd(coins) {
-    console.log('in calcUSD', coins);
     const btc = coins.filter(item => {
         return item.symbol === 'BTCUSDT'
     })

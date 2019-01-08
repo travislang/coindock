@@ -39,7 +39,7 @@ class AlertsPage extends Component {
 
     componentDidMount() {
         this.setState({
-            open: true
+            open: this.props.user.push_endpoint ? false : true
         })
     }
 
@@ -67,7 +67,8 @@ class AlertsPage extends Component {
 
 const mapStateToProps = store => ({
     portfolios: store.portfolios,
-    portfolioSymbols: store.portfolioSymbols
+    portfolioSymbols: store.portfolioSymbols,
+    user: store.user
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(AlertsPage));

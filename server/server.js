@@ -21,6 +21,10 @@ const portfolioRouter = require('./routes/portfolio.router');
 const alertsRouter = require('./routes/alerts.router');
 const pushRouter = require('./routes/push.router');
 
+const monitorAlerts = require('./monitorAlerts');
+
+monitorAlerts.monitorAlerts();
+
 // Body parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -96,7 +100,8 @@ function startPortfolioStream(coins, socket) {
     ws.on('open', () => {
         console.log('binance portfolio symbols stream open');
     });
-    
+    ws.on('ping', heartbeat);
+    //listen for data stream
     ws.on('message', (data) => {
         const dataObj = JSON.parse(data)
         let foundIndex = symbolsToSend.findIndex( el => {
@@ -166,16 +171,6 @@ function binanceAllTickers() {
 }
 binanceAllTickers();
 
-function monitorAlerts(coinsToWatch) {
-
-}
-
-// TOMORROW
-
-//dialog for portfolios
-// input adornments
-
-
 
 // App Set //
 const PORT = process.env.PORT || 5000;
@@ -184,3 +179,5 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
     console.log(`Listening on port: ${PORT}`);
 });
+
+module.exports = io;
