@@ -8,6 +8,7 @@ import AlertsHeading from './AlertsHeading';
 import AlertsList from './AlertsList';
 
 import sw from '../../customServiceWorker';
+import axios from 'axios';
 
 const styles = theme => ({
     root: {
@@ -24,7 +25,13 @@ class AlertsPage extends Component {
     }
 
     componentDidMount() {
-        // sw.askPermission();
+        sw.askPermission();
+    }
+
+    triggerPush() {
+        setTimeout(() => {
+            axios.post('/api/push/trigger-push/2')
+        }, 4000)
     }
 
     render() {
@@ -33,6 +40,9 @@ class AlertsPage extends Component {
             <div className={classes.root}>
                 <Grid container justify='center' spacing={16}>
                     <AlertsHeading />
+                    <button onClick={this.triggerPush}>
+                        trigger push
+                    </button>
                     <Grid item xs={11} md={9} lg={7}>
                         <AlertsList />
                     </Grid>

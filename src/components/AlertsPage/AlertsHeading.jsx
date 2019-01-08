@@ -95,7 +95,7 @@ class AlertsHeading extends Component {
                             <FormControlLabel
                                 control={
                                     <Switch
-                                        checked={user.alerts_on}
+                                        checked={user.global_alerts_on}
                                         onChange={this.handleToggle}
                                         value="alerts on"
                                         color="primary"

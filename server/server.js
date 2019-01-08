@@ -19,6 +19,7 @@ const authRouter = require('./routes/auth.router');
 const cryptoRouter = require('./routes/crypto.router');
 const portfolioRouter = require('./routes/portfolio.router');
 const alertsRouter = require('./routes/alerts.router');
+const pushRouter = require('./routes/push.router');
 
 // Body parser middleware
 app.use(bodyParser.json());
@@ -37,6 +38,7 @@ app.use('/api/user', userRouter);
 app.use('/api/crypto', cryptoRouter);
 app.use('/api/portfolio', portfolioRouter);
 app.use('/api/alerts', alertsRouter);
+app.use('/api/push', pushRouter);
 
 //placeholder for incoming binance tickers
 let allTickers;

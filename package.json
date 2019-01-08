@@ -33,6 +33,7 @@
     "redux-saga": "^0.16.0",
     "socket.io": "^2.2.0",
     "typeface-roboto": "0.0.54",
+    "web-push": "^3.3.3",
     "ws": "^6.1.2"
   },
   "scripts": {
