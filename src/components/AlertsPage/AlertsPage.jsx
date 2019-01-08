@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 
 import AlertsHeading from './AlertsHeading';
 import AlertsList from './AlertsList';
+import AlertsDialog from './AlertsDialog';
 
 import sw from '../../customServiceWorker';
 import axios from 'axios';
@@ -19,30 +20,42 @@ const styles = theme => ({
 
 class AlertsPage extends Component {
 
-    askPermission() {
-        // browser asks user for notification permissions
+    state = {
+    open: false,
+    };
+
+    handleClickOpen = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
+
+    handleAccept = () => {
+        this.setState({ open: false });
         sw.askPermission();
     }
 
     componentDidMount() {
-        sw.askPermission();
+        this.setState({
+            open: true
+        })
     }
 
-    triggerPush() {
-        setTimeout(() => {
-            axios.post('/api/push/trigger-push/2')
-        }, 4000)
-    }
+    
 
     render() {
         const { classes, portfolioSymbols } = this.props;
         return (
             <div className={classes.root}>
+                <AlertsDialog 
+                    open={this.state.open}
+                    handleClose={this.handleClose}
+                    handleAccept={this.handleAccept}
+                />
                 <Grid container justify='center' spacing={16}>
                     <AlertsHeading />
-                    <button onClick={this.triggerPush}>
-                        trigger push
-                    </button>
                     <Grid item xs={11} md={9} lg={7}>
                         <AlertsList />
                     </Grid>

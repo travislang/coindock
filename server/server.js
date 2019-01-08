@@ -166,6 +166,9 @@ function binanceAllTickers() {
 }
 binanceAllTickers();
 
+function monitorAlerts(coinsToWatch) {
+
+}
 
 // TOMORROW
 

@@ -30,14 +30,14 @@ router.post('/trigger-push/:id', function (req, res) {
     .then((subscriptions) => {
         let promiseChain = Promise.resolve();
         for (let i = 0; i < subscriptions.rows.length; i++) {
-            const subscription = {
+            let subscription = subscriptions.rows[i];
+            const subscriptionObj = {
                 endpoint: subscriptions.rows[i].push_endpoint,
                 keys: {
                     auth: subscriptions.rows[i].auth,
                     p256dh: subscriptions.rows[i].p256dh
                 }
             };
-            console.log('this is subscription', subscription)
             const dataToSend = {
                 coin: subscription.symbol_name,
                 direction: subscription.less_than ? 'less than' : 'more than',
@@ -45,7 +45,7 @@ router.post('/trigger-push/:id', function (req, res) {
             }
 
             promiseChain = promiseChain.then(() => {
-                return triggerPushMsg(subscription, dataToSend);
+                return triggerPushMsg(subscriptionObj, dataToSend);
             });
         }
         return promiseChain;
@@ -58,6 +58,7 @@ router.post('/trigger-push/:id', function (req, res) {
         res.sendStatus(500);
     })
     const triggerPushMsg = function (subscription, dataToSend) {
+        console.log('data to send', JSON.stringify(dataToSend))
         return webpush.sendNotification(subscription, JSON.stringify(dataToSend))
             .catch((err) => {
                 if (err.statusCode === 410) {
