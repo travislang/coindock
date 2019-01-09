@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -7,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import AutoSelect from '../Autoselect/Autoselect';
 import TextField from '@material-ui/core/TextField';
+import { withSnackbar } from 'notistack';
 
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -51,6 +54,9 @@ const styles = theme => ({
         bottom: theme.spacing.unit * 2,
         right: theme.spacing.unit * 2,
     },
+    extendedIcon: {
+        marginRight: theme.spacing.unit,
+    },
 });
 
 function getSteps() {
@@ -68,12 +74,17 @@ class AlertStepper extends Component {
 
     componentDidMount() {
         const { activeStep } = this.state;
-        if(!Number(this.props.coinId).isNan) {
+        console.log('this is coinId', this.props.coinId);
+        console.log('checkin nan', Number.isNaN(this.props.coinId));
+        
+        if (this.props.coinId !== 'new') {
             this.setState({
                 coinName: this.props.coinId,
-                activeStep: activeStep + 1
+                activeStep: 1
             })
         }
+        
+        
     }
 
     handleNext = () => {
@@ -95,6 +106,12 @@ class AlertStepper extends Component {
         });
     };
 
+    handleChange = name => event => {
+        this.setState({
+            [name]: event.target.value,
+        });
+    }
+
     handleRadioChange = event => {
         const { activeStep } = this.state;
         this.setState({
@@ -103,15 +120,18 @@ class AlertStepper extends Component {
         });
     };
 
-    handleChange = name => e => {
-        this.setState({
-            [name]: e.target.value
-        })
-    }
-
     handleSubmit = () => {
+        const { enqueueSnackbar } = this.props;
         this.handleReset();
-
+        this.props.dispatch({type: 'ADD_ALERT', payload: {
+            coinId: this.state.coinName,
+            direction: this.state.direction,
+            price: this.state.price
+        }})
+        enqueueSnackbar(`alert was added`, {
+            variant: 'success',
+            autoHideDuration: 4000
+        })
     }
 
     // called when user selects item from search form
@@ -124,10 +144,12 @@ class AlertStepper extends Component {
     }
 
     render() {
+
         // coinId is passed in as prop
         const { classes, coinId } = this.props;
         const steps = getSteps();
         const { activeStep } = this.state;
+        console.log('this is state num', this.state.activeStep);
         return (
             <div className={classes.root}>
                 <Stepper activeStep={activeStep}>
@@ -158,8 +180,8 @@ class AlertStepper extends Component {
                                     value={this.state.direction}
                                     onChange={this.handleRadioChange}
                                 >
-                                    <FormControlLabel value="down" control={<Radio color="primary" />} label="Less Than" />
-                                    <FormControlLabel value="up" control={<Radio color="primary" />} label="More Than" />
+                                    <FormControlLabel value="true" control={<Radio color="primary" />} label="Less Than" />
+                                    <FormControlLabel value='false' control={<Radio color="primary" />} label="More Than" />
                                 </RadioGroup>
                             </FormControl>
                         </div>
@@ -185,11 +207,15 @@ class AlertStepper extends Component {
                     {activeStep === steps.length - 1 ? (
                         <div>
                             <Fab
+                                component={Link}
+                                to='/alerts'
+                                variant="extended"
                                 className={classes.fab}
                                 color='primary'
                                 onClick={this.handleSubmit}
                             >
-                                <SendIcon />
+                                <SendIcon className={classes.extendedIcon} />
+                                Add Alert
                             </Fab>
                         </div>
                     ) : (
@@ -202,4 +228,4 @@ class AlertStepper extends Component {
     }
 }
 
-export default withStyles(styles)(AlertStepper);
+export default connect()(withStyles(styles)(withSnackbar(AlertStepper)));

@@ -7,7 +7,17 @@ function* fetchAlerts() {
         yield put({type: 'SET_ALERTS', payload: alerts.data})
     }
     catch (err) {
-        console.log('error in fetch alerts saga', err);
+        
+    }
+}
+
+function* addAlert(action) {
+    try {
+        yield call(axios.post, 'api/alerts/add', action.payload)
+        yield put({type: 'FETCH_ALERTS'})
+    }
+    catch (err) {
+        console.log('error in add alert saga', err);
     }
 }
 
@@ -30,6 +40,7 @@ function* alertsSaga() {
     yield takeLatest('FETCH_ALERTS', fetchAlerts);
     yield takeLatest('TOGGLE_COIN_ALERTS', toggleCoinAlerts);
     yield takeLatest('UPDATE_ALERTS_ORDER', updateAlertsOrder);
+    yield takeLatest('ADD_ALERT', addAlert);
 }
 
 
