@@ -95,8 +95,8 @@ class PortfolioExpansionPanel extends Component {
         this.props.dispatch({ type: 'SET_EXPANDED', payload: toggle })
     };
 
-    addAlert = (coinId) => {
-
+    deleteCoin = (coinId, portfolioId) => {
+        this.props.dispatch({type: 'DELETE_PORTFOLIO_COIN', payload: {coinId: coinId, portfolioId: portfolioId}})
     }
 
     componentDidMount() {
@@ -167,7 +167,7 @@ class PortfolioExpansionPanel extends Component {
                 </ExpansionPanelDetails>
                 <Divider />
                 <ExpansionPanelActions>
-                    <Button onClick={() => this.addCoin(coin.id)} variant="contained" color="primary" className={classes.button}>
+                    <Button onClick={() => this.deleteCoin(coin.id, coin.portfolio_id)} variant="contained" color="primary" className={classes.button}>
                         <DeleteIcon className={classes.leftIcon} />
                         Remove
                     </Button>

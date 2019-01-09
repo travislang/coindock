@@ -20,7 +20,7 @@ function AlertsDialog (props) {
         </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              This app uses push notifications to send users alerts.  Without allowing notifications the alert functionality will not work.
+              This app uses push notifications to send users alerts.  Without allowing notifications the alert functionality will not work.  Please click agree and then click allow when your browser asks you for permission to send notifications.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
