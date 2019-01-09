@@ -50,16 +50,6 @@ class UserPage extends Component {
     componentDidMount() {
         const socket = this.context;
         this.props.dispatch({ type: 'FETCH_TICKER_NAMES' })
-        
-        // socket.on('allTickers', (data) => {
-        //     this.props.dispatch({
-        //         type: 'UPDATE_TICKERS', payload:
-        //         {
-        //             data: JSON.parse(data.data)
-        //         }
-        //     });
-        // })
-
         socket.on('allTickers', (data) => {
             // console.log(data.msg);
             this.props.dispatch({

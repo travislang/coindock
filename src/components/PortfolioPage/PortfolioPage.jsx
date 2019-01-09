@@ -35,6 +35,7 @@ class PortfolioPage extends Component {
     }
 
     componentWillUnmount() {
+        // running without loading component?
         const socket = this.context;
         socket.emit('closePortfolioWs');
     }

@@ -5,12 +5,10 @@ const app = express();
 const server = require('http').Server(app);
 const bodyParser = require('body-parser');
 const sessionMiddleware = require('./modules/session-middleware');
-
 const WebSocket = require('ws');
 const io = require('socket.io')(server);
 const moment = require('moment');
 const pool = require('./modules/pool');
-
 const passport = require('./strategies/user.strategy');
 
 // Route includes
@@ -23,7 +21,7 @@ const pushRouter = require('./routes/push.router');
 
 const monitorAlerts = require('./monitorAlerts');
 
-monitorAlerts.monitorAlerts();
+
 
 // Body parser middleware
 app.use(bodyParser.json());
@@ -51,6 +49,9 @@ let allTickers;
 app.use(express.static('build'));
 
 /* WebSockets */
+binanceAllTickers(); // starts all tickers stream
+monitorAlerts(); // starts stream to monitor prices against alerts
+
 //**SOCKET.IO FOR CLIENT/SERVER COMMUNICATION**//
 io.on('connection', function (socket) {
     let intClear;
@@ -80,6 +81,7 @@ io.on('connection', function (socket) {
     })
 });
 
+// starts socket for portfolio symbols
 function startPortfolioStream(coins, socket) {
     //placeholder to store symbols that will be sent by socket to client
     const symbolsToSend = [];
@@ -120,13 +122,8 @@ function startPortfolioStream(coins, socket) {
         else if (dataObj.data.s === 'ETHBTC') {
             ethPrice = dataObj.data.c
         }
-        
     })
-
-    //need to close socket and start new one on button click event portfolio c hange client side
-    
-    
-    
+    //need to close socket and start new one on button click event portfolio change client side
     socket.on('closePortfolioWs', () => {
         console.log('recieved the close portfolio emit');
         ws.close();
@@ -169,8 +166,6 @@ function binanceAllTickers() {
         io.to('allTickers').emit('allTickers', {msg: allTickers})
     }, 3000);
 }
-binanceAllTickers();
-
 
 // App Set //
 const PORT = process.env.PORT || 5000;
