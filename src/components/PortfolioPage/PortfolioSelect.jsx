@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import SocketContext from '../SocketContext';
 
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -13,6 +14,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircle from '@material-ui/icons/AddCircle';
 import SettingsIcon from '@material-ui/icons/Settings';
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -57,13 +59,13 @@ const styles = theme => ({
         flexWrap: 'wrap',
         alignItems: 'center',
         justifyContent: 'center',
-        border: `1px solid ${theme.palette.primary.dark}`,
-        borderRadius: '30px'
+        // border: `1px solid ${theme.palette.primary.dark}`,
+        // borderRadius: '30px'
     },
     titleText: {
         letterSpacing: '2px',
-        fontSize: '1rem',
-        lineHeight: 'normal'
+        fontSize: '1.2rem',
+        lineHeight: 1.5
     },
     column: {
         flexBasis: '33%'
@@ -86,6 +88,9 @@ const styles = theme => ({
         display: 'flex',
         justifyContent: 'flex-end'
     },
+    updatedTime: {
+        color: theme.palette.text.disabled
+    }
 })
 
 class PortfolioSelect extends Component {
@@ -105,12 +110,18 @@ class PortfolioSelect extends Component {
     };
 
     handleClose = (item) => {
+        const socket = this.context;
         const { enqueueSnackbar } = this.props;
         const currentPortfolio = this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0];
         this.setState({ anchorEl: null });
         // check to make sure user closed menu by clicking a portfolio item
         if (Number(item.id) && currentPortfolio.id != item.id ) {
             this.props.dispatch({ type: 'SET_ACTIVE', payload: { data: item.id }})
+            // close current socket stream and start new one with updated symbols
+            socket.emit('closePortfolioWs');
+            setTimeout(() => {
+                socket.emit('portfolioStream', this.props.portfolioSymbols)
+            }, 2000)
         }
     };
 
@@ -166,13 +177,17 @@ class PortfolioSelect extends Component {
             <Grid item xs={11} md={9} lg={7}>
                 <Paper className={classes.paper} elevation={3}>
                     <div className={classNames(classes.column)}>
+                        <Typography className={classes.updatedTime} variant='caption' align='left' color='secondary'>
+                            Portfolio updated:
+                        </Typography>
+                        <Typography variant='caption' align='left' color='primary'>
+                            a few seconds ago
+                        </Typography>
                     </div>
                     <div className={classNames(classes.title, classes.column)}>
                         <Typography className={classes.titleText} color='textPrimary' variant='overline'>
                             {portfolios.activePortfolio && portfolios.activePortfolio[0] && portfolios.activePortfolio[0].portfolio_name || 'No Portfolio Selected'}
                         </Typography>
-                    </div>
-                    <div className={classNames(classes.column, classes.editButtons)}>
                         <Tooltip title="Switch Portfolio" aria-label="Switch Portfolio">
                             <IconButton
                                 size='small'
@@ -181,7 +196,7 @@ class PortfolioSelect extends Component {
                                 aria-haspopup="true"
                                 onClick={this.handleClick}
                             >
-                                <SettingsIcon fontSize='small' />
+                                <ArrowDropDown fontSize='small' />
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -196,6 +211,9 @@ class PortfolioSelect extends Component {
                                 )
                             })}
                         </Menu>
+                    </div>
+                    <div className={classNames(classes.column, classes.editButtons)}>
+                        
                         <Tooltip title="Delete Portfolio" aria-label="Delete Portfolio">
                             <IconButton
                                 size='small'
@@ -254,8 +272,12 @@ class PortfolioSelect extends Component {
     }
 }
 
+//getting socket instance context
+PortfolioSelect.contextType = SocketContext;
+
 const mapStateToProps = store => ({
     portfolios: store.portfolios,
+    portfolioSymbols: store.portfolioSymbols
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(withSnackbar(PortfolioSelect)));

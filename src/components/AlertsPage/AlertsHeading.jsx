@@ -77,7 +77,7 @@ class AlertsHeading extends Component {
 
     handleToggle =  () => {
         const { enqueueSnackbar } = this.props;
-        const toggle = this.props.user.alerts_on ? 'off' : 'on';
+        const toggle = this.props.user.global_alerts_on ? 'off' : 'on';
         this.props.dispatch({type: 'TOGGLE_ALERTS'})
         enqueueSnackbar(`all alerts turned ${toggle}`, {
             variant: 'warning',
@@ -95,7 +95,7 @@ class AlertsHeading extends Component {
                             <FormControlLabel
                                 control={
                                     <Switch
-                                        checked={user.alerts_on}
+                                        checked={user.global_alerts_on}
                                         onChange={this.handleToggle}
                                         value="alerts on"
                                         color="primary"

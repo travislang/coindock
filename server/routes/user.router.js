@@ -44,7 +44,7 @@ router.post('/logout', (req, res) => {
 });
 
 router.put('/toggle-alerts', (req, res) => {
-    pool.query(`UPDATE "person" SET "alerts_on" = NOT "alerts_on" WHERE "id" =               $1`, [req.user.id])
+    pool.query(`UPDATE "person" SET "global_alerts_on" = NOT "global_alerts_on" WHERE "id" =               $1`, [req.user.id])
         .then( result => {
             res.sendStatus(201);
         })

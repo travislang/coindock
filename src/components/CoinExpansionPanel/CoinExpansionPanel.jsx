@@ -17,6 +17,7 @@ import Chip from '@material-ui/core/Chip';
 import DoneAll from '@material-ui/icons/DoneAll';
 import AddIcon from '@material-ui/icons/Add';
 import green from '@material-ui/core/colors/green';
+import red from '@material-ui/core/colors/red';
 
 const styles = theme => ({
     root: {
@@ -34,8 +35,12 @@ const styles = theme => ({
         paddingRight: theme.spacing.unit * 2,
         
     },
-    textPercent: {
+    textPercentPos: {
         color: green[400],
+        marginRight: theme.spacing.unit * 2,
+    },
+    textPercentNeg: {
+        color: red[400],
         marginRight: theme.spacing.unit * 2,
     },
     column: {
@@ -102,6 +107,7 @@ class CoinExpansionPanel extends Component {
             })
             if (match.length === 1) {
                 addedChip = (<Chip
+                    key={match.id}
                     icon={<DoneAll className={classes.chipIcon} />}
                     label="Added to Portfolio"
                     className={classes.chip}
@@ -119,8 +125,8 @@ class CoinExpansionPanel extends Component {
                         </Typography>
                         {addedChip}
                     </div>
-                    <Typography variant='h4' className={classes.textPrice}>{Number(coin.last_price).toFixed(2)}</Typography>
-                    <Typography variant='overline' className={classes.textPercent}>{Number(coin.price_change).toFixed(2)}%</Typography>
+                    <Typography variant='h4' className={classes.textPrice}>${Number(coin.usd_price).toFixed(2)}</Typography>
+                    <Typography variant='overline' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <div className={classes.column}>

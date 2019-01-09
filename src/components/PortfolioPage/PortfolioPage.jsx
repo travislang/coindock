@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import SocketContext from '../SocketContext';
 
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -7,6 +8,8 @@ import Grid from '@material-ui/core/Grid';
 
 import PortfolioSelect from './PortfolioSelect';
 import PortfolioList from './PortfolioList';
+
+
 
 const styles = theme => ({
     root: {
@@ -18,7 +21,23 @@ const styles = theme => ({
 class PortfolioPage extends Component {
 
     componentDidMount() {
+        const socket = this.context;
+        //best way to do this async? put dispatch in class init constructor?
         this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
+        // //make sure the client has the data before sending it
+        setTimeout(() => {
+            socket.emit('portfolioStream', this.props.portfolioSymbols)
+        }, 2000)
+        socket.on('portfolioUpdate', ({msg, btc, eth}) => {
+            console.log('portfolio price update:', msg, btc, eth);
+            this.props.dispatch({ type: 'UPDATE_PORTFOLIO_SYMBOLS', payload: {msg, btc, eth}})
+        })
+    }
+
+    componentWillUnmount() {
+        // running without loading component?
+        const socket = this.context;
+        socket.emit('closePortfolioWs');
     }
 
     render() {
@@ -35,6 +54,9 @@ class PortfolioPage extends Component {
         )
     }
 }
+
+//getting socket instance context
+PortfolioPage.contextType = SocketContext;
 
 const mapStateToProps = store => ({
     portfolios: store.portfolios,

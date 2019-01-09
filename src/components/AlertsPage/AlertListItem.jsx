@@ -63,7 +63,7 @@ class AlertsListItem extends Component {
     render() {
         const { classes, coin, user } = this.props;
         return (
-            <ListItem className={classes.listItem} disabled={user.alerts_on && coin.alerts_on ? false : true} key={coin.id}>
+            <ListItem className={classes.listItem} disabled={user.global_alerts_on && coin.alerts_on ? false : true} key={coin.id}>
                 <ListItemAvatar>
                     <Avatar
                         alt={`cryptocurrency logo`}
@@ -94,7 +94,7 @@ class AlertsListItem extends Component {
                         <DeleteIcon fontSize='small' />
                     </IconButton>
                     <Switch
-                        checked={user.alerts_on && coin.alerts_on}
+                        checked={user.global_alerts_on && coin.alerts_on}
                         onChange={this.handleToggle(coin.id)}
                         value="alerts on"
                         color="primary"

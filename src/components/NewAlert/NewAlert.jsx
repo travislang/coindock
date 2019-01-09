@@ -41,6 +41,8 @@ class NewAlert extends Component {
     render() {
         //get coinId passed as param in router
         const match = this.props.match.params;
+        console.log('this is match', match);
+        
         const { classes } = this.props;
         return (
             <div className={classes.root}>

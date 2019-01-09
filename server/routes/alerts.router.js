@@ -17,6 +17,20 @@ router.get('/', (req, res) => {
         })
 })
 
+router.post('/add', (req, res) => {
+    const data = req.body;
+    const dir = req.body.direction === 'true' ? true : false;
+    pool.query(`INSERT INTO "alerts" ("person_id", "price_threshold", "less_than", "symbol_id")
+                VALUES($1, $2, $3, $4)`, [req.user.id, data.price, dir, data.coinId])
+        .then( () => {
+            res.sendStatus(201);
+        })
+        .catch( err => {
+            console.log('error adding alert to DB', err);
+            res.sendStatus(500);
+        })
+})
+
 router.put('/toggle-alert/:id', (req, res) => {
     pool.query(`UPDATE "alerts" SET "alerts_on" = NOT "alerts_on" WHERE "id" =               $1`, [req.params.id])
         .then(result => {

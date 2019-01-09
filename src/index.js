@@ -14,6 +14,8 @@ import { withStyles } from '@material-ui/core/styles';
 
 import App from './components/App/App';
 
+
+
 const sagaMiddleware = createSagaMiddleware();
 
 // this line creates an array of all of redux middleware you want to use
@@ -72,11 +74,10 @@ const SnackbarWrapper = withStyles(styles)(CustomSnackbar)
 
 
 ReactDOM.render(
-    
     <Provider store={store}>
         <SnackbarWrapper>
-            <App />
+                <App />
         </SnackbarWrapper>
-  </Provider>,
+    </Provider>,
         document.getElementById('react-root'),
       );

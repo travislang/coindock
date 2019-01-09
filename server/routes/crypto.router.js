@@ -1,11 +1,7 @@
 const express = require('express');
 const { rejectUnauthenticated } = require('../modules/authentication-middleware');
 const pool = require('../modules/pool');
-
-
 const axios = require('axios');
-
-
 const router = express.Router();
 
 //get all available trading symbols from binance REST API
@@ -27,10 +23,12 @@ router.get('/binance', (req, res) => {
                     return t.baseAsset === item.baseAsset && !badSymbols.includes(item.baseAsset);
                 })
             })
+            
             //save symbol pairs to db for later use
+            // need to add promise.all here?
             symbols.map(item => {
-                pool.query(`INSERT INTO "symbols" ("symbol", "base_asset")
-                VALUES($1, $2);`, [item.symbol, item.baseAsset])
+                pool.query(`INSERT INTO "symbols" ("symbol", "base_asset", "quote_asset")
+                VALUES($1, $2, $3);`, [item.symbol, item.baseAsset, item.quoteAsset])
                 .then( () => {
                 }).catch( err => {
                     console.log('error in symbols query:', err);
@@ -42,13 +40,14 @@ router.get('/binance', (req, res) => {
             let baseSymbols = symbols.map(item => {
                 return item.baseAsset
             });
-            
+            // dont request logos for symbols without them
             baseSymbols = baseSymbols.filter(item => {
                 return !badSymbols.includes(item);
             })
             baseSymbols = baseSymbols.join(',');
             axios.get(`https://pro-api.coinmarketcap.com/v1/cryptocurrency/info?CMC_PRO_API_KEY=${process.env.CMC_API_KEY}&symbol=${baseSymbols}`).then(resp => {
                 let obj = resp.data.data;
+                
                 for (let key in obj) {
                     pool.query(`UPDATE "symbols"
                     SET "logo" = $1, "symbol_name" = $2
@@ -82,24 +81,24 @@ router.get('/tickernames', (req, res) => {
 router.get('/alltickers', (req, res) => {
     const amount = req.query.q;
     //comment out to keep from hitting api
-    // axios.get('https://api.binance.com/api/v1/ticker/24hr')
-    // .then( response => {
-    //     for( let item of response.data) {
-    //         const params = [
-    //             item.lastPrice,
-    //             item.volume,
-    //             item.priceChangePercent,
-    //             item.symbol
-    //         ]
-    //         pool.query(`UPDATE "symbols"
-    //                 SET "last_price" = $1, "volume" = $2, "price_change" = $3
-    //                 WHERE "symbol" = $4;`, params)
-    //             .then( result => {
+    axios.get('https://api.binance.com/api/v1/ticker/24hr')
+    .then( response => {
+        for( let item of response.data) {
+            const params = [
+                item.lastPrice,
+                item.volume,
+                item.priceChangePercent,
+                item.symbol
+            ]
+            pool.query(`UPDATE "symbols"
+                    SET "last_price" = $1, "volume" = $2, "price_change" = $3
+                    WHERE "symbol" = $4;`, params)
+                .then( result => {
 
-    //             }).catch( err => {
-    //                 console.log('error updating db with prices', err);
-    //             })
-    //     }
+                }).catch( err => {
+                    console.log('error updating db with prices', err);
+                })
+        }
         // query based on where the request is coming from - if it has offset param in query
         if(amount != 'undefined') {
             pool.query(`SELECT * FROM "symbols" ORDER BY "id" ASC LIMIT 20 OFFSET $1;`, [amount])
@@ -121,11 +120,11 @@ router.get('/alltickers', (req, res) => {
         }
         
     })
-//     .catch( err => {
-//         console.log('error getting 24h data from binance', err);
-//         res.sendStatus(500);
-//     })
-// })
+    .catch( err => {
+        console.log('error getting 24h data from binance', err);
+        res.sendStatus(500);
+    })
+})
 
 
 module.exports = router;
