@@ -31,6 +31,18 @@ router.post('/add', (req, res) => {
         })
 })
 
+router.delete('/:id', (req, res) => {
+    const id = req.params.id;
+    pool.query(`DELETE FROM "alerts" WHERE "id" = $1 AND "person_id" = $2`, [id, req.user.id])
+    .then( result => {
+        res.sendStatus(200);
+    })
+    .catch( err => {
+        console.log('error deleting alert from db', err);
+        res.sendStatus(500);
+    })
+})
+
 router.put('/toggle-alert/:id', (req, res) => {
     pool.query(`UPDATE "alerts" SET "alerts_on" = NOT "alerts_on" WHERE "id" =               $1`, [req.params.id])
         .then(result => {
@@ -46,8 +58,6 @@ router.put('/toggle-alert/:id', (req, res) => {
 router.put('/update-order', (req, res) => {
     console.log('in put:', req.body.data);
     const coins = req.body.data;
-    
-
     (async () => {
         const client = await pool.connect()
         try {

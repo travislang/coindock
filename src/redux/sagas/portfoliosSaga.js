@@ -30,6 +30,11 @@ function* deletePortfolio(action) {
         }
     })
 }
+
+function* deletePortfolioCoin(action) {
+    yield call(axios.delete, `/api/portfolio/coin/${action.payload.coinId}?pid=${action.payload.portfolioId}`)
+    yield put({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: action.payload.portfolioId})
+}
 function* addPortfolio(action) {
     const responseId = yield call(axios.post, '/api/portfolio/new', action.payload)
     yield put({type: 'SET_ACTIVE', payload: {
@@ -53,6 +58,7 @@ function* portfolioSaga() {
     yield takeLatest('SET_ACTIVE', setActive);
     yield takeLatest('ADD_COIN', addCoin);
     yield takeLatest('DELETE_PORTFOLIO', deletePortfolio);
+    yield takeLatest('DELETE_PORTFOLIO_COIN', deletePortfolioCoin);
     yield takeLatest('ADD_PORTFOLIO', addPortfolio);
 }
 

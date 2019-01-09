@@ -60,6 +60,10 @@ class AlertsListItem extends Component {
         this.props.dispatch({ type: 'TOGGLE_COIN_ALERTS', payload: coinId })
     };
 
+    handleDelete = (coinId) => () => {
+        this.props.dispatch({type: 'DELETE_ALERT', payload: coinId})
+    }
+
     render() {
         const { classes, coin, user } = this.props;
         return (
@@ -89,7 +93,7 @@ class AlertsListItem extends Component {
                     <IconButton
                         size='small'
                         className={classes.button}
-                        onClick={this.handleDelete}
+                        onClick={this.handleDelete(coin.id)}
                     >
                         <DeleteIcon fontSize='small' />
                     </IconButton>
