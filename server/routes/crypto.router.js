@@ -68,6 +68,32 @@ router.get('/binance', (req, res) => {
         })
 })
 
+router.post('/klines', (req, res) => {
+    // time in ms
+    let endTime = Date.now();
+    console.log('end time', endTime);
+    // time in ms minus 7 days
+    let startTime = endTime - 604800000;
+    console.log('start time', startTime);
+    let symbols = req.body.data;
+    // promise chain to wait for all requests to come back
+    let promiseChain = Promise.resolve();
+    for(let symbol of symbols) {
+        promiseChain = promiseChain.then(() => {
+            return axios.get(`https://api.binance.com/api/v1/klines?symbol=${symbol.symbol}&interval=8h&startTime=${startTime}&endTime=${endTime}`)
+                .then(res => {
+                    console.log('in axios call');
+                    return symbol.kline = res.data
+                    
+                    
+                })
+        });
+    }
+    promiseChain.then(() => {
+        res.send(symbols)
+    })
+})
+
 router.get('/tickernames', (req, res) => {
     pool.query(`SELECT "id", "symbol_name" FROM "symbols" ORDER BY "id" ASC;`)
         .then(result => {

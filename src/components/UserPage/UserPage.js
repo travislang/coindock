@@ -88,10 +88,10 @@ class UserPage extends Component {
                                 </div>
                             }
                         >
-                            {tickers.map(item => {
+                            {tickers.map((item, i) => {
                                 return (
                                     <CoinExpansionPanel 
-                                        key={item.id} 
+                                        key={i} 
                                         coin={item} 
                                         snackbarControl={this.snackbarControl}
                                     />
