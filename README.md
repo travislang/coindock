@@ -7,7 +7,7 @@ A cryptocurrency tracking app
 The user can seamlessly check real-time cryptocurrency price data on mobile or desktop and receive push notifications on dynamically generated alerts without downloading a native app
 
 ## Screen Shot
-![Alt text](/assets/screenShot.jpg)
+![screenshot](/assets/screenShot.jpg)
 
 ## Built With
 
