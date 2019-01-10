@@ -64,7 +64,6 @@ function priceCheckInterval(alerts) {
                 return alert.symbol === coin.s && testString
             })
         })
-        console.log('this is after filter', filteredCoins);
         if (filteredCoins.length > 0) {
             console.log('clearing interval');
             // clear the interval

@@ -26,6 +26,8 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import MainAppBar from '../MainAppBar/MainAppBar';
+import BottomNav from '../BottomNav/BottomNav';
+import Hidden from '@material-ui/core/Hidden';
 
 //context for one socket instance
 import SocketContext from '../SocketContext'
@@ -81,7 +83,7 @@ class App extends Component {
                     <CssBaseline />
                     <Router>
                         <div>
-                            <MainAppBar />
+                                <MainAppBar />
                             <Switch>
                                 {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
                                 <Redirect exact from="/" to="/home" />
@@ -128,7 +130,10 @@ class App extends Component {
                                 {/* If none of the other routes matched, we will show a 404. */}
                                 <Route render={() => <h1>404</h1>} />
                             </Switch>
-                            <Footer />
+                            {/* <Footer /> */}
+                            <Hidden mdUp>
+                                <BottomNav />
+                            </Hidden>
                         </div>
                     </Router>
                 </SocketContext.Provider>

@@ -153,18 +153,18 @@ class PortfolioExpansionPanel extends Component {
                 <ExpansionPanelDetails>
                     <div className={classes.column}>
                         <Typography variant='h5'>
-                            {coin.volume}
+                            ${coin.high ? Number(coin.high).toFixed(4) : 'Loading...'}
                         </Typography>
                         <Typography color='textSecondary' variant='overline'>
-                            24 Hour Volume
+                            24 Hour High
                             </Typography>
                     </div>
                     <div className={classes.column}>
                         <Typography variant='h5'>
-                            $58,690,281
+                            ${coin.low ? Number(coin.low).toFixed(4) : 'Loading...'}
                             </Typography>
                         <Typography color='textSecondary' variant='overline'>
-                            Market Cap
+                            24 Hour Low
                             </Typography>
                     </div>
                     <div className={classes.columnRight}>
