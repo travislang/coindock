@@ -16,7 +16,9 @@ function* fetchPortfolios() {
 }
 function* fetchPortfolioSymbols(action) {
     const responseSymbols = yield call(axios.get, `/api/portfolio/symbols/${action.payload}`);
-    yield put({ type: 'SET_PORTFOLIO_SYMBOLS', payload: responseSymbols.data })
+    // gets kline data for charts
+    const newResponse = yield call(axios.post, '/api/crypto/klines', {data: responseSymbols.data})
+    yield put({ type: 'SET_PORTFOLIO_SYMBOLS', payload: newResponse.data })
 }
 //sets users active portfolio
 function* setActive(action) {

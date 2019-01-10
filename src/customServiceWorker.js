@@ -64,6 +64,7 @@ function sendSubscriptionToBackEnd(subscription) {
             console.log('error in server response', err);
             throw new Error('Bad response from server.');
         })
+        // dispatch to user saga to get user info again
 }
 
 function urlBase64ToUint8Array(base64String) {

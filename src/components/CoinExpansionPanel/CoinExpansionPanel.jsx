@@ -19,6 +19,8 @@ import AddIcon from '@material-ui/icons/Add';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 
+import LineChart from '../LineChart/LineChart';
+
 const styles = theme => ({
     root: {
         width: '100%',
@@ -49,6 +51,10 @@ const styles = theme => ({
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
         textAlign: 'center',
         color: theme.palette.textSecondary
+    },
+    columnRight: {
+        flexBasis: '40%',
+        padding: `${theme.spacing.unit}px 0 0 ${theme.spacing.unit * 2}px`,
     },
     avatar: {
         marginRight: 10,
@@ -145,8 +151,8 @@ class CoinExpansionPanel extends Component {
                             Market Cap
                             </Typography>
                     </div>
-                    <div className={classes.column}>
-                        
+                    <div className={classes.columnRight}>
+                        {/* <LineChart /> */}
                     </div>
                 </ExpansionPanelDetails>
                 <Divider />
