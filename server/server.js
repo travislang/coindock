@@ -19,6 +19,7 @@ const portfolioRouter = require('./routes/portfolio.router');
 const alertsRouter = require('./routes/alerts.router');
 const pushRouter = require('./routes/push.router');
 
+//module to handle monitoring all alerts to send notifications
 const monitorAlerts = require('./monitorAlerts');
 
 
@@ -50,7 +51,7 @@ app.use(express.static('build'));
 
 /* WebSockets */
 binanceAllTickers(); // starts all tickers stream
-monitorAlerts(); // starts stream to monitor prices against alerts
+monitorAlerts.monitorAlerts(); // starts stream to monitor prices against alerts
 
 //**SOCKET.IO FOR CLIENT/SERVER COMMUNICATION**//
 io.on('connection', function (socket) {

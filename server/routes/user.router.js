@@ -3,7 +3,7 @@ const { rejectUnauthenticated } = require('../modules/authentication-middleware'
 const encryptLib = require('../modules/encryption');
 const pool = require('../modules/pool');
 const userStrategy = require('../strategies/user.strategy');
-
+const monitorAlerts = require('../monitorAlerts');
 const router = express.Router();
 
 // Handles Ajax request for user information if user is authenticated
@@ -46,6 +46,7 @@ router.post('/logout', (req, res) => {
 router.put('/toggle-alerts', (req, res) => {
     pool.query(`UPDATE "person" SET "global_alerts_on" = NOT "global_alerts_on" WHERE "id" =               $1`, [req.user.id])
         .then( result => {
+            monitorAlerts.getAlerts();
             res.sendStatus(201);
         })
         .catch( err => {
