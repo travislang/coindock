@@ -146,13 +146,21 @@ class CoinExpansionPanel extends Component {
                     <div className={classes.column}>
                         <Typography variant='h5'>
                             $58,690,281
-                            </Typography>
+                        </Typography>
                         <Typography color='textSecondary' variant='overline'>
                             Market Cap
-                            </Typography>
+                        </Typography>
                     </div>
                     <div className={classes.columnRight}>
-                        {/* <LineChart /> */}
+                        <Typography color='textSecondary' variant='overline'>
+                            ADD TO PORTFOLIO
+                        </Typography>
+                        <Typography color='textSecondary' variant='overline'>
+                            TO VIEW  
+                        </Typography>
+                        <Typography color='textSecondary' variant='overline'>
+                            7 DAY CHART  
+                        </Typography>
                     </div>
                 </ExpansionPanelDetails>
                 <Divider />

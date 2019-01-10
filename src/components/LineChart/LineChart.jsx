@@ -27,6 +27,8 @@ function LineChart(props) {
             // }}
             colorBy={function (c) { return c.color }}
             lineWidth={2}
+            curve="monotoneX"
+            // areaBaselineValue={5}
             height={100}
             yScale={{
                 "type": 'linear',
