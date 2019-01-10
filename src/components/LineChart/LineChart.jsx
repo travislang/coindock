@@ -9,8 +9,6 @@ function LineChart(props) {
             y: item[4]
         }
     })
-    console.log('this is kline data', klineData);
-    
     const data = [{
         id: 'crypto',
         color: '#03a9f4',

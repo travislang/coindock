@@ -17,6 +17,8 @@ import MainTabs from './MainTabs';
 
 import LogoIcon from './LogoIcon';
 
+import Hidden from '@material-ui/core/Hidden';
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -24,6 +26,11 @@ const styles = theme => ({
     },
     grow: {
         flexGrow: 1,
+    },
+    breakpointGrow: {
+        [theme.breakpoints.down('sm')]: {
+            flexGrow: 1,
+        },
     },
     button: {
         margin: theme.spacing.unit,
@@ -87,15 +94,16 @@ class MainAppBar extends Component {
                         <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
                             <MenuIcon />
                         </IconButton>
-                        {user.id ? <NavLink to="/home" style={{ textDecoration: 'none', color: 'unset' }}>
+                        {user.id ? <NavLink to="/home" className={classes.breakpointGrow} style={{ textDecoration: 'none', color: 'unset' }}>
                             <LogoIcon />
                             {/* need this to add flex grow to logo if not logged in */}
                         </NavLink> : <NavLink to="/home" className={classes.grow} style={{ textDecoration: 'none', color: 'unset' }}>
                                 <LogoIcon />
                             </NavLink>}
                         {user.id ? (
-                            <>
-                                <MainTabs className={classes.grow}/>
+                            <>  <Hidden smDown>
+                                    <MainTabs className={classes.grow} />
+                                </Hidden>
                                 <Button  
                                     size='small' 
                                     aria-owns={open ? 'menu-appbar' : undefined}

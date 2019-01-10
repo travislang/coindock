@@ -22,20 +22,16 @@ class PortfolioPage extends Component {
 
     componentDidMount() {
         const socket = this.context;
-        //best way to do this async? put dispatch in class init constructor?
-        this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
-        // //make sure the client has the data before sending it
-        setTimeout(() => {
-            socket.emit('portfolioStream', this.props.portfolioSymbols)
-        }, 2000)
+        //send socket obj with dispatch so it can start connection when the response gets back
+        this.props.dispatch({ type: 'FETCH_PORTFOLIOS', socket: socket })
         socket.on('portfolioUpdate', ({msg, btc, eth}) => {
-            console.log('portfolio price update:', msg, btc, eth);
+            // console.log('portfolio price update:', msg, btc, eth);
             this.props.dispatch({ type: 'UPDATE_PORTFOLIO_SYMBOLS', payload: {msg, btc, eth}})
         })
     }
 
     componentWillUnmount() {
-        // running without loading component?
+        // close 
         const socket = this.context;
         socket.emit('closePortfolioWs');
     }

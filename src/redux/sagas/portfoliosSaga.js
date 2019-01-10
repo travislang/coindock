@@ -1,24 +1,28 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 
-function* fetchPortfolios() {
+function* fetchPortfolios(action) {
     try{ 
         const responsePortfolios = yield call(axios.get, '/api/portfolio');
         yield put({ type: 'SET_PORTFOLIOS', payload: responsePortfolios.data })
         const portfolioId = responsePortfolios.data.filter(item => {
             return item.active;
         })
-        yield put({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: portfolioId[0].id })
+        yield put({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: {
+            portfolio: portfolioId[0].id,
+            socket: action.socket
+        }})
     }
     catch( err ) {
         console.log('error in fetchPortfolios saga', err);
     }
 }
 function* fetchPortfolioSymbols(action) {
-    const responseSymbols = yield call(axios.get, `/api/portfolio/symbols/${action.payload}`);
+    const responseSymbols = yield call(axios.get, `/api/portfolio/symbols/${action.payload.portfolio}`);
     // gets kline data for charts
     const newResponse = yield call(axios.post, '/api/crypto/klines', {data: responseSymbols.data})
     yield put({ type: 'SET_PORTFOLIO_SYMBOLS', payload: newResponse.data })
+    action.payload.socket.emit('portfolioStream', newResponse.data)
 }
 //sets users active portfolio
 function* setActive(action) {

@@ -164,6 +164,8 @@ function binanceAllTickers() {
     });
     //sends out updated data every 3 seconds to 'allTickers' socket room
     const intervalClear = setInterval(() => {
+        console.log('sending update on alltickers', allTickers[0]);
+        
         io.to('allTickers').emit('allTickers', {msg: allTickers})
     }, 3000);
 }

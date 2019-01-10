@@ -9,13 +9,14 @@ const portfolioSymbols = (state = [], action) => {
                     return {
                         ...ticker,
                         last_price: temp.data.c,
-                        price_change: temp.data.P
+                        price_change: temp.data.P,
+                        high: temp.data.h,
+                        low: temp.data.l
                     }
                 }
                 else {
                     return ticker
                 }
-
             })
             return calculateUsd(action.payload.btc, action.payload.eth, tempState)
         default:
@@ -24,20 +25,21 @@ const portfolioSymbols = (state = [], action) => {
 }
 
 function calculateUsd(btc, eth, coins) {
-    console.log('in calcUSD', coins);
     const btcPrice = btc;
     const ethPrice = btcPrice * eth;
-    console.log('this is btc price', btcPrice);
-    console.log('this is eth price', ethPrice);
+    // console.log('this is btc price', btcPrice);
+    // console.log('this is eth price', ethPrice);
 
     const newState = coins.map(ticker => {
-        console.log('this is ticker in convert', ticker);
-        
         if (ticker.quote_asset === 'BTC') {
             let usdPrice = btcPrice * ticker.last_price;
+            let usdHigh = btcPrice * ticker.high;
+            let usdLow = btcPrice * ticker.low;
             return {
                 ...ticker,
                 usd_price: usdPrice,
+                high: usdHigh,
+                low: usdLow
             }
         }
         else if (ticker.quote_asset === 'USDT') {
@@ -48,13 +50,16 @@ function calculateUsd(btc, eth, coins) {
         }
         else if (ticker.quote_asset === 'ETH') {
             let usdPrice = ethPrice * ticker.last_price;
+            let usdHigh = ethPrice * ticker.high;
+            let usdLow = ethPrice * ticker.low;
             return {
                 ...ticker,
                 usd_price: usdPrice,
+                high: usdHigh,
+                low: usdLow
             }
         }
     })
-    console.log('this is new state', newState);
     return newState;
 }
 
