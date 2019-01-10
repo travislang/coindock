@@ -2,6 +2,7 @@ const express = require('express');
 const pool = require('./modules/pool');
 const WebSocket = require('ws');
 const webpush = require('./modules/web-push.module');
+const io = require('./server');
 
 // global variable to hold coin prices
 let globalTickerPrices = [];
@@ -46,6 +47,8 @@ function getAlerts() {
     return pool.query(sqlText)
         .then(({ rows }) => {
             // save alerts into global variable
+            console.log('in getAlerts', globalAlerts);
+            
             globalAlerts = rows;
         })
 }
@@ -55,7 +58,7 @@ function priceCheckInterval(alerts) {
     //sets interval
     intervalId = setInterval(() => {
         // filters coins against alerts to see if any alerts need to be sent
-        const filteredCoins = alerts.filter(alert => {
+        const filteredCoins = globalAlerts.filter(alert => {
             return globalTickerPrices.find(coin => {
                 let testString = alert.less_than ? coin.c < alert.price_threshold : coin.c > alert.price_threshold
                 return alert.symbol === coin.s && testString
