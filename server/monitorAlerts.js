@@ -5,17 +5,17 @@ const webpush = require('./modules/web-push.module');
 
 // global variable to hold coin prices
 let globalTickerPrices = [];
+// global variable to hold alerts to check against coin prices
+let globalAlerts = [];
 
 // monitor all alerts to send notifications
 function monitorAlerts() {
     // starts a websocket to get price data
     monitorAllPrices();
     // get all alerts from db
-    getAlerts()
-    .then( response => {
-        // start 3 second interval to check coin prices
-        priceCheckInterval(response);
-    })
+    getAlerts();
+    // start 3 second interval to check coin prices
+    priceCheckInterval(globalAlerts);
 }
 
 function heartbeat() {
@@ -45,14 +45,15 @@ function getAlerts() {
     WHERE "person".global_alerts_on = true AND "alerts".alerts_on = true;`
     return pool.query(sqlText)
         .then(({ rows }) => {
-            return rows;
+            // save alerts into global variable
+            globalAlerts = rows;
         })
 }
 
 // set interval to check prices every 3 seconds
 function priceCheckInterval(alerts) {
     //sets interval
-    let intervalId = setInterval(() => {
+    intervalId = setInterval(() => {
         // filters coins against alerts to see if any alerts need to be sent
         const filteredCoins = alerts.filter(alert => {
             return globalTickerPrices.find(coin => {
@@ -68,12 +69,11 @@ function priceCheckInterval(alerts) {
             triggerPushNotification(filteredCoins[0].id)
             // turn alerts off for alert that just got sent
             pool.query(`UPDATE "alerts" SET "alerts_on" = NOT "alerts_on" WHERE "id" = $1`, [filteredCoins[0].id])
-                .then(result => {
+                .then(() => {
                     // call getAlerts again to get new alerts
-                    getAlerts().then(response => {
-                        // set new 3 second interval
-                        priceCheckInterval(response)
-                    })
+                    getAlerts();
+                    // set new 3 second interval
+                    priceCheckInterval(globalAlerts);
                 })
         }
     }, 3000);
@@ -127,4 +127,7 @@ function triggerPushMsg(subscription, dataToSend) {
         });
 };
 
-module.exports = monitorAlerts;
+module.exports = {
+    monitorAlerts: monitorAlerts,
+    getAlerts: getAlerts
+}
