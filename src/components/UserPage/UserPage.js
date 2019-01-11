@@ -9,8 +9,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
-
-import CoinExpansionPanel from '../CoinExpansionPanel/CoinExpansionPanel';
+import List from '@material-ui/core/List';
+import HomeListItem from './HomeListItem';
 import SearchBar from '../SearchBar/SearchBar';
 
 import { withSnackbar } from 'notistack';
@@ -21,6 +21,11 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
         minHeight: '100vh',
+    },
+    listRoot: {
+        width: '100%',
+        backgroundColor: theme.palette.background.paper,
+        padding: 0
     },
     spinner: {
         display: 'flex',
@@ -39,16 +44,26 @@ class UserPage extends Component {
         this.props.dispatch({type: 'FETCH_TICKERS', payload: amount})
     }
 
-    snackbarControl = (name) => {
+    snackbarControl = (name, variantType) => {
         const { enqueueSnackbar } = this.props;
-        enqueueSnackbar(`${name} was added to portfolio`, {
-            variant: 'success',
-            autoHideDuration: 5000
-        })
+        if(variantType === 'success') {
+            enqueueSnackbar(`${name} was added to portfolio`, {
+                variant: 'success',
+                autoHideDuration: 4000
+            })
+        }
+        else if(variantType === 'error') {
+            enqueueSnackbar(`${name} is already in portfolio`, {
+                variant: 'error',
+                autoHideDuration: 4000
+            })
+        }
+        
     }
 
     componentDidMount() {
         const socket = this.context;
+        this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
         this.props.dispatch({ type: 'FETCH_TICKER_NAMES' })
         socket.on('allTickers', (data) => {
             // console.log(data.msg);
@@ -78,26 +93,28 @@ class UserPage extends Component {
                 <Grid container justify='center' spacing={16}>
                     <SearchBar />
                     <Grid item xs={11} md={9} lg={7}>
-                        <InfiniteScroll
-                            pageStart={-1}
-                            loadMore={this.loadCoins}
-                            hasMore={hasMore}
-                            loader={
-                                <div key={1} className={classes.spinner}>
-                                    <CircularProgress className={classes.progress} />
-                                </div>
-                            }
-                        >
-                            {tickers.map((item) => {
-                                return (
-                                    <CoinExpansionPanel 
-                                        key={item.id} 
-                                        coin={item} 
-                                        snackbarControl={this.snackbarControl}
-                                    />
-                                )
-                            })}
-                        </InfiniteScroll>
+                        <List className={classes.listRoot}>
+                            <InfiniteScroll
+                                pageStart={-1}
+                                loadMore={this.loadCoins}
+                                hasMore={hasMore}
+                                loader={
+                                    <div key={1} className={classes.spinner}>
+                                        <CircularProgress className={classes.progress} />
+                                    </div>
+                                }
+                            >
+                                {tickers.map((item) => {
+                                    return (
+                                        <HomeListItem
+                                            key={item.id}
+                                            coin={item}
+                                            snackbarControl={this.snackbarControl}
+                                        />
+                                    )
+                                })}
+                            </InfiniteScroll>
+                        </List>
                         
                     </Grid>
                 </Grid>
