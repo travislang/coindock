@@ -3,6 +3,16 @@ import { ResponsiveLine } from '@nivo/line'
 
 function LineChart(props) {
     const klines = props.klines;
+    let yMin = 50000000000;
+    let yMax = 0;
+    for(let kline of klines) {
+        if(kline[4] < yMin) {
+            yMin = Number(kline[4])
+        }
+        if (kline[4] > yMax) {
+            yMax = Number(kline[4])
+        }
+    }
     const klineData = klines.map( (item, i) => {
         return {
             x: i,
@@ -30,8 +40,8 @@ function LineChart(props) {
             height={100}
             yScale={{
                 "type": 'linear',
-                "min": "auto",
-                "max": "auto"
+                "min": yMin - (yMin * .03),
+                "max": yMax + (yMax * .03)
             }}
             enableGridX={false}
             enableGridY={false}

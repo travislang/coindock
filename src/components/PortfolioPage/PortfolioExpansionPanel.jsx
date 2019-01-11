@@ -32,7 +32,7 @@ const styles = theme => ({
     },
     summaryRoot: {
         paddingRight: 8,
-        
+        borderBottom: `1px solid rgba(0, 0, 0, 0.25)`
     },
     heading: {
         flexGrow: 1,
@@ -62,6 +62,9 @@ const styles = theme => ({
         marginRight: theme.spacing.unit * 2,
     },
     column: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
         flexBasis: '33%',
         borderRight: `2px solid ${theme.palette.divider}`,
         padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
@@ -100,24 +103,21 @@ class PortfolioExpansionPanel extends Component {
     };
 
     handleChange = panel => (event, expanded) => {
-        let toggle;
-        expanded ? toggle = panel : toggle = false;
-        this.props.dispatch({ type: 'SET_EXPANDED', payload: toggle })
+        this.setState({
+            expanded: expanded ? panel : false,
+        });
     };
 
     deleteCoin = (coinId, portfolioId) => {
         this.props.dispatch({type: 'DELETE_PORTFOLIO_COIN', payload: {coinId: coinId, portfolioId: portfolioId}})
     }
 
-    componentDidMount() {
-        this.props.dispatch({ type: 'SET_EXPANDED', payload: false })
-    }
 
     // add coin to active portfolio
 
     render() {
         const { classes, coin, portfolioSymbols } = this.props;
-        const { expanded } = this.props;
+        const { expanded } = this.state;
         const alertUrl = `/new-alert/${coin.id}`;
         let countupEnd = 100;
         let countupStart = 0;

@@ -17,6 +17,8 @@ import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircle from '@material-ui/icons/AddCircle';
 
+import CountUp from 'react-countup';
+
 const styles = theme => ({
     root: {
         width: '100%',
@@ -63,7 +65,11 @@ const styles = theme => ({
     },
     chipIcon: {
         color: theme.palette.text.disabled,
-    }
+    },
+    countup: {
+        ...theme.typography.h5,
+        paddingRight: theme.spacing.unit * 2,
+    },
 
 });
 
@@ -129,6 +135,19 @@ class HomeListItem extends Component {
                                 {addedChip}
                             </span>
                             <React.Fragment>
+                                {/* <CountUp
+                                    start={Number(coin.previous_price)}
+                                    end={Number(coin.usd_price)}
+                                    delay={0}
+                                    decimals={2}
+                                    prefix={'$'}
+                                >
+                                    {({ countUpRef }) => (
+                                        <div className={classes.countup}>
+                                            <span ref={countUpRef} />
+                                        </div>
+                                    )}
+                                </CountUp> */}
                                 <Typography component="span" variant='h5' className={classes.textPrice}>${Number(coin.usd_price).toFixed(2)}</Typography>
                                 <Typography component="span" variant='overline' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
                             </React.Fragment>
