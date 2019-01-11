@@ -70,7 +70,7 @@ class App extends Component {
         this.props.dispatch({ type: 'FETCH_TICKER_NAMES' })
         //so its loaded by the time user goes to alerts page
         this.props.dispatch({ type: 'FETCH_ALERTS' })
-        this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
+        
     }
     componentWillUnmount() {
         socket.close();

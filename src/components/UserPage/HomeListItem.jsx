@@ -8,66 +8,111 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import Switch from '@material-ui/core/Switch';
 
 import green from '@material-ui/core/colors/green';
-
+import red from '@material-ui/core/colors/red';
+import Chip from '@material-ui/core/Chip';
+import DoneAll from '@material-ui/icons/DoneAll';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import ReorderIcon from '@material-ui/icons/Reorder';
+import AddCircle from '@material-ui/icons/AddCircle';
 
 const styles = theme => ({
     root: {
         width: '100%',
-        backgroundColor: theme.palette.background.paper,
     },
     listItem: {
+        padding: `${theme.spacing.unit} ${theme.spacing.unit * 2}`,
         borderBottom: `1px solid ${theme.palette.divider}`
     },
-    inline: {
-        display: 'inline',
-        margin: theme.spacing.unit,
+    coinName: {
+        flexGrow: 1
+    },
+    primaryText: {
+        display: 'flex'
     },
     inlineTitle: {
         display: 'inline',
     },
-    inlinePrice: {
+    textPrice: {
         display: 'inline',
-        margin: theme.spacing.unit,
-        color: green[400]
+        paddingRight: theme.spacing.unit * 2,
+    },
+    textPercentPos: {
+        display: 'inline',
+        color: green[400],
+    },
+    textPercentNeg: {
+        display: 'inline',
+        color: red[400],
     },
     button: {
-        color: 'rgba(255, 255, 255, 0.5)',
+        color: 'rgba(255, 255, 255, 0.4)',
         padding: theme.spacing.unit,
         '&:hover': {
-            color: theme.palette.error.dark,
+            color: theme.palette.primary.main,
         },
-    },
-    icon: {
-        margin: theme.spacing.unit,
-        // fontSize: 32,
     },
     centerButtons: {
         display: 'flex',
         alignItems: 'center'
+    },
+    chip: {
+        color: theme.palette.text.disabled,
+        marginLeft: theme.spacing.unit * 2,
+    },
+    chipIcon: {
+        color: theme.palette.text.disabled,
     }
 
 });
 
-class AlertsListItem extends Component {
+class HomeListItem extends Component {
 
-    handleToggle = (coinId) => () => {
-        this.props.dispatch({ type: 'TOGGLE_COIN_ALERTS', payload: coinId })
-    };
-
-    handleDelete = (coinId) => () => {
-        this.props.dispatch({ type: 'DELETE_ALERT', payload: coinId })
+    // add coin to active portfolio
+    addCoin = ({ id, symbol_name }) => {
+        const { portfolioSymbols } = this.props;
+        if (portfolioSymbols.length > 0) {
+            let match = portfolioSymbols.filter(item => {
+                return item.id === id
+            })
+            if(match.length === 0) {
+                this.props.dispatch({
+                    type: 'ADD_COIN',
+                    payload: {
+                        portfolio: this.props.portfolios.activePortfolio[0].id,
+                        coin: id
+                    }
+                })
+                this.props.snackbarControl(symbol_name, 'success');
+            }
+            else {
+                this.props.snackbarControl(symbol_name, 'error');
+            }
+            
+        }
     }
 
+
     render() {
-        const { classes, coin, user } = this.props;
+        const { classes, coin, portfolioSymbols } = this.props;
+        let addedChip = '';
+        if (portfolioSymbols.length > 0) {
+            let match = portfolioSymbols.filter(item => {
+                return item.id === coin.id
+            })
+            if (match.length === 1) {
+                addedChip = (<Chip
+                    key={match.id}
+                    icon={<DoneAll className={classes.chipIcon} />}
+                    label="Added to Portfolio"
+                    className={classes.chip}
+                    variant="outlined"
+                />)
+            }
+        }
         return (
-            <ListItem className={classes.listItem} disabled={user.global_alerts_on && coin.alerts_on ? false : true} key={coin.id}>
+            <ListItem button className={classes.listItem}>
                 <ListItemAvatar>
                     <Avatar
                         alt={`cryptocurrency logo`}
@@ -76,33 +121,29 @@ class AlertsListItem extends Component {
                 </ListItemAvatar>
                 <ListItemText
                     primary={
-                        <React.Fragment>
-                            <Typography component="span" className={classes.inlineTitle} variant='h6' color="textPrimary">
-                                {coin.symbol_name}
-                            </Typography>
-                            <Typography component="span" className={classes.inline} color="textSecondary">
-                                {`when 1 ${coin.base_asset} is ${coin.less_than ? 'less than' : 'more than'}`}
-                            </Typography>
-                            <Typography component="span" className={classes.inlinePrice} variant='h5'>
-                                {`$${coin.price_threshold}`}
-                            </Typography>
-                        </React.Fragment>
+                        <div className={classes.primaryText}>
+                            <span className={classes.coinName}>
+                                <Typography component="span" className={classes.inlineTitle} variant='h6' color="textPrimary">
+                                    {coin.symbol_name}
+                                </Typography>
+                                {addedChip}
+                            </span>
+                            <React.Fragment>
+                                <Typography component="span" variant='h5' className={classes.textPrice}>${Number(coin.usd_price).toFixed(2)}</Typography>
+                                <Typography component="span" variant='overline' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
+                            </React.Fragment>
+                            
+                        </div>
                     }
                 />
                 <ListItemSecondaryAction className={classes.centerButtons}>
                     <IconButton
                         size='small'
                         className={classes.button}
-                        onClick={this.handleDelete(coin.id)}
+                        onClick={() => this.addCoin(coin)}
                     >
-                        <DeleteIcon fontSize='small' />
+                        <AddCircle fontSize='small' />
                     </IconButton>
-                    <Switch
-                        checked={user.global_alerts_on && coin.alerts_on}
-                        onChange={this.handleToggle(coin.id)}
-                        value="alerts on"
-                        color="primary"
-                    />
                 </ListItemSecondaryAction>
             </ListItem>
         )
@@ -110,8 +151,9 @@ class AlertsListItem extends Component {
 }
 
 const mapStateToProps = store => ({
+    portfolios: store.portfolios,
+    portfolioSymbols: store.portfolioSymbols,
     user: store.user,
-    alerts: store.alerts
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(AlertsListItem));
+export default connect(mapStateToProps)(withStyles(styles)(HomeListItem));

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import PortfolioExpansionPanel from '../CoinExpansionPanel/PortfolioExpansionPanel';
+import PortfolioExpansionPanel from './PortfolioExpansionPanel';
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
