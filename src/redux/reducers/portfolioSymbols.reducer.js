@@ -8,6 +8,7 @@ const portfolioSymbols = (state = [], action) => {
                 if (temp) {
                     return {
                         ...ticker,
+                        previous_price: ticker.last_price,
                         last_price: temp.data.c,
                         price_change: temp.data.P,
                         high: temp.data.h,
@@ -33,10 +34,12 @@ function calculateUsd(btc, eth, coins) {
     const newState = coins.map(ticker => {
         if (ticker.quote_asset === 'BTC') {
             let usdPrice = btcPrice * ticker.last_price;
+            let usdPrev = btcPrice * ticker.previous_price;
             let usdHigh = btcPrice * ticker.high;
             let usdLow = btcPrice * ticker.low;
             return {
                 ...ticker,
+                previous_price: usdPrev,
                 usd_price: usdPrice,
                 high: usdHigh,
                 low: usdLow
@@ -50,10 +53,12 @@ function calculateUsd(btc, eth, coins) {
         }
         else if (ticker.quote_asset === 'ETH') {
             let usdPrice = ethPrice * ticker.last_price;
+            let usdPrev = ethPrice * ticker.previous_price;
             let usdHigh = ethPrice * ticker.high;
             let usdLow = ethPrice * ticker.low;
             return {
                 ...ticker,
+                previous_price: usdPrev,
                 usd_price: usdPrice,
                 high: usdHigh,
                 low: usdLow

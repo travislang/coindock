@@ -24,6 +24,7 @@ import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 
 import LineChart from '../LineChart/LineChart';
+import CountUp from 'react-countup';
 
 const styles = theme => ({
     root: {
@@ -43,7 +44,10 @@ const styles = theme => ({
     },
     textPrice: {
         paddingRight: theme.spacing.unit * 2,
-
+    },
+    countup: {
+        ...theme.typography.h4,
+        paddingRight: theme.spacing.unit * 2,
     },
     textPercentPos: {
         paddingRight: 25,
@@ -115,6 +119,9 @@ class PortfolioExpansionPanel extends Component {
         const { classes, coin, portfolioSymbols } = this.props;
         const { expanded } = this.props;
         const alertUrl = `/new-alert/${coin.id}`;
+        let countupEnd = 100;
+        let countupStart = 0;
+        
         // let addedChip = '';
         // if (portfolioSymbols.length > 0) {
         //     let match = portfolioSymbols.filter(item => {
@@ -139,7 +146,20 @@ class PortfolioExpansionPanel extends Component {
                         </Typography>
                         {/* {addedChip} */}
                     </div>
-                    <Typography variant='h4' className={classes.textPrice}>{Number(coin.usd_price).toFixed(2)}</Typography>
+                    <CountUp 
+                        start={Number(coin.previous_price)} 
+                        end={Number(coin.usd_price)} 
+                        delay={0}
+                        decimals={2}
+                        prefix={'$'}
+                    >
+                        {({ countUpRef }) => (
+                            <div className={classes.countup}>
+                                <span ref={countUpRef} />
+                            </div>
+                        )}
+                    </CountUp>
+                    {/* <Typography variant='h4' className={classes.textPrice}>{Number(coin.usd_price).toFixed(2)}</Typography> */}
                     <Typography variant='overline' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
                     <div
                         style={{ display: 'flex', alignItems: 'center', paddingRight: 0 }}

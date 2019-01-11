@@ -155,17 +155,10 @@ function binanceAllTickers() {
     ws.on('ping', heartbeat);
     //listen for data stream
     ws.on('message', function (data) {
-        // let time = moment(JSON.parse(data).E).format('h:mm:ss a')
-        // console.log(time);
-        // console.log(data);
-        // console.log('data', JSON.parse(data).stream);
-        // io.emit('priceUpdate', { data })
         allTickers = data;
     });
     //sends out updated data every 3 seconds to 'allTickers' socket room
     const intervalClear = setInterval(() => {
-        console.log('sending update on alltickers', allTickers[0]);
-        
         io.to('allTickers').emit('allTickers', {msg: allTickers})
     }, 3000);
 }
