@@ -82,10 +82,7 @@ router.post('/klines', (req, res) => {
         promiseChain = promiseChain.then(() => {
             return axios.get(`https://api.binance.com/api/v1/klines?symbol=${symbol.symbol}&interval=8h&startTime=${startTime}&endTime=${endTime}`)
                 .then(res => {
-                    console.log('in axios call');
                     return symbol.kline = res.data
-                    
-                    
                 })
         });
     }
@@ -109,6 +106,7 @@ router.get('/alltickers', (req, res) => {
     //comment out to keep from hitting api
     axios.get('https://api.binance.com/api/v1/ticker/24hr')
     .then( response => {
+        let promiseChain = Promise.resolve();
         for( let item of response.data) {
             const params = [
                 item.lastPrice,
@@ -116,38 +114,28 @@ router.get('/alltickers', (req, res) => {
                 item.priceChangePercent,
                 item.symbol
             ]
-            pool.query(`UPDATE "symbols"
+            promiseChain = promiseChain.then(() => {
+                return pool.query(`UPDATE "symbols"
                     SET "last_price" = $1, "volume" = $2, "price_change" = $3
                     WHERE "symbol" = $4;`, params)
-                .then( result => {
-
-                }).catch( err => {
-                    console.log('error updating db with prices', err);
-                })
+                    .then(result => {
+                        return result;
+                    })
+            })
         }
-        // query based on where the request is coming from - if it has offset param in query
-        if(amount != 'undefined') {
-            pool.query(`SELECT * FROM "symbols" ORDER BY "id" ASC LIMIT 20 OFFSET $1;`, [amount])
-                .then(result => {
-                    res.send(result.rows)
-                }).catch(err => {
-                    console.log('error getting symbols from db:', err);
-                    res.sendStatus(500);
-                })
-        }
-        else {
-            pool.query(`SELECT * FROM "symbols" ORDER BY "id" ASC LIMIT 20;`)
-                .then(result => {
-                    res.send(result.rows)
-                }).catch(err => {
-                    console.log('error getting symbols from db:', err);
-                    res.sendStatus(500);
-                })
-        }
-        
+        return promiseChain;
     })
-    .catch( err => {
+    .catch(err => {
         console.log('error getting 24h data from binance', err);
+        res.sendStatus(500);
+    })
+    .then(() => {
+        return pool.query(`SELECT * FROM "symbols" ORDER BY "id" ASC LIMIT 20 OFFSET $1;`, [amount])
+    })
+    .then(result => {
+        res.send(result.rows)
+    }).catch(err => {
+        console.log('error in alltickers route:', err);
         res.sendStatus(500);
     })
 })

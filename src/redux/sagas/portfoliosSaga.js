@@ -22,7 +22,9 @@ function* fetchPortfolioSymbols(action) {
     // gets kline data for charts
     const newResponse = yield call(axios.post, '/api/crypto/klines', {data: responseSymbols.data})
     yield put({ type: 'SET_PORTFOLIO_SYMBOLS', payload: newResponse.data })
-    action.payload.socket.emit('portfolioStream', newResponse.data)
+    if(action.payload && action.payload.socket) {
+        action.payload.socket.emit('portfolioStream', newResponse.data)
+    }
 }
 //sets users active portfolio
 function* setActive(action) {
@@ -51,7 +53,7 @@ function* addCoin(action) {
     try {
         console.log('payload', action.payload);
         yield call(axios.post, '/api/portfolio/add', action.payload);
-        yield put({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: action.payload.portfolio })
+        yield put({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: {portfolio: action.payload.portfolio }})
         // call snackbar confirmation here
     } catch ( err ) {
         console.log('error adding coin to portfolio', err);

@@ -79,19 +79,19 @@ class UserPage extends Component {
                     <SearchBar />
                     <Grid item xs={11} md={9} lg={7}>
                         <InfiniteScroll
-                            pageStart={0}
+                            pageStart={-1}
                             loadMore={this.loadCoins}
                             hasMore={hasMore}
                             loader={
-                                <div className={classes.spinner}>
+                                <div key={1} className={classes.spinner}>
                                     <CircularProgress className={classes.progress} />
                                 </div>
                             }
                         >
-                            {tickers.map((item, i) => {
+                            {tickers.map((item) => {
                                 return (
                                     <CoinExpansionPanel 
-                                        key={i} 
+                                        key={item.id} 
                                         coin={item} 
                                         snackbarControl={this.snackbarControl}
                                     />

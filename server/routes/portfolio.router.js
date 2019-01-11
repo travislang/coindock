@@ -125,6 +125,8 @@ router.get('/symbols/:id', (req, res) => {
 router.post('/add', (req, res) => {
     const portfolioId = req.body.portfolio;
     const coinId = req.body.coin;
+    console.log('in add coin');
+
     pool.query(`INSERT INTO "portfolio_symbols"("symbol_id", "portfolio_id")
                 VALUES($1, $2);`, [coinId, portfolioId])
         .then( () => {
