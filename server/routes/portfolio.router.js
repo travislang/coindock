@@ -72,6 +72,8 @@ router.delete('/coin/:id', (req, res) => {
 
 // delete portfolio from db
 router.delete( '/:id', (req, res) => {
+    console.log('in delete');
+    
     const id = req.params.id;
     // gets rid of references to portfolio
     pool.query(`DELETE FROM "portfolio_symbols" WHERE "portfolio_id" = $1`, [id])
