@@ -52,9 +52,6 @@ class PortfolioList extends Component {
         this.props.dispatch({ type: 'SET_PORTFOLIO_SYMBOLS', payload: items })
     }
 
-    componentDidMount() {
-        this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
-    }
     // sends new list order to server to save in db
     componentWillUnmount() {
         

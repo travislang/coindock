@@ -78,24 +78,21 @@ class HomeListItem extends Component {
     // add coin to active portfolio
     addCoin = ({ id, symbol_name }) => {
         const { portfolioSymbols } = this.props;
-        if (portfolioSymbols.length > 0) {
-            let match = portfolioSymbols.filter(item => {
-                return item.id === id
+        let match = portfolioSymbols.filter(item => {
+            return item.id === id
+        })
+        if(match.length === 0) {
+            this.props.dispatch({
+                type: 'ADD_COIN',
+                payload: {
+                    portfolio: this.props.portfolios.activePortfolio[0].id,
+                    coin: id
+                }
             })
-            if(match.length === 0) {
-                this.props.dispatch({
-                    type: 'ADD_COIN',
-                    payload: {
-                        portfolio: this.props.portfolios.activePortfolio[0].id,
-                        coin: id
-                    }
-                })
-                this.props.snackbarControl(symbol_name, 'success');
-            }
-            else {
-                this.props.snackbarControl(symbol_name, 'error');
-            }
-            
+            this.props.snackbarControl(symbol_name, 'success');
+        }
+        else {
+            this.props.snackbarControl(symbol_name, 'error');
         }
     }
 

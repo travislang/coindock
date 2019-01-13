@@ -1,14 +1,13 @@
 const express = require('express');
-const pool = require('./modules/pool');
+const pool = require('../modules/pool');
 const WebSocket = require('ws');
-const webpush = require('./modules/web-push.module');
-const io = require('./server');
+const webpush = require('../modules/web-push.module');
 
 // global variable to hold coin prices
 let globalTickerPrices = [];
 // global variable to hold alerts to check against coin prices
 let globalAlerts = [];
-
+let reconnectInterval;
 // monitor all alerts to send notifications
 function monitorAlerts() {
     // starts a websocket to get price data
@@ -19,23 +18,56 @@ function monitorAlerts() {
     priceCheckInterval(globalAlerts);
 }
 
-function heartbeat() {
-    console.log('recieved ping from server');
-}
-
 function monitorAllPrices() {
+    let pingTimeout;
+    // opens new webSocket to monitor prices
     let ws = new WebSocket(`wss://stream.binance.com:9443/ws/!miniTicker@arr`);
-    ws.on('open', () => {
-        console.log('binance all minitickers stream open');
+    ws.on('open', function () {
+        console.log('binance monitorPrices stream open');
+        // clears heartbeat timeout
+        clearTimeout(pingTimeout);
+        // starts another heartbeat for 3mins + 10 seconds for latency
+        pingTimeout = setTimeout(() => {
+            console.log('pingTimeout hit, disconnecting...');
+            ws.terminate();
+        }, 300000 + 10000);
     });
     // send pong on ping to keep socket open
-    ws.on('ping', heartbeat);
+    ws.on('ping', () => {
+        console.log('recieved ping from API in monitorPrices stream');
+        ws.pong();
+        // clears heartbeat timeout
+        clearTimeout(pingTimeout);
+        // starts another heartbeat for 3mins + 10 seconds for latency
+        pingTimeout = setTimeout(() => {
+            console.log('pingTimeout hit, disconnecting...');
+            ws.terminate();
+        }, 300000 + 10000);
+    });
     //listen for data stream
     ws.on('message', function (data) {
         const prices = JSON.parse(data);
         // save response in global variable
         globalTickerPrices = prices;
     });
+    ws.on('close', function (code, reason) {
+        console.log('monitorPrices stream closed, error:', code, reason);
+        // clears heartbeat interval
+        clearTimeout(pingTimeout);
+        setTimeout(() => {
+            console.log('trying to reconnect to monitorPrices stream...');
+            monitorAllPrices();
+        }, 1000);
+        // clear out ws object
+        ws = null;
+    });
+    ws.on('error', (err) => {
+        console.log('error in monitorPrices websocket:', err);
+    })
+    // setTimeout(() => {
+    //     console.log('pingTimeout hit, disconnecting...');
+    //     ws.terminate();
+    // }, 10000);
 }
 
 // get alerts to monitor from db
@@ -45,12 +77,10 @@ function getAlerts() {
     JOIN "person" ON "person".id = "alerts".person_id
     WHERE "person".global_alerts_on = true AND "alerts".alerts_on = true;`
     return pool.query(sqlText)
-        .then(({ rows }) => {
-            // save alerts into global variable
-            console.log('in getAlerts', globalAlerts);
-            
-            globalAlerts = rows;
-        })
+    .then(({ rows }) => {
+        // save alerts into global variable
+        globalAlerts = rows;
+    })
 }
 
 // set interval to check prices every 3 seconds

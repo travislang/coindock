@@ -1,7 +1,7 @@
 const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
-const monitorAlerts = require('../monitorAlerts');
+const monitorAlerts = require('../webSockets/monitorAlerts');
 
 // get all alerts for a user
 router.get('/', (req, res) => {

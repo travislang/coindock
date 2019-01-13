@@ -25,7 +25,6 @@ class PortfolioPage extends Component {
         //send socket obj with dispatch so it can start connection when the response gets back
         this.props.dispatch({ type: 'FETCH_PORTFOLIOS', socket: socket })
         socket.on('portfolioUpdate', ({msg, btc, eth}) => {
-            // console.log('portfolio price update:', msg, btc, eth);
             this.props.dispatch({ type: 'UPDATE_PORTFOLIO_SYMBOLS', payload: {msg, btc, eth}})
         })
     }
@@ -33,6 +32,7 @@ class PortfolioPage extends Component {
     componentWillUnmount() {
         // close 
         const socket = this.context;
+        console.log('unmounting portfolio page');
         socket.emit('closePortfolioWs');
     }
 

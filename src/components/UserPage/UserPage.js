@@ -65,13 +65,9 @@ class UserPage extends Component {
         const socket = this.context;
         this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
         this.props.dispatch({ type: 'FETCH_TICKER_NAMES' })
-        socket.on('allTickers', (data) => {
-            // console.log(data.msg);
+        socket.on('allTickers', ({msg, btc, eth}) => {
             this.props.dispatch({
-                type: 'UPDATE_TICKERS', payload:
-                {
-                    data: JSON.parse(data.msg)
-                }
+                type: 'UPDATE_TICKERS', payload: { msg, btc, eth }
             });
         })
         socket.emit('joinAllTickers')

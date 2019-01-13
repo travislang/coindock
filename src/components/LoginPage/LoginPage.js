@@ -24,6 +24,9 @@ const styles = theme => ({
         textAlign: 'center',
         color: theme.palette.text.secondary,
     },
+    divider: {
+        width: '100%'
+    },
     container: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -33,7 +36,10 @@ const styles = theme => ({
     border: {
         border: `2px solid ${theme.palette.divider}`,
         borderRadius: '20px',
-        padding: theme.spacing.unit * 2
+        padding: theme.spacing.unit * 2,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
     },
     textField: {
         minWidth: '60%',
@@ -57,7 +63,12 @@ const styles = theme => ({
         color: theme.palette.primary.dark
     },
     overlap: {
+        ...theme.typography.h6,
         marginBottom: -theme.spacing.unit * 2,
+        textAlign: 'center',
+        backgroundColor: theme.palette.background.default,
+        zIndex: 1000,
+        padding: `0px ${theme.spacing.unit}px`
     }
 });
 
@@ -116,11 +127,14 @@ class LoginPage extends Component {
                                 Login with Facebook
                             </Button>
                         </Grid>
-                        <Typography className={classes.overlap} color='primary' align='center' variant="h6">
+                        {/* <Typography component='span' className={classes.overlap} color='primary' align='center' variant="h6">
                             OR
-                        </Typography>
-                        <Divider />
-                        <Divider />
+                        </Typography> */}
+                        <span className={classes.overlap}>
+                            OR
+                        </span>
+                        <Divider className={classes.divider} />
+                        <Divider className={classes.divider} />
                         <form className={classes.container} noValidate autoComplete="off" onSubmit={this.login}>
                             <TextField
                                 id="outlined-name"
