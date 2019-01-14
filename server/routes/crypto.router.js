@@ -140,5 +140,39 @@ router.get('/alltickers', (req, res) => {
     })
 })
 
+router.get('/search-ticker', (req, res) => {
+    const symbol = req.query.symbol;
+    axios.get(`https://api.binance.com/api/v1/ticker/24hr?symbol=${symbol}`)
+    .then( response => {
+        return response.data
+    })
+    .catch( err => {
+        console.log('error getting symbol response from binance.  The ticker symbol is probably invalid');
+        res.sendStatus(404);
+    })
+    .then( res => {
+        const params = [
+            res.lastPrice,
+            res.volume,
+            res.priceChangePercent,
+            res.symbol
+        ]
+        return pool.query(`UPDATE "symbols"
+                    SET "last_price" = $1, "volume" = $2, "price_change" = $3
+                    WHERE "symbol" = $4;`, params)
+            .then(result => {
+                return result;
+            })
+    })
+    .then(() => {
+        return pool.query(`SELECT * FROM "symbols" WHERE "symbol" = $1;`, [symbol])
+    })
+    .then(result => {
+        res.send(result.rows)
+    }).catch(err => {
+        console.log('error in search-ticker route:', err);
+        res.sendStatus(500);
+    })
+})
 
 module.exports = router;
