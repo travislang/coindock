@@ -10,11 +10,13 @@ let ethPrice;
 
 // starts socket for portfolio symbols
 function startPortfolioStream(coins, socket) {
+    // sends emit right away
     socket.emit('portfolioUpdate', {
         msg: symbolsToSend,
         btc: btcPrice,
         eth: ethPrice
     })
+    // sends emits every 3 seconds
     const intervalId = setInterval(() => {
         socket.emit('portfolioUpdate', {
             msg: symbolsToSend,
@@ -37,6 +39,7 @@ function startPortfolioStream(coins, socket) {
 }
 
 function portfolioSocket(portfolioSymbols, intervalId, socket) {
+    // pingtimeout notifies of lost connection that went undetected - eg. losing wifi
     let pingTimeout;
     let didIClose = false;
     let ws = portfolioSymbols ? new WebSocket(`wss://stream.binance.com:9443/stream?streams=${portfolioSymbols}/btcusdt@ticker/ethbtc@ticker`) : new WebSocket(`wss://stream.binance.com:9443/stream?streams=btcusdt@ticker/ethbtc@ticker`);
@@ -89,24 +92,33 @@ function portfolioSocket(portfolioSymbols, intervalId, socket) {
         }
         clearInterval(intervalId);
     })
+    
+    // client socket closed, disconnect ws
+    socket.on('disconnect', () => {
+        console.log('client disconnected, closing portfolioStream webSocket.');
+        didIClose = true;
+        ws.close(1001);
+        // clears socket.emit 3 second interval
+        clearInterval(intervalId);
+    })
+
     ws.on('close', function (code, reason) {
         console.log('portfolioStream webSocket closed, code:', code, reason);
         // clears heartbeat interval
         clearInterval(pingTimeout);
-        console.log('this is code:', code, reason);
+        // if user didnt send close event then try to reconnect
         if(!didIClose) {
             setTimeout(() => {
                 console.log('trying to reconnect to portfolioStream stream...');
                 portfolioSocket(portfolioSymbols, intervalId, socket);
             }, 1000);
         }
-        // clear out ws object
-        ws = null;
     });
     ws.on('error', (err) => {
         console.log('error in portfolioStream webSocket,', err);
     })
 }
+
 
 function binanceAllTickers(io) {
     //placeholder for incoming binance tickers
@@ -139,6 +151,7 @@ function binanceAllTickers(io) {
             ws.terminate();
         }, 300000 + 10000);
     });
+   
     //listen for data stream
     ws.on('message', function (data) {
         const dataObj = JSON.parse(data)
@@ -158,12 +171,11 @@ function binanceAllTickers(io) {
         clearInterval(intervalClear);
         // clears heartbeat interval
         clearInterval(pingTimeout);
+        // if connection is stopped try to reconnect
         setTimeout(() => {
             console.log('trying to reconnect to allTicker stream...');
             binanceAllTickers(io);
         }, 1000);
-        // clear out ws object
-        ws = null;
     })
     ws.on('error', (err) => {
         console.log('error in allTickers websocket:', err);

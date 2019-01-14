@@ -27,6 +27,11 @@ class PortfolioPage extends Component {
         socket.on('portfolioUpdate', ({msg, btc, eth}) => {
             this.props.dispatch({ type: 'UPDATE_PORTFOLIO_SYMBOLS', payload: {msg, btc, eth}})
         })
+
+        socket.on('reconnect', () => {
+            console.log('reconnected', socket.id);
+            socket.emit('portfolioStream', this.props.portfolioSymbols)
+        })
     }
 
     componentWillUnmount() {

@@ -11,6 +11,9 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import AlertStepper from './AlertStepper';
 
+import AlertsDialog from '../AlertsPage/AlertsDialog';
+import sw from '../../customServiceWorker';
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -37,6 +40,33 @@ const styles = theme => ({
 });
 
 class NewAlert extends Component {
+
+    state = {
+        open: false,
+    }
+
+    handleClickOpen = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
+
+    handleAccept = () => {
+        this.setState({ open: false });
+        sw.askPermission();
+    }
+
+    componentDidMount() {
+        this.setState({
+            open: this.props.user.push_endpoint ? false : true
+        })
+    }
+
+    componentWillUnmount() {
+        this.props.dispatch({ type: 'FETCH_USER' });
+    }
    
     render() {
         //get coinId passed as param in router
@@ -46,6 +76,11 @@ class NewAlert extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
+                <AlertsDialog
+                    open={this.state.open}
+                    handleClose={this.handleClose}
+                    handleAccept={this.handleAccept}
+                />
                 <Grid container justify='center' alignItems='center' className={classes.rootContainer} >
                     <Grid item xs={12} sm={10} md={9} lg={7}>
                         <Paper className={classes.paper} elevation={5}>
@@ -60,6 +95,7 @@ class NewAlert extends Component {
 
 const mapStateToProps = state => ({
     errors: state.errors,
+    user: state.user
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(NewAlert));

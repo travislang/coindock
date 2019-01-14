@@ -71,6 +71,10 @@ class UserPage extends Component {
             });
         })
         socket.emit('joinAllTickers')
+        // if socket loses connection it will rejoin room on reconnect
+        socket.on('reconnect', () => {
+            socket.emit('joinAllTickers')
+        })
     }
 
     componentWillUnmount() {

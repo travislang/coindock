@@ -4,19 +4,21 @@ const tickers = (state = [], action) => {
             return [...state, ...action.payload];
         case 'UPDATE_TICKERS':
             const tempState = state.map(ticker => {
-                let temp = action.payload.msg.find(item => ticker.symbol == item.s);
-                if (temp) {
-                    return {
-                        ...ticker,
-                        previous_price: ticker.last_price,
-                        last_price: temp.c,
-                        price_change: temp.P,
+                if (action.payload && action.payload.msg) {
+                    let temp = action.payload.msg.find(item => ticker.symbol == item.s);
+                    if (temp) {
+                        return {
+                            ...ticker,
+                            previous_price: ticker.last_price,
+                            last_price: temp.c,
+                            price_change: temp.P,
+                        }
                     }
-                }
-                else {
-                    return {
-                        ...ticker,
-                        previous_price: ticker.last_price,
+                    else {
+                        return {
+                            ...ticker,
+                            previous_price: ticker.last_price,
+                        }
                     }
                 }
             })

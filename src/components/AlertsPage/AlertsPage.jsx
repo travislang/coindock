@@ -35,14 +35,18 @@ class AlertsPage extends Component {
     handleAccept = () => {
         this.setState({ open: false });
         sw.askPermission();
-        this.props.dispatch({ type: 'FETCH_USER' });
     }
 
     componentDidMount() {
+        this.props.dispatch({ type: 'FETCH_USER' });
         this.props.dispatch({ type: 'FETCH_ALERTS' })
         this.setState({
             open: this.props.user.push_endpoint ? false : true
         })
+    }
+
+    componentWillUnmount() {
+        this.props.dispatch({ type: 'FETCH_USER' });
     }
 
     

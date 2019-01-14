@@ -7,7 +7,9 @@ const bodyParser = require('body-parser');
 const sessionMiddleware = require('./modules/session-middleware');
 const moment = require('moment');
 const passport = require('./strategies/user.strategy');
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+    pingTimeout: 60000,
+});
 
 // Route includes
 const userRouter = require('./routes/user.router');
@@ -51,6 +53,7 @@ monitorAlerts.monitorAlerts(); // starts stream to monitor prices against alerts
 
 // App Set //
 const PORT = process.env.PORT || 5000;
+const URL = 
 
 io.on('connection', function (socket) {
     console.log('a user connected to server');

@@ -28,8 +28,8 @@ function* fetchPortfolioSymbols(action) {
 }
 //sets users active portfolio
 function* setActive(action) {
-    yield call(axios.post, '/api/portfolio', action.payload)
-    yield put({type: 'FETCH_PORTFOLIOS'})
+    yield call(axios.post, '/api/portfolio', action.payload.data)
+    yield put({type: 'FETCH_PORTFOLIOS', socket: action.payload.socket})
 }
 function* deletePortfolio(action) {
     yield call(axios.delete, `/api/portfolio/${action.payload.portfolioId}`)

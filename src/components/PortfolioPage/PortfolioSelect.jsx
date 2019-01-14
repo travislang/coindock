@@ -116,12 +116,9 @@ class PortfolioSelect extends Component {
         this.setState({ anchorEl: null });
         // check to make sure user closed menu by clicking a portfolio item
         if (Number(item.id) && currentPortfolio.id != item.id ) {
-            this.props.dispatch({ type: 'SET_ACTIVE', payload: { data: item.id }})
+            this.props.dispatch({ type: 'SET_ACTIVE', payload: {data: { data: item.id }, socket: socket}})
             // close current socket stream and start new one with updated symbols
             socket.emit('closePortfolioWs');
-            setTimeout(() => {
-                socket.emit('portfolioStream', this.props.portfolioSymbols)
-            }, 2000)
         }
     };
 

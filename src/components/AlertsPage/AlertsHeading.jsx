@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircle from '@material-ui/icons/AddCircle';
+import MoreVert from '@material-ui/icons/MoreVert';
 
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -63,6 +64,10 @@ const styles = theme => ({
         display: 'flex',
         justifyContent: 'flex-start'
     },
+    buttonAlign: {
+        display: 'flex',
+        alignItems: 'center'
+    }
 })
 
 class AlertsHeading extends Component {
@@ -110,7 +115,7 @@ class AlertsHeading extends Component {
                             All Portfolio Alerts
                         </Typography>
                     </div>
-                    <div className={classNames(classes.column, classes.editButtons)}>
+                    <div className={classNames(classes.column, classes.editButtons, classes.buttonAlign)}>
                         <IconButton
                             size='small'
                             className={classes.deleteButton}
@@ -127,6 +132,7 @@ class AlertsHeading extends Component {
                         >
                             <AddCircle fontSize='small' />
                         </IconButton>
+                        <MoreVert />
                     </div>
                 </Paper>
             </Grid>

@@ -54,20 +54,15 @@ function monitorAllPrices() {
         console.log('monitorPrices stream closed, error:', code, reason);
         // clears heartbeat interval
         clearTimeout(pingTimeout);
+        // if socket disconnects try to reconnect
         setTimeout(() => {
             console.log('trying to reconnect to monitorPrices stream...');
             monitorAllPrices();
         }, 1000);
-        // clear out ws object
-        ws = null;
     });
     ws.on('error', (err) => {
         console.log('error in monitorPrices websocket:', err);
     })
-    // setTimeout(() => {
-    //     console.log('pingTimeout hit, disconnecting...');
-    //     ws.terminate();
-    // }, 10000);
 }
 
 // get alerts to monitor from db

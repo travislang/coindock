@@ -36,7 +36,8 @@ import io from 'socket.io-client'
 //imports MUI theme config
 import darkTheme from '../MuiThemes/DarkTheme';
 
-let socket = io('http://localhost:5000');
+let socket = io.connect();
+// let socket = io('http://localhost:5000');
 
 class App extends Component {
     componentDidMount() {
