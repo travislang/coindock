@@ -70,6 +70,12 @@ const styles = theme => ({
 
 class SearchBar extends Component {
 
+    handleSelection = (selection) => {
+        console.log('you selected an item', selection);
+        this.props.dispatch({type: 'SET_SEARCH_TRUE'})
+        this.props.dispatch({ type: 'FETCH_SEARCH_TICKER', payload: selection.id})
+    }
+
     render() {
         const { classes, portfolios } = this.props;
         return (
@@ -83,7 +89,7 @@ class SearchBar extends Component {
                             {portfolios.activePortfolio && portfolios.activePortfolio[0] && portfolios.activePortfolio[0].portfolio_name}
                         </Typography>
                     </div>
-                    <IntegrationDownshift message='Filter Coins...' />
+                    <IntegrationDownshift handleSelection={this.handleSelection} message='Filter Coins...' />
                 </Paper>
             </Grid>
         )

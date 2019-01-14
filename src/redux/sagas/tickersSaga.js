@@ -11,6 +11,16 @@ function* fetchTickers(action) {
     }
 }
 
+function* fetchSearchTicker(action) {
+    try{
+        const responseTicker = yield call(axios.get, `/api/crypto/search-ticker?symbolId=${action.payload}`)
+        yield put({ type: 'SET_SEARCH_TICKERS', payload: responseTicker.data })
+    } 
+    catch( err ) {
+        console.log('error in searchTickerSaga:', err);
+    }
+}
+
 function* fetchTickerNames() {
     try{
         const responseTickers = yield call(axios.get, '/api/crypto/tickernames')
@@ -23,6 +33,7 @@ function* fetchTickerNames() {
 
 function* tickersSaga() {
     yield takeEvery('FETCH_TICKERS', fetchTickers);
+    yield takeEvery('FETCH_SEARCH_TICKER', fetchSearchTicker);
     yield takeLatest('FETCH_TICKER_NAMES', fetchTickerNames);
 }
 

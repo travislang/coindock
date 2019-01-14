@@ -33,8 +33,9 @@ function renderInput(inputProps) {
 
 function renderSuggestion({ suggestion, index, itemProps, highlightedIndex, selectedItem }) {
     const isHighlighted = highlightedIndex === index;
-    const isSelected = (selectedItem || '').indexOf(suggestion.symbol_name) > -1;
-    console.log(suggestion);
+    // const isSelected = false;
+    const isSelected = (selectedItem && selectedItem.symbol_name || '').indexOf(suggestion.symbol_name) > -1;
+    console.log('suggestion', suggestion, 'is selected', isSelected, 'selected item', selectedItem);
     return (
         <MenuItem
             {...itemProps}
@@ -59,17 +60,20 @@ renderSuggestion.propTypes = {
 };
 
 function getSuggestions(props) {
-    console.log('sugges', props);
-    
     const inputValue = props.inputValue.trim().toLowerCase();
     const inputLength = inputValue.length;
+    console.log('getsuggestions props', props);
+    
     let count = 0;
-
+    if(inputLength === 0) {
+        props.dispatch({ type: 'SET_SEARCH_FALSE' })
+        props.dispatch({ type: 'CLEAR_TICKERS' })
+    }
     return inputLength === 0
         ? []
         : props.tickerNames.filter(suggestion => {
             const keep =
-                count < 5 && suggestion.symbol_name.slice(0, inputLength).toLowerCase() === inputValue;
+                count < 7 && suggestion.symbol_name.slice(0, inputLength).toLowerCase() === inputValue;
 
             if (keep) {
                 count += 1;

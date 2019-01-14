@@ -2,6 +2,10 @@ const tickers = (state = [], action) => {
     switch (action.type) {
         case 'SET_TICKERS':
             return [...state, ...action.payload];
+        case 'SET_SEARCH_TICKERS':
+            return action.payload;
+        case 'CLEAR_TICKERS':
+            return [];
         case 'UPDATE_TICKERS':
             const tempState = state.map(ticker => {
                 if (action.payload && action.payload.msg) {
