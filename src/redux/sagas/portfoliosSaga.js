@@ -4,14 +4,21 @@ import axios from 'axios';
 function* fetchPortfolios(action) {
     try{ 
         const responsePortfolios = yield call(axios.get, '/api/portfolio');
+        console.log('fetch portfolios', responsePortfolios);
+        
         yield put({ type: 'SET_PORTFOLIOS', payload: responsePortfolios.data })
         const portfolioId = responsePortfolios.data.filter(item => {
             return item.active;
         })
-        yield put({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: {
-            portfolio: portfolioId[0].id,
-            socket: action.socket
-        }})
+        // if there is an active portfolio get that one
+        let portfolioIdToSend = portfolioId.length > 0 ? portfolioId[0].id : responsePortfolios.data[0].id;
+        yield put({
+            type: 'FETCH_PORTFOLIO_SYMBOLS', payload: {
+                portfolio: portfolioIdToSend,
+                socket: action.socket
+            }
+        })
+        
     }
     catch( err ) {
         console.log('error in fetchPortfolios saga', err);
@@ -31,12 +38,13 @@ function* setActive(action) {
     yield call(axios.post, '/api/portfolio', action.payload.data)
     yield put({type: 'FETCH_PORTFOLIOS', socket: action.payload.socket})
 }
+
 function* deletePortfolio(action) {
     yield call(axios.delete, `/api/portfolio/${action.payload.portfolioId}`)
     yield put({type: 'SET_ACTIVE', payload: {
-            data: action.payload.portfolioToMakeActive
-        }
-    })
+        data: {data: action.payload.portfolioToMakeActive},
+        socket: action.payload.socket
+    }})
 }
 
 function* deletePortfolioCoin(action) {
@@ -44,9 +52,12 @@ function* deletePortfolioCoin(action) {
     yield put({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: action.payload.portfolioId})
 }
 function* addPortfolio(action) {
-    const responseId = yield call(axios.post, '/api/portfolio/new', action.payload)
+    const responseId = yield call(axios.post, '/api/portfolio/new', action.payload.name)
+    console.log('add portfolio', responseId);
+    
     yield put({type: 'SET_ACTIVE', payload: {
-        data: responseId.data[0].id
+        data: {data: responseId.data[0].id}, 
+        socket: action.payload.socket
     }})
 }
 function* addCoin(action) {

@@ -31,11 +31,11 @@ router.get('/', (req, res) => {
     })
 })
 
-//svg icons for landing page
-
 //route to save active portfolio in DB
 router.post('/', (req, res) => {
     const id = req.body.data;
+    console.log('in post portfolio', id);
+    
     // set all portfolios user owns to false
     pool.query('UPDATE "portfolio" SET "active" = false WHERE "person_id" = $1', [req.user.id])
     .then( result => {
@@ -72,7 +72,7 @@ router.delete('/coin/:id', (req, res) => {
 
 // delete portfolio from db
 router.delete( '/:id', (req, res) => {
-    console.log('in delete');
+    console.log('in delete', req.params.id);
     
     const id = req.params.id;
     // gets rid of references to portfolio

@@ -24,12 +24,14 @@ const styles = theme => ({
     },
     listRoot: {
         width: '100%',
-        // backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.paper,
         padding: 0
     },
     spinner: {
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor: theme.palette.background.default,
+
     },
     progress: {
         margin: theme.spacing.unit * 5,
@@ -63,8 +65,9 @@ class UserPage extends Component {
 
     componentDidMount() {
         const socket = this.context;
-        // so it shows all symbols
+        // set false so it shows all symbols
         this.props.dispatch({ type: 'SET_SEARCH_FALSE' })
+        // clear out any prior searches
         this.props.dispatch({ type: 'CLEAR_TICKERS' })
         this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
         this.props.dispatch({ type: 'FETCH_TICKER_NAMES' })

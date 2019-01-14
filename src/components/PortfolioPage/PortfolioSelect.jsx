@@ -90,6 +90,9 @@ const styles = theme => ({
     },
     updatedTime: {
         color: theme.palette.text.disabled
+    },
+    dialogText: {
+        marginBottom: theme.spacing.unit
     }
 })
 
@@ -110,12 +113,16 @@ class PortfolioSelect extends Component {
     };
 
     handleClose = (item) => {
+        console.log('this is item id', item);
+        
         const socket = this.context;
         const { enqueueSnackbar } = this.props;
         const currentPortfolio = this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0];
+        console.log('current portfolio', currentPortfolio);
+        
         this.setState({ anchorEl: null });
         // check to make sure user closed menu by clicking a portfolio item
-        if (Number(item.id) && currentPortfolio.id != item.id ) {
+        if (Number(item.id) && (currentPortfolio && currentPortfolio.id) != item.id ) {
             this.props.dispatch({ type: 'SET_ACTIVE', payload: {data: { data: item.id }, socket: socket}})
             // close current socket stream and start new one with updated symbols
             socket.emit('closePortfolioWs');
@@ -138,7 +145,8 @@ class PortfolioSelect extends Component {
 
     // add new portfolio 
     handleAdd = () => {
-        this.props.dispatch({type: 'ADD_PORTFOLIO', payload: {data: this.state.newPortfolio}})
+        const socket = this.context;
+        this.props.dispatch({type: 'ADD_PORTFOLIO', payload: {name: {data: this.state.newPortfolio}, socket: socket}})
         this.handleCloseDialog();
         this.setState({
             newPortfolio: ''
@@ -233,7 +241,6 @@ class PortfolioSelect extends Component {
                                 <AddCircle fontSize='small' />
                             </IconButton>
                         </Tooltip>
-                        
                         <Dialog
                             className={classes.dialog}
                             open={this.state.open}
@@ -242,9 +249,11 @@ class PortfolioSelect extends Component {
                         >
                             <DialogTitle id="form-dialog-title">Add New Portfolio</DialogTitle>
                             <DialogContent>
+                                <DialogContentText className={classes.dialogText}>
+                                    Please enter a new portfolio name. Example: 'Ethereum based tokens'
+                                </DialogContentText>
                                 <TextField
                                     autoFocus
-                                    margin="dense"
                                     id="name"
                                     label="Portfolio Name"
                                     type="text"
