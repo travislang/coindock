@@ -24,7 +24,7 @@ const styles = theme => ({
     },
     listRoot: {
         width: '100%',
-        backgroundColor: theme.palette.background.paper,
+        // backgroundColor: theme.palette.background.paper,
         padding: 0
     },
     spinner: {
@@ -63,6 +63,9 @@ class UserPage extends Component {
 
     componentDidMount() {
         const socket = this.context;
+        // so it shows all symbols
+        this.props.dispatch({ type: 'SET_SEARCH_FALSE' })
+        this.props.dispatch({ type: 'CLEAR_TICKERS' })
         this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
         this.props.dispatch({ type: 'FETCH_TICKER_NAMES' })
         socket.on('allTickers', ({msg, btc, eth}) => {
@@ -81,10 +84,12 @@ class UserPage extends Component {
         const socket = this.context;
         //leave allTickers room
         socket.emit('leaveAllTickers');
+        console.log('unmounting home');
+        
     }
 
     render() {
-        const { classes, tickers, tickerNames } = this.props;
+        const { classes, tickers, tickerNames, search } = this.props;
         //check to see if there is more tickers to load from DB
         const hasMore = tickers.length < tickerNames.length;
         
@@ -94,17 +99,29 @@ class UserPage extends Component {
                     <SearchBar />
                     <Grid item xs={11} md={9} lg={7}>
                         <List className={classes.listRoot}>
-                            <InfiniteScroll
-                                pageStart={-1}
-                                loadMore={this.loadCoins}
-                                hasMore={hasMore}
-                                loader={
-                                    <div key={1} className={classes.spinner}>
-                                        <CircularProgress className={classes.progress} />
-                                    </div>
-                                }
-                            >
-                                {tickers.map((item) => {
+                            {!search ? 
+                                <InfiniteScroll
+                                    pageStart={-1}
+                                    loadMore={this.loadCoins}
+                                    hasMore={hasMore}
+                                    loader={
+                                        <div key={1} className={classes.spinner}>
+                                            <CircularProgress className={classes.progress} />
+                                        </div>
+                                    }
+                                >
+                                    {tickers.map((item) => {
+                                        return (
+                                            <HomeListItem
+                                                key={item.id}
+                                                coin={item}
+                                                snackbarControl={this.snackbarControl}
+                                            />
+                                        )
+                                    })}
+                                </InfiniteScroll>
+                                : 
+                                tickers.map((item) => {
                                     return (
                                         <HomeListItem
                                             key={item.id}
@@ -112,8 +129,8 @@ class UserPage extends Component {
                                             snackbarControl={this.snackbarControl}
                                         />
                                     )
-                                })}
-                            </InfiniteScroll>
+                                })
+                            }
                         </List>
                         
                     </Grid>
@@ -127,7 +144,8 @@ UserPage.contextType = SocketContext;
 
 const mapStateToProps = state => ({
     tickers: state.tickers,
-    tickerNames: state.tickerNames
+    tickerNames: state.tickerNames,
+    search: state.search
 });
 
 // this allows us to use <App /> in index.js

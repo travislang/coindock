@@ -141,13 +141,19 @@ router.get('/alltickers', (req, res) => {
 })
 
 router.get('/search-ticker', (req, res) => {
-    const symbol = req.query.symbol;
-    axios.get(`https://api.binance.com/api/v1/ticker/24hr?symbol=${symbol}`)
+    const symbolId = req.query.symbolId;
+    pool.query(`SELECT "symbol" FROM "symbols" WHERE "id" = $1;`, [symbolId])
+    .then(({rows}) => {
+        return rows[0];
+    })
+    .then( resp => {
+        return axios.get(`https://api.binance.com/api/v1/ticker/24hr?symbol=${resp.symbol}`)
+    }) 
     .then( response => {
         return response.data
     })
     .catch( err => {
-        console.log('error getting symbol response from binance.  The ticker symbol is probably invalid');
+        console.log('error getting symbol response from binance.  The ticker symbol is probably invalid', err);
         res.sendStatus(404);
     })
     .then( res => {
@@ -165,7 +171,7 @@ router.get('/search-ticker', (req, res) => {
             })
     })
     .then(() => {
-        return pool.query(`SELECT * FROM "symbols" WHERE "symbol" = $1;`, [symbol])
+        return pool.query(`SELECT * FROM "symbols" WHERE "id" = $1;`, [symbolId])
     })
     .then(result => {
         res.send(result.rows)

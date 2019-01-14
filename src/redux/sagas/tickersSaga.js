@@ -13,8 +13,8 @@ function* fetchTickers(action) {
 
 function* fetchSearchTicker(action) {
     try{
-        const responseTicker = yield call(axios.get, `/api/crypto/search-ticker?symbol=${action.payload}`)
-        yield put({ type: 'SET_TICKERS', payload: responseTicker.data })
+        const responseTicker = yield call(axios.get, `/api/crypto/search-ticker?symbolId=${action.payload}`)
+        yield put({ type: 'SET_SEARCH_TICKERS', payload: responseTicker.data })
     } 
     catch( err ) {
         console.log('error in searchTickerSaga:', err);
