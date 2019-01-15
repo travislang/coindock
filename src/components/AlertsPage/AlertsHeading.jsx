@@ -12,11 +12,12 @@ import IconButton from '@material-ui/core/IconButton';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircle from '@material-ui/icons/AddCircle';
-import MoreVert from '@material-ui/icons/MoreVert';
+import Help from '@material-ui/icons/Help';
 
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
     paper: {
@@ -50,6 +51,15 @@ const styles = theme => ({
             color: theme.palette.primary.main,
         },
     },
+    icon: {
+        fontSize: 20,
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        color: 'rgba(255, 255, 255, 0.5)',
+        '&:hover': {
+            color: theme.palette.primary.main,
+        },
+    },
     deleteButton: {
         color: 'rgba(255, 255, 255, 0.5)',
         '&:hover': {
@@ -69,6 +79,8 @@ const styles = theme => ({
         alignItems: 'center'
     }
 })
+const infoTooltip = 'This is your alerts page.  CoinDock will automatically monitor the alert prices that you set and send you push notifications when required.  After a notification has been triggered the notification will be turned off.  You can manually turn individual alerts off/off or toggle all alerts at once.'
+
 
 class AlertsHeading extends Component {
 
@@ -116,23 +128,29 @@ class AlertsHeading extends Component {
                         </Typography>
                     </div>
                     <div className={classNames(classes.column, classes.editButtons, classes.buttonAlign)}>
-                        <IconButton
-                            size='small'
-                            className={classes.deleteButton}
-                            onClick={this.handleDeleteAll}
-                        >
-                            <DeleteIcon fontSize='small' />
-                        </IconButton>
-                        <IconButton
-                            size='small'
-                            component={Link}
-                            to='/new-alert/new'
-                            className={classes.button}
-                            onClick={this.handleAddAlert}
-                        >
-                            <AddCircle fontSize='small' />
-                        </IconButton>
-                        <MoreVert />
+                        <Tooltip title={'Delete All Alerts'}>
+                            <IconButton
+                                size='small'
+                                className={classes.deleteButton}
+                                onClick={this.handleDeleteAll}
+                            >
+                                <DeleteIcon fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title={'Add Alert'}>
+                            <IconButton
+                                size='small'
+                                component={Link}
+                                to='/new-alert/new'
+                                className={classes.button}
+                                onClick={this.handleAddAlert}
+                            >
+                                <AddCircle fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title={infoTooltip}>
+                            <Help className={classes.icon} />
+                        </Tooltip>
                     </div>
                 </Paper>
             </Grid>

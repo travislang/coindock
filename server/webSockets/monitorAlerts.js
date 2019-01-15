@@ -3,11 +3,14 @@ const pool = require('../modules/pool');
 const WebSocket = require('ws');
 const webpush = require('../modules/web-push.module');
 
+// current price of BTC and ETH -- needed to convert price to USD
+let btcPrice;
+let ethPrice;
 // global variable to hold coin prices
 let globalTickerPrices = [];
 // global variable to hold alerts to check against coin prices
 let globalAlerts = [];
-let reconnectInterval;
+
 // monitor all alerts to send notifications
 function monitorAlerts() {
     // starts a websocket to get price data
@@ -21,7 +24,7 @@ function monitorAlerts() {
 function monitorAllPrices() {
     let pingTimeout;
     // opens new webSocket to monitor prices
-    let ws = new WebSocket(`wss://stream.binance.com:9443/ws/!miniTicker@arr`);
+    let ws = new WebSocket(`wss://stream.binance.com:9443/stream?streams=btcusdt@ticker/ethbtc@ticker/!miniTicker@arr`);
     ws.on('open', function () {
         console.log('binance monitorPrices stream open');
         // clears heartbeat timeout
@@ -46,9 +49,18 @@ function monitorAllPrices() {
     });
     //listen for data stream
     ws.on('message', function (data) {
-        const prices = JSON.parse(data);
-        // save response in global variable
-        globalTickerPrices = prices;
+        const dataObj = JSON.parse(data)
+        if (dataObj.stream === '!miniTicker@arr') {
+            // save response in global variable
+            globalTickerPrices = dataObj.data;
+        }
+        else if (dataObj.stream === 'btcusdt@ticker') {
+            btcPrice = dataObj.data.c
+        }
+        else if (dataObj.stream === 'ethbtc@ticker') {
+            ethPrice = dataObj.data.c
+        }
+        
     });
     ws.on('close', function (code, reason) {
         console.log('monitorPrices stream closed, error:', code, reason);
@@ -67,7 +79,7 @@ function monitorAllPrices() {
 
 // get alerts to monitor from db
 function getAlerts() {
-    const sqlText = `SELECT "alerts".id, "alerts".price_threshold, "alerts".less_than, "symbols".symbol FROM "alerts"
+    const sqlText = `SELECT "alerts".id, "alerts".price_threshold, "alerts".less_than, "symbols".symbol, "symbols".quote_asset FROM "alerts"
     JOIN "symbols" ON "symbols".id = "alerts".symbol_id
     JOIN "person" ON "person".id = "alerts".person_id
     WHERE "person".global_alerts_on = true AND "alerts".alerts_on = true;`
@@ -82,28 +94,69 @@ function getAlerts() {
 function priceCheckInterval(alerts) {
     //sets interval
     intervalId = setInterval(() => {
-        // filters coins against alerts to see if any alerts need to be sent
-        const filteredCoins = globalAlerts.filter(alert => {
-            return globalTickerPrices.find(coin => {
-                let testString = alert.less_than ? coin.c < alert.price_threshold : coin.c > alert.price_threshold
-                return alert.symbol === coin.s && testString
+        //find alert matches
+        const alertMatches = globalAlerts.filter(alert => {
+            let temp = globalTickerPrices.find(coin => {
+                return alert.symbol === coin.s
             })
+            if(temp) {
+                // add current price to alert object
+                alert.last_price = temp.c;
+                return true;
+            }
         })
-        if (filteredCoins.length > 0) {
-            console.log('clearing interval');
-            // clear the interval
-            clearInterval(intervalId);
-            triggerPushNotification(filteredCoins[0].id)
-            // turn alerts off for alert that just got sent
-            pool.query(`UPDATE "alerts" SET "alerts_on" = NOT "alerts_on" WHERE "id" = $1`, [filteredCoins[0].id])
-                .then(() => {
-                    // call getAlerts again to get new alerts
-                    getAlerts();
-                    // set new 3 second interval
-                    priceCheckInterval(globalAlerts);
-                })
+        if(alertMatches.length > 0) {
+            // convert current price to usd
+            const convertedPrices = globalAlerts.map(coin => {
+                return convertToUsd(coin)
+            })
+            // filters coins against alerts to see if any alerts need to be sent
+            const filteredCoins = convertedPrices.filter(alert => {
+                let testString = alert.less_than ? alert.usd_price < alert.price_threshold : alert.usd_price > alert.price_threshold
+                return testString;
+            })
+            // if a coin matches update db and send push alert
+            if (filteredCoins.length > 0) {
+                let date = Date.now();
+                console.log('clearing interval');
+                // clear the interval
+                clearInterval(intervalId);
+                triggerPushNotification(filteredCoins[0].id)
+                // turn alerts off for alert that just got sent and attach alert time
+                pool.query(`UPDATE "alerts" SET "alerts_on" = NOT "alerts_on", "alert_sent" = $1 WHERE "id" = $2`, [date, filteredCoins[0].id])
+                    .then(() => {
+                        // call getAlerts again to get new alerts
+                        getAlerts();
+                        // set new 3 second interval
+                        priceCheckInterval(globalAlerts);
+                    })
+            }
         }
     }, 3000);
+}
+
+function convertToUsd(coin) {
+    let btc = btcPrice;
+    let eth = btc * ethPrice;
+    if (coin.quote_asset === 'BTC') {
+        return {
+            ...coin,
+            usd_price: btc * coin.last_price
+        }
+    }
+    else if (coin.quote_asset === 'USDT') {
+        return {
+            ...coin,
+            usd_price: coin.last_price,
+        }
+    }
+    else if (coin.quote_asset === 'ETH') {
+        let usdPrice = eth * coin.last_price;
+        return {
+            ...ticker,
+            usd_price: usdPrice,
+        }
+    }
 }
 
 //get subscription data for user attached to alert that got triggered
