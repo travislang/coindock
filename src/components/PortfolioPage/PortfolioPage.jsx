@@ -5,10 +5,9 @@ import SocketContext from '../SocketContext';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-
 import PortfolioSelect from './PortfolioSelect';
 import PortfolioList from './PortfolioList';
-
+import Loader from '../UserPage/Loader';
 
 
 const styles = theme => ({
@@ -16,6 +15,11 @@ const styles = theme => ({
         flexGrow: 1,
         minHeight: '100vh',
     },
+    loadingRoot: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center'
+    }
 });
 
 class PortfolioPage extends Component {
@@ -35,20 +39,27 @@ class PortfolioPage extends Component {
     }
 
     componentWillUnmount() {
-        // close 
         const socket = this.context;
-        console.log('unmounting portfolio page');
+        // close socket connection to portfolioStream
         socket.emit('closePortfolioWs');
     }
 
     render() {
-        const { classes, portfolioSymbols } = this.props;
+        const { classes, portfolioSymbols, loading } = this.props;
         return (
             <div className={classes.root}>
                 <Grid container justify='center' spacing={16}>
                     <PortfolioSelect />
                     <Grid item xs={11} md={9} lg={7}>
-                        <PortfolioList />
+                        {loading ? 
+                            <Grid container alignItems='center' justify='center'>
+                                <Loader />
+                            </Grid>
+                            // <div className={classes.loadingRoot}>
+                            //     <Loader />
+                            // </div> 
+                            : 
+                            <PortfolioList />}
                     </Grid>
                 </Grid>
             </div>
@@ -61,7 +72,8 @@ PortfolioPage.contextType = SocketContext;
 
 const mapStateToProps = store => ({
     portfolios: store.portfolios,
-    portfolioSymbols: store.portfolioSymbols
+    portfolioSymbols: store.portfolioSymbols,
+    loading: store.loading
 })
 
 export default connect(mapStateToProps)(withStyles(styles)(PortfolioPage));

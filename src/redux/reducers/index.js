@@ -9,6 +9,7 @@ import portfolioSymbols from './portfolioSymbols.reducer';
 import alerts from './alerts.reducer';
 import tickerNames from './tickerNames.reducer';
 import search from './search.reducer';
+import loading from './loading.reducer';
 
 const rootReducer = combineReducers({
   errors, // contains registrationMessage and loginMessage
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   portfolioSymbols,
   alerts,
   tickerNames,
-  search
+  search,
+  loading
 });
 
 export default rootReducer;

@@ -53,7 +53,6 @@ monitorAlerts.monitorAlerts(); // starts stream to monitor prices against alerts
 
 // App Set //
 const PORT = process.env.PORT || 5000;
-const URL = 
 
 io.on('connection', function (socket) {
     console.log('a user connected to server');

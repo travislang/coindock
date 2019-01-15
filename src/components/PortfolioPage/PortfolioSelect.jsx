@@ -114,10 +114,8 @@ class PortfolioSelect extends Component {
     };
 
     handleClose = (item) => {
-        console.log('this is item id', item);
-        
         const socket = this.context;
-        const { enqueueSnackbar } = this.props;
+        this.props.dispatch({ type: 'SET_LOADING_TRUE' })
         const currentPortfolio = this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0];
         console.log('current portfolio', currentPortfolio);
         
@@ -155,6 +153,7 @@ class PortfolioSelect extends Component {
     // add new portfolio 
     handleAdd = () => {
         const socket = this.context;
+        this.props.dispatch({ type: 'SET_LOADING_TRUE' })
         this.props.dispatch({type: 'ADD_PORTFOLIO', payload: {name: {data: this.state.newPortfolio}, socket: socket}})
         this.handleCloseDialog();
         this.setState({
@@ -175,8 +174,7 @@ class PortfolioSelect extends Component {
 
     handleDelete = () => {
         const socket = this.context;
-        console.log('this is socket', socket);
-        
+        this.props.dispatch({ type: 'SET_LOADING_TRUE' })
         // find next portfolio user has that isnt active
         let portfolioToMakeActive = this.props.portfolios.portfolios.find(item => {
             return item.active === false;

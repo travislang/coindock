@@ -33,6 +33,7 @@ function* fetchPortfolioSymbols(action) {
         action.payload.socket.emit('closePortfolioWs')
         action.payload.socket.emit('portfolioStream', newResponse.data)
     }
+    yield put({type: 'SET_LOADING_FALSE'})
 }
 //sets users active portfolio
 function* setActive(action) {
