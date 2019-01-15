@@ -100,6 +100,7 @@ class PortfolioSelect extends Component {
 
     state = {
         open: false,
+        openDeleteDialog: false,
         anchorEl: null,
         anchorElSettings: null,
         newPortfolio: ''
@@ -133,8 +134,16 @@ class PortfolioSelect extends Component {
         this.setState({ open: true });
     }
 
+    handleDeleteOpenDialog = () => {
+        this.setState({ openDeleteDialog: true });
+    }
+
     handleCloseDialog = () => {
         this.setState({ open: false });
+    }
+
+    handleCloseDeleteDialog = () => {
+        this.setState({ openDeleteDialog: false });
     }
 
     handleNewPortfolio = (e) => {
@@ -157,16 +166,27 @@ class PortfolioSelect extends Component {
         })
     }
 
+    handleDeleteDialog = () => {
+        // close dialog
+        this.handleCloseDeleteDialog();
+        // delete portfolio
+        this.handleDelete();
+    }
+
     handleDelete = () => {
+        const socket = this.context;
+        console.log('this is socket', socket);
+        
         // find next portfolio user has that isnt active
-        let portfolioToMakeActive = this.props.portfolios.portfoli1os.find(item => {
+        let portfolioToMakeActive = this.props.portfolios.portfolios.find(item => {
             return item.active === false;
         })
         this.props.dispatch({
             type: 'DELETE_PORTFOLIO',
             payload: {
                 portfolioId: this.props.portfolios.activePortfolio[0].id,
-                portfolioToMakeActive: portfolioToMakeActive.id
+                portfolioToMakeActive: portfolioToMakeActive.id,
+                socket: socket
             }
         })
         this.props.enqueueSnackbar(`portfolio ${this.props.portfolios.activePortfolio[0].portfolio_name} deleted`, {
@@ -218,14 +238,13 @@ class PortfolioSelect extends Component {
                         </Menu>
                     </div>
                     <div className={classNames(classes.column, classes.editButtons)}>
-                        
                         <Tooltip title="Delete Portfolio" aria-label="Delete Portfolio">
                             <IconButton
                                 size='small'
                                 className={classes.deleteButton}
                                 aria-owns={anchorEl ? 'simple-menu' : undefined}
                                 aria-haspopup="true"
-                                onClick={this.handleDelete}
+                                onClick={this.handleDeleteOpenDialog}
                             >
                                 <DeleteIcon fontSize='small' />
                             </IconButton>
@@ -268,6 +287,27 @@ class PortfolioSelect extends Component {
                                 </Button>
                                 <Button onClick={this.handleAdd} color="primary">
                                     Add
+                                </Button>
+                            </DialogActions>
+                        </Dialog>
+                        <Dialog
+                            className={classes.dialog}
+                            open={this.state.openDeleteDialog}
+                            onClose={this.handleCloseDeleteDialog}
+                            aria-labelledby="form-dialog-title"
+                        >
+                            <DialogTitle id="form-dialog-title">Delete?</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Are you sure you want to remove this cryptocurrency?
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={this.handleCloseDialog} color="default">
+                                    Cancel
+                                </Button>
+                                <Button onClick={this.handleDeleteDialog} color="primary">
+                                    Delete
                                 </Button>
                             </DialogActions>
                         </Dialog>

@@ -4,7 +4,7 @@ const WebSocket = require('ws');
 const server = require('../server');
 
 //placeholder to store symbols that will be sent by socket to client
-const symbolsToSend = [];
+let symbolsToSend = [];
 let btcPrice;
 let ethPrice;
 
@@ -91,6 +91,8 @@ function portfolioSocket(portfolioSymbols, intervalId, socket) {
             ws.close(1000);
         }
         clearInterval(intervalId);
+        // clear array of old symbols
+        symbolsToSend = [];
     })
     
     // client socket closed, disconnect ws

@@ -40,7 +40,7 @@ class MainTabs extends React.Component {
                 value: 2
             })
         }
-        else if (this.props.history.location.pathname === '/new-alert/new') {
+        else if (this.props.history.location.pathname.includes('/new-alert')) {
             this.setState({
                 value: 2
             })

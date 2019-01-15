@@ -30,6 +30,7 @@ function* fetchPortfolioSymbols(action) {
     const newResponse = yield call(axios.post, '/api/crypto/klines', {data: responseSymbols.data})
     yield put({ type: 'SET_PORTFOLIO_SYMBOLS', payload: newResponse.data })
     if(action.payload && action.payload.socket) {
+        action.payload.socket.emit('closePortfolioWs')
         action.payload.socket.emit('portfolioStream', newResponse.data)
     }
 }
@@ -40,6 +41,8 @@ function* setActive(action) {
 }
 
 function* deletePortfolio(action) {
+    console.log('saga socket', action.payload);
+    
     yield call(axios.delete, `/api/portfolio/${action.payload.portfolioId}`)
     yield put({type: 'SET_ACTIVE', payload: {
         data: {data: action.payload.portfolioToMakeActive},
