@@ -39,6 +39,12 @@ import darkTheme from '../MuiThemes/DarkTheme';
 let socket = io.connect();
 // let socket = io('http://localhost:5000');
 
+const styles = {
+    position: 'fixed',
+    bottom: 0,
+    width: '100%',
+}
+
 class App extends Component {
     componentDidMount() {
         // check for service worker and notification support and install sw
@@ -82,7 +88,7 @@ class App extends Component {
                     <CssBaseline />
                     <Router>
                         <div>
-                                <MainAppBar />
+                            <MainAppBar />
                             <Switch>
                                 {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
                                 <Redirect exact from="/" to="/home" />
@@ -131,7 +137,10 @@ class App extends Component {
                             </Switch>
                             {/* <Footer /> */}
                             <Hidden mdUp>
-                                <BottomNav />
+                                <BottomNav style={{
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    width: '100%'}} />
                             </Hidden>
                         </div>
                     </Router>

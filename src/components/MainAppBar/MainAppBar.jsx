@@ -8,6 +8,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import PowerSettings from '@material-ui/icons/PowerSettingsNew';
+import TagFaces from '@material-ui/icons/Person';
 import Avatar from '@material-ui/core/Avatar';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -63,6 +65,9 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit / 2,
         color: theme.palette.text.disabled,
     },
+    icon: {
+        marginRight: theme.spacing.unit * 2
+    }
 });
 
 class MainAppBar extends Component {
@@ -130,11 +135,17 @@ class MainAppBar extends Component {
                                     open={open}
                                     onClose={this.handleClose}
                                 >
-                                    <MenuItem component={Link}
-                                    to="/about" onClick={this.handleClose} >About</MenuItem>
+                                    {/* <MenuItem component={Link}
+                                    to="/about" onClick={this.handleClose} >About</MenuItem> */}
                                     <MenuItem component={Link} 
-                                    to="/profile" onClick={this.handleClose}>Profile</MenuItem>
-                                    <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                                    to="/profile" onClick={this.handleClose}>
+                                        <TagFaces className={classes.icon} />
+                                        Profile
+                                    </MenuItem>
+                                    <MenuItem onClick={this.handleLogout}>
+                                        <PowerSettings className={classes.icon} />
+                                        Logout
+                                    </MenuItem>
                                 </Menu>
                             </>
                         ) : <Button 

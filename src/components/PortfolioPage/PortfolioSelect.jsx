@@ -159,7 +159,7 @@ class PortfolioSelect extends Component {
 
     handleDelete = () => {
         // find next portfolio user has that isnt active
-        let portfolioToMakeActive = this.props.portfolios.portfolios.find(item => {
+        let portfolioToMakeActive = this.props.portfolios.portfoli1os.find(item => {
             return item.active === false;
         })
         this.props.dispatch({
