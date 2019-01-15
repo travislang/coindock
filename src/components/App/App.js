@@ -18,6 +18,7 @@ import PortfolioPage from '../PortfolioPage/PortfolioPage';
 import ProfilePage from '../ProfilePage/ProfilePage';
 import AlertsPage from '../AlertsPage/AlertsPage';
 import NewAlert from '../NewAlert/NewAlert';
+import LandingPage from '../LandingPage/LandingPage';
 
 import './App.css';
 import 'typeface-roboto';
@@ -91,10 +92,15 @@ class App extends Component {
                             <MainAppBar />
                             <Switch>
                                 {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
-                                <Redirect exact from="/" to="/home" />
+                                {/* <Redirect exact from="/" to="/home" /> */}
                                 <Redirect exact from="/_=_" to="/home" />
                                 {/* Visiting localhost:3000/about will show the about page.
                             This is a route anyone can see, no login necessary */}
+                                <Route
+                                    exact
+                                    path="/"
+                                    component={LandingPage}
+                                />
                                 <Route
                                     exact
                                     path="/about"
