@@ -70,9 +70,11 @@ const PORT = process.env.PORT || 5000;
 io.on('connection', function (socket) {
     console.log('a user connected to server');
     // the user id is coming from the socketIo middleware that accesses passport
-    const userId = socket.request.session.passport.user;
-    // save socket id to DB for later use by the monitorAlerts function
-    webSockets.saveSocket(socket.id, userId)
+    if (socket.request.session.passport && socket.request.session.passport.user) {
+        const userId = socket.request.session.passport.user;
+        // save socket id to DB for later use by the monitorAlerts function
+        webSockets.saveSocket(socket.id, userId)
+    }
     //joins room for alltickers stream
     socket.on('joinAllTickers', () => {
         socket.join('allTickers');

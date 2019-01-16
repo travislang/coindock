@@ -15,8 +15,16 @@ import green from '@material-ui/core/colors/green';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReorderIcon from '@material-ui/icons/Reorder';
+import Hidden from '@material-ui/core/Hidden';
 
 const styles = theme => ({
+    "@global": {
+        html: {
+            [theme.breakpoints.down("md")]: {
+                fontSize: 10
+            }
+        }
+    },
     root: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
@@ -27,6 +35,11 @@ const styles = theme => ({
     inline: {
         display: 'inline',
         margin: theme.spacing.unit,
+    },
+    inlineMobile: {
+        display: 'inline',
+        margin: theme.spacing.unit,
+        marginLeft: theme.spacing.unit * 2
     },
     inlineTitle: {
         display: 'inline',
@@ -95,9 +108,17 @@ class AlertsListItem extends Component {
                             <Typography component="span" className={classes.inlineTitle} variant='h6' color="textPrimary">
                                 {coin.symbol_name}
                             </Typography>
-                            <Typography component="span" className={classes.inline} color="textSecondary">
-                                {`when 1 ${coin.base_asset} is ${coin.less_than ? 'less than' : 'more than'}`}
-                            </Typography>
+                            <Hidden smDown>
+                                <Typography component="span" className={classes.inline} color="textSecondary">
+                                    {`when 1 ${coin.base_asset} is ${coin.less_than ? 'less than' : 'more than'}`}
+                                </Typography>
+                            </Hidden>
+                            <Hidden smUp>
+                                <Typography component="span" className={classes.inlineMobile} 
+                                    variant='h5' color="textSecondary">
+                                    {`${coin.less_than ? '<' : '>'}`}
+                                </Typography>
+                            </Hidden>
                             <Typography component="span" className={classes.inlinePrice} variant='h5'>
                                 {`$${coin.price_threshold}`}
                             </Typography>

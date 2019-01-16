@@ -18,6 +18,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircle from '@material-ui/icons/AddCircle';
 
 import CountUp from 'react-countup';
+import Hidden from '@material-ui/core/Hidden';
 
 const styles = theme => ({
     root: {
@@ -129,7 +130,9 @@ class HomeListItem extends Component {
                                 <Typography component="span" className={classes.inlineTitle} variant='h6' color="textPrimary">
                                     {coin.symbol_name}
                                 </Typography>
-                                {addedChip}
+                                <Hidden smDown>
+                                    {addedChip}
+                                </Hidden>
                             </span>
                             <React.Fragment>
                                 {/* <CountUp

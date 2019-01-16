@@ -199,7 +199,7 @@ function triggerPushNotification(alertId, io) {
                     direction: subscription.less_than ? 'less than' : 'more than',
                     threshold: subscription.price_threshold
                 }
-                const msg = 'hello this is working';
+                const msg = 'updating';
 
                 promiseChain = promiseChain.then(() => {
                     console.log(subscriptions.rows[i].socket);

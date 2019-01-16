@@ -31,6 +31,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = theme => ({
+    "@global": {
+        html: {
+            [theme.breakpoints.down("md")]: {
+                fontSize: 10
+            }
+        }
+    },
     paper: {
         padding: theme.spacing.unit,
         textAlign: 'center',
@@ -65,7 +72,10 @@ const styles = theme => ({
     titleText: {
         letterSpacing: '2px',
         fontSize: '1.2rem',
-        lineHeight: 1.5
+        lineHeight: 1.5,
+        [theme.breakpoints.down("md")]: {
+            fontSize: 9
+        }
     },
     column: {
         flexBasis: '33%'
@@ -295,10 +305,10 @@ class PortfolioSelect extends Component {
                             onClose={this.handleCloseDeleteDialog}
                             aria-labelledby="form-dialog-title"
                         >
-                            <DialogTitle id="form-dialog-title">Delete?</DialogTitle>
+                            <DialogTitle id="form-dialog-title">Delete Portfolio?</DialogTitle>
                             <DialogContent>
                                 <DialogContentText>
-                                    Are you sure you want to remove this cryptocurrency?
+                                    This will remove your entire portfolio.
                                 </DialogContentText>
                             </DialogContent>
                             <DialogActions>

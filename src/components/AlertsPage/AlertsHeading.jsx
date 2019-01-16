@@ -29,6 +29,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 const styles = theme => ({
+    "@global": {
+        html: {
+            [theme.breakpoints.down("md")]: {
+                fontSize: 10
+            }
+        }
+    },
     paper: {
         padding: theme.spacing.unit,
         textAlign: 'center',
@@ -89,16 +96,13 @@ const styles = theme => ({
         marginBottom: theme.spacing.unit
     },
 })
-const infoTooltip = 'This is your alerts page.  CoinDock will automatically monitor the alert prices that you set and send you push notifications when required.  After a notification has been triggered the notification will be turned off.  You can manually turn individual alerts off/off or toggle all alerts at once.'
+const alertsInfo = 'This is your alerts page.  CoinDock will automatically monitor the alert prices that you set and send you push notifications when required.  After a notification has been triggered the notification will be turned off.  You can manually turn individual alerts on & off or toggle all alerts at once.'
 
 
 class AlertsHeading extends Component {
     state = {
         open: false,
-    }
-
-    handleAddAlert = () => {
-        
+        openInfo: false
     }
 
     handleDeleteAll = () => {
@@ -120,12 +124,22 @@ class AlertsHeading extends Component {
         })
     };
 
+    //dialog handlers
     handleOpenDialog = () => {
         this.setState({ open: true });
     }
-
+    handleOpenInfo = () => {
+        this.setState({
+            openInfo: true
+        })
+    }
     handleCloseDialog = () => {
         this.setState({ open: false });
+    }
+    handleCloseInfo = () => {
+        this.setState({
+            openInfo: false
+        })
     }
 
     render() {
@@ -169,24 +183,27 @@ class AlertsHeading extends Component {
                                 component={Link}
                                 to='/new-alert/new'
                                 className={classes.button}
-                                onClick={this.handleAddAlert}
                             >
                                 <AddCircle fontSize='small' />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title={infoTooltip}>
-                            <Help className={classes.icon} />
-                        </Tooltip>
+                        <IconButton
+                            size='small'
+                            className={classes.button}
+                            onClick={this.handleOpenInfo}
+                        >
+                            <Help fontSize='small' />
+                        </IconButton>
                     </div>
                     <Dialog
                         open={this.state.open}
                         onClose={this.handleCloseDialog}
                         aria-labelledby="form-dialog-title"
                     >
-                        <DialogTitle id="form-dialog-title">Delete?</DialogTitle>
+                        <DialogTitle id="form-dialog-title">Delete Alerts?</DialogTitle>
                         <DialogContent>
                             <DialogContentText className={classes.dialogText}>
-                                Are you sure?  This will delete all of your alerts.
+                                This will delete all of your alerts.
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
@@ -196,6 +213,21 @@ class AlertsHeading extends Component {
                             <Button onClick={this.handleDeleteAll} color="primary">
                                 Delete
                                 </Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Dialog
+                        open={this.state.openInfo}
+                        onClose={this.handleCloseInfo}
+                    >
+                        <DialogContent>
+                            <DialogContentText className={classes.dialogText}>
+                                {alertsInfo}
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleCloseInfo} color="primary">
+                                Okay
+                            </Button>
                         </DialogActions>
                     </Dialog>
                 </Paper>
