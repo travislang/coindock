@@ -28,6 +28,7 @@ class PortfolioPage extends Component {
         const socket = this.context;
         //send socket obj with dispatch so it can start connection when the response gets back
         this.props.dispatch({ type: 'FETCH_PORTFOLIOS', socket: socket })
+        this.props.dispatch({ type: 'SET_LOADING_TRUE' })
         socket.on('portfolioUpdate', ({msg, btc, eth}) => {
             this.props.dispatch({ type: 'UPDATE_PORTFOLIO_SYMBOLS', payload: {msg, btc, eth}})
         })

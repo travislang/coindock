@@ -70,6 +70,11 @@ class App extends Component {
         socket.on('connect', () => {
             console.log('the client connected');
         })
+        socket.on('triggerRender', (msg) => {
+            // updates alerts badge
+            this.props.dispatch({ type: 'FETCH_USER' })
+            this.props.dispatch({ type: 'FETCH_ALERTS' })
+        })
         socket.on('disconnect', () => {
             console.log('the client disconnected');
         })
@@ -143,10 +148,7 @@ class App extends Component {
                             </Switch>
                             {/* <Footer /> */}
                             <Hidden mdUp>
-                                <BottomNav style={{
-                                    position: 'absolute',
-                                    bottom: 0,
-                                    width: '100%'}} />
+                                <BottomNav />
                             </Hidden>
                         </div>
                     </Router>

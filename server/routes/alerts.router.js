@@ -59,6 +59,19 @@ router.delete('/:id', (req, res) => {
     })
 })
 
+// resets date sent of alert to null
+router.put('/remove-chip/:id', (req, res) => {
+    const alertId = req.params.id;
+    pool.query(`UPDATE "alerts" SET "alert_sent" = null WHERE "id" = $1`, [alertId])
+        .then(() => {
+            res.sendStatus(200);
+        })
+        .catch(err => {
+            console.log('error deleting alert sent from db', err);
+            res.sendStatus(500);
+        })
+})
+
 router.put('/toggle-alert/:id', (req, res) => {
     pool.query(`UPDATE "alerts" SET "alerts_on" = NOT "alerts_on" WHERE "id" =               $1`, [req.params.id])
         .then(() => {

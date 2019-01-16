@@ -9,14 +9,22 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Switch from '@material-ui/core/Switch';
+import Chip from '@material-ui/core/Chip';
 
 import green from '@material-ui/core/colors/green';
-
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReorderIcon from '@material-ui/icons/Reorder';
+import Hidden from '@material-ui/core/Hidden';
 
 const styles = theme => ({
+    "@global": {
+        html: {
+            [theme.breakpoints.down("md")]: {
+                fontSize: 10
+            }
+        }
+    },
     root: {
         width: '100%',
         backgroundColor: theme.palette.background.paper,
@@ -27,6 +35,11 @@ const styles = theme => ({
     inline: {
         display: 'inline',
         margin: theme.spacing.unit,
+    },
+    inlineMobile: {
+        display: 'inline',
+        margin: theme.spacing.unit,
+        marginLeft: theme.spacing.unit * 2
     },
     inlineTitle: {
         display: 'inline',
@@ -50,7 +63,11 @@ const styles = theme => ({
     centerButtons: {
         display: 'flex',
         alignItems: 'center'
-    }
+    },
+    chip: {
+        margin: theme.spacing.unit,
+        marginRight: theme.spacing.unit * 2
+    },
 
 });
 
@@ -64,8 +81,19 @@ class AlertsListItem extends Component {
         this.props.dispatch({type: 'DELETE_ALERT', payload: coinId})
     }
 
+    handleChipDelete = (alertId) => () => {
+        this.props.dispatch({type: 'DELETE_CHIP', payload: alertId})
+    }
+
     render() {
         const { classes, coin, user } = this.props;
+        const dateChip = <Chip
+                            label={`Alert Sent ${coin.alert_sent}`}
+                            onDelete={this.handleChipDelete(coin.id)}
+                            className={classes.chip}
+                            color="default"
+                            variant="outlined"
+                        />
         return (
             <ListItem className={classes.listItem} disabled={user.global_alerts_on && coin.alerts_on ? false : true} key={coin.id}>
                 <ListItemAvatar>
@@ -80,16 +108,26 @@ class AlertsListItem extends Component {
                             <Typography component="span" className={classes.inlineTitle} variant='h6' color="textPrimary">
                                 {coin.symbol_name}
                             </Typography>
-                            <Typography component="span" className={classes.inline} color="textSecondary">
-                                {`when 1 ${coin.base_asset} is ${coin.less_than ? 'less than' : 'more than'}`}
-                            </Typography>
+                            <Hidden smDown>
+                                <Typography component="span" className={classes.inline} color="textSecondary">
+                                    {`when 1 ${coin.base_asset} is ${coin.less_than ? 'less than' : 'more than'}`}
+                                </Typography>
+                            </Hidden>
+                            <Hidden smUp>
+                                <Typography component="span" className={classes.inlineMobile} 
+                                    variant='h5' color="textSecondary">
+                                    {`${coin.less_than ? '<' : '>'}`}
+                                </Typography>
+                            </Hidden>
                             <Typography component="span" className={classes.inlinePrice} variant='h5'>
                                 {`$${coin.price_threshold}`}
                             </Typography>
+                            
                         </React.Fragment>
                     }
                 />
                 <ListItemSecondaryAction className={classes.centerButtons}>
+                    {coin.alert_sent ? dateChip : null}
                     <IconButton
                         size='small'
                         className={classes.button}

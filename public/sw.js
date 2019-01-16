@@ -13,9 +13,9 @@ self.addEventListener('push', function (event) {
     const title = `${response.coin} is ${response.direction} $${response.threshold}`;
     const promiseChain = self.registration.showNotification(title, {
         icon: '/images/coindockicon.png'
-    }
+        }
     );
-    console.log('in push sw', event.data.json())
+    console.log('in push sw', event.data.json());
     event.waitUntil(promiseChain);
 });
 

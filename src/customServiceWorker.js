@@ -25,6 +25,9 @@ function askPermission() {
 }
 
 function subscribeUserToPush() {
+    navigator.serviceWorker.addEventListener('message', event => {
+        console.log(event.data.msg, event.data.url);
+    });
     return navigator.serviceWorker.register('sw.js')
         .then(function (registration) {
             const subscribeOptions = {

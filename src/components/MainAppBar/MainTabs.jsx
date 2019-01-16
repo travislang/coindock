@@ -1,22 +1,31 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { Link, withRouter } from 'react-router-dom';
 
 import HomeIcon from '@material-ui/icons/Home';
-import RssFeed from '@material-ui/icons/RssFeed';
+import Cast from '@material-ui/icons/CastRounded';
 import BrokenImage from '@material-ui/icons/BrokenImage';
 
+import Badge from '@material-ui/core/Badge';
 
-const styles = {
+const styles = theme => ({
     root: {
         flexGrow: 1,
     },
+    badge: {
+        backgroundColor: theme.palette.secondary.main,
+        top: '-7px',
+        right: '-9px',
+        width: 18,
+        height: 18
+    },
     small: {
         minHeight: '65px'
-    }
-};
+    },
+});
 
 class MainTabs extends React.Component {
     state = {
@@ -59,7 +68,7 @@ class MainTabs extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, user } = this.props;
 
         return (
             <Tabs
@@ -72,10 +81,29 @@ class MainTabs extends React.Component {
             >
                 <Tab className={classes.small} component={Link} to='/home' icon={<HomeIcon />} label="Home" />
                 <Tab className={classes.small} component={Link} to='/portfolio' icon={<BrokenImage />} label="Portfolio" />
-                <Tab className={classes.small} component={Link} to='/alerts' icon={<RssFeed />} label="Alerts" />
+                <Tab 
+                    
+                    component={Link} 
+                    to='/alerts' 
+                    icon={
+                        <Badge 
+                            max={25} 
+                            classes={{ badge: classes.badge }} 
+                            badgeContent={user.alerts_total}
+                            invisible={user.alerts_total === 0}
+                            >
+                            <Cast />
+                        </Badge>
+                        } 
+                    label='Alerts' 
+                    />
             </Tabs>
         );
     }
 }
 
-export default withRouter(withStyles(styles)(MainTabs));
+const mapStateToProps = store => ({
+    user: store.user,
+})
+
+export default withRouter(connect(mapStateToProps)(withStyles(styles)(MainTabs)));

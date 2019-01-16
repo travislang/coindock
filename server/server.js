@@ -5,7 +5,6 @@ const app = express();
 const server = require('http').Server(app);
 const bodyParser = require('body-parser');
 const sessionMiddleware = require('./modules/session-middleware');
-const moment = require('moment');
 const passport = require('./strategies/user.strategy');
 const io = require('socket.io')(server, {
     pingTimeout: 60000,
@@ -44,18 +43,38 @@ app.use('/api/portfolio', portfolioRouter);
 app.use('/api/alerts', alertsRouter);
 app.use('/api/push', pushRouter);
 
+//passes in passport auth user to socketIo
+io.use(function (socket, next) {
+    // Wrap the express middleware
+    sessionMiddleware(socket.request, {}, next);
+})
+
 // Serve static files
 app.use(express.static('build'));
 
 // WebSockets - these always need to be running
 webSockets.binanceAllTickers(io); // starts all tickers stream
-monitorAlerts.monitorAlerts(); // starts stream to monitor prices against alerts
+monitorAlerts.monitorAlerts(io); // starts stream to monitor prices against alerts
 
 // App Set //
 const PORT = process.env.PORT || 5000;
 
+// test to see what clients are connected
+// setInterval(() => {
+//     io.clients((error, clients) => {
+//         if (error) throw error;
+//         console.log('clients connected', clients); // => [PZDoMHjiu8PYfRiKAAAF, Anw2LatarvGVVXEIAAAD]
+//     });
+// }, 5000);
+
 io.on('connection', function (socket) {
     console.log('a user connected to server');
+    // the user id is coming from the socketIo middleware that accesses passport
+    if (socket.request.session.passport && socket.request.session.passport.user) {
+        const userId = socket.request.session.passport.user;
+        // save socket id to DB for later use by the monitorAlerts function
+        webSockets.saveSocket(socket.id, userId)
+    }
     //joins room for alltickers stream
     socket.on('joinAllTickers', () => {
         socket.join('allTickers');

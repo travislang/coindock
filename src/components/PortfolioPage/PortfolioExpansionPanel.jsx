@@ -27,6 +27,13 @@ import LineChart from '../LineChart/LineChart';
 import CountUp from 'react-countup';
 
 const styles = theme => ({
+    "@global": {
+        html: {
+            [theme.breakpoints.down("md")]: {
+                fontSize: 10
+            }
+        }
+    },
     root: {
         width: '100%',
     },

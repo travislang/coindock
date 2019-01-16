@@ -32,6 +32,8 @@ const tickers = (state = [], action) => {
     }
 };
 
+//getting error quote_asset of undefined reducer is getting called with empty arr
+
 function calculateUsd(btc, eth, coins) {
     const btcPrice = btc;
     const ethPrice = btcPrice * eth;

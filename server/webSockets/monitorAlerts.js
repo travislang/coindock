@@ -2,6 +2,7 @@ const express = require('express');
 const pool = require('../modules/pool');
 const WebSocket = require('ws');
 const webpush = require('../modules/web-push.module');
+const moment = require('moment');
 
 // current price of BTC and ETH -- needed to convert price to USD
 let btcPrice;
@@ -12,13 +13,13 @@ let globalTickerPrices = [];
 let globalAlerts = [];
 
 // monitor all alerts to send notifications
-function monitorAlerts() {
+function monitorAlerts(io) {
     // starts a websocket to get price data
     monitorAllPrices();
     // get all alerts from db
     getAlerts();
     // start 3 second interval to check coin prices
-    priceCheckInterval(globalAlerts);
+    priceCheckInterval(globalAlerts, io);
 }
 
 function monitorAllPrices() {
@@ -79,7 +80,7 @@ function monitorAllPrices() {
 
 // get alerts to monitor from db
 function getAlerts() {
-    const sqlText = `SELECT "alerts".id, "alerts".price_threshold, "alerts".less_than, "symbols".symbol, "symbols".quote_asset FROM "alerts"
+    const sqlText = `SELECT "alerts".id, "alerts".price_threshold, "alerts".less_than, "symbols".symbol, "symbols".quote_asset, "person".id AS person_id FROM "alerts"
     JOIN "symbols" ON "symbols".id = "alerts".symbol_id
     JOIN "person" ON "person".id = "alerts".person_id
     WHERE "person".global_alerts_on = true AND "alerts".alerts_on = true;`
@@ -88,10 +89,14 @@ function getAlerts() {
         // save alerts into global variable
         globalAlerts = rows;
     })
+    .catch( err => {
+        console.log('error getting alerts from DB', err);
+        
+    })
 }
 
 // set interval to check prices every 3 seconds
-function priceCheckInterval(alerts) {
+function priceCheckInterval(alerts, io) {
     //sets interval
     intervalId = setInterval(() => {
         //find alert matches
@@ -117,18 +122,30 @@ function priceCheckInterval(alerts) {
             })
             // if a coin matches update db and send push alert
             if (filteredCoins.length > 0) {
-                let date = Date.now();
+                let date = moment().format('MMM Do @ h:mma');
+                console.log('this is filtered coin obj', filteredCoins[0]);
+                
                 console.log('clearing interval');
                 // clear the interval
                 clearInterval(intervalId);
-                triggerPushNotification(filteredCoins[0].id)
+                triggerPushNotification(filteredCoins[0].id ,io)
                 // turn alerts off for alert that just got sent and attach alert time
                 pool.query(`UPDATE "alerts" SET "alerts_on" = NOT "alerts_on", "alert_sent" = $1 WHERE "id" = $2`, [date, filteredCoins[0].id])
+                    .then((res) => {
+                        return res;
+                    })
+                    .then(() => {
+                        // updates user db alerts total needed for badges
+                        return pool.query(`UPDATE "person" SET "alerts_total" = "alerts_total" + 1 WHERE "id" = $1`, [filteredCoins[0].person_id])
+                    })
                     .then(() => {
                         // call getAlerts again to get new alerts
                         getAlerts();
                         // set new 3 second interval
-                        priceCheckInterval(globalAlerts);
+                        priceCheckInterval(globalAlerts, io);
+                    })
+                    .catch( err => {
+                        console.log('error updating alerts in monitorAlerts', err);
                     })
             }
         }
@@ -160,8 +177,9 @@ function convertToUsd(coin) {
 }
 
 //get subscription data for user attached to alert that got triggered
-function triggerPushNotification(alertId) {
-    pool.query(`SELECT "alerts".*, "person".push_endpoint, "person".p256dh, "person".auth, "symbols".symbol_name FROM "alerts"
+function triggerPushNotification(alertId, io) {
+    pool.query(`SELECT "alerts".*, "person".push_endpoint, "person".p256dh, "person".auth,
+     "person".socket, "symbols".symbol_name FROM "alerts"
     JOIN "person" ON "person".id = "alerts".person_id
     JOIN "symbols" ON "symbols".id = "alerts".symbol_id
     WHERE "alerts".id = $1;`, [alertId])
@@ -181,8 +199,12 @@ function triggerPushNotification(alertId) {
                     direction: subscription.less_than ? 'less than' : 'more than',
                     threshold: subscription.price_threshold
                 }
+                const msg = 'updating';
 
                 promiseChain = promiseChain.then(() => {
+                    console.log(subscriptions.rows[i].socket);
+                    
+                    io.to(subscriptions.rows[i].socket).emit('triggerRender', msg);
                     return triggerPushMsg(subscriptionObj, dataToSend);
                 });
             }

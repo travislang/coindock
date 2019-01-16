@@ -38,7 +38,9 @@ class AlertsPage extends Component {
     }
 
     componentDidMount() {
-        this.props.dispatch({ type: 'FETCH_USER' });
+        // clears any badge alerts
+        this.props.dispatch({ type: 'CLEAR_ALERT_COUNT' });
+        // this.props.dispatch({ type: 'FETCH_USER' });
         this.props.dispatch({ type: 'FETCH_ALERTS' })
         this.setState({
             open: this.props.user.push_endpoint ? false : true
