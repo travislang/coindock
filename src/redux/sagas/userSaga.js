@@ -29,9 +29,15 @@ function* toggleAlerts() {
     yield put({type: 'FETCH_USER'})
 }
 
+function* clearAlertsCounter() {
+    yield call(axios.put, '/api/user/clear-alert-count')
+    yield put({ type: 'FETCH_USER' })
+}
+
 function* userSaga() {
   yield takeLatest('FETCH_USER', fetchUser);
   yield takeLatest('TOGGLE_ALERTS', toggleAlerts);
+    yield takeLatest('CLEAR_ALERT_COUNT', clearAlertsCounter);
 }
 
 export default userSaga;

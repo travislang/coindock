@@ -55,4 +55,15 @@ router.put('/toggle-alerts', (req, res) => {
         })
 })
 
+router.put('/clear-alert-count', (req, res) => {
+    pool.query(`UPDATE "person" SET "alerts_total" = 0 WHERE "id" =$1`, [req.user.id])
+    .then(() => {
+        res.sendStatus(200);
+    })
+    .catch(err => {
+        console.log('error clearing alerts count', err);
+        res.sendStatus(500);
+    })
+})
+
 module.exports = router;
