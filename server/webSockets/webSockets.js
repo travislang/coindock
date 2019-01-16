@@ -197,7 +197,15 @@ function binanceAllTickers(io) {
     })
 }
 
+function saveSocket(socketId, userId) {
+    pool.query(`UPDATE "person" SET "socket" = $1 WHERE "id" = $2`, [socketId, userId])
+    .then( () => {
+        return;
+    })
+}
+
 module.exports = {
     binanceAllTickers: binanceAllTickers,
-    startPortfolioStream: startPortfolioStream
+    startPortfolioStream: startPortfolioStream,
+    saveSocket: saveSocket
 }

@@ -16,7 +16,7 @@ const styles = theme => ({
         flexGrow: 1,
     },
     badge: {
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: theme.palette.secondary.main,
         top: '-7px',
         right: '-9px',
         width: 18,

@@ -13,13 +13,13 @@ let globalTickerPrices = [];
 let globalAlerts = [];
 
 // monitor all alerts to send notifications
-function monitorAlerts() {
+function monitorAlerts(io) {
     // starts a websocket to get price data
     monitorAllPrices();
     // get all alerts from db
     getAlerts();
     // start 3 second interval to check coin prices
-    priceCheckInterval(globalAlerts);
+    priceCheckInterval(globalAlerts, io);
 }
 
 function monitorAllPrices() {
@@ -96,7 +96,7 @@ function getAlerts() {
 }
 
 // set interval to check prices every 3 seconds
-function priceCheckInterval(alerts) {
+function priceCheckInterval(alerts, io) {
     //sets interval
     intervalId = setInterval(() => {
         //find alert matches
@@ -128,7 +128,7 @@ function priceCheckInterval(alerts) {
                 console.log('clearing interval');
                 // clear the interval
                 clearInterval(intervalId);
-                triggerPushNotification(filteredCoins[0].id)
+                triggerPushNotification(filteredCoins[0].id ,io)
                 // turn alerts off for alert that just got sent and attach alert time
                 pool.query(`UPDATE "alerts" SET "alerts_on" = NOT "alerts_on", "alert_sent" = $1 WHERE "id" = $2`, [date, filteredCoins[0].id])
                     .then((res) => {
@@ -142,7 +142,7 @@ function priceCheckInterval(alerts) {
                         // call getAlerts again to get new alerts
                         getAlerts();
                         // set new 3 second interval
-                        priceCheckInterval(globalAlerts);
+                        priceCheckInterval(globalAlerts, io);
                     })
                     .catch( err => {
                         console.log('error updating alerts in monitorAlerts', err);
@@ -177,8 +177,9 @@ function convertToUsd(coin) {
 }
 
 //get subscription data for user attached to alert that got triggered
-function triggerPushNotification(alertId) {
-    pool.query(`SELECT "alerts".*, "person".push_endpoint, "person".p256dh, "person".auth, "symbols".symbol_name FROM "alerts"
+function triggerPushNotification(alertId, io) {
+    pool.query(`SELECT "alerts".*, "person".push_endpoint, "person".p256dh, "person".auth,
+     "person".socket, "symbols".symbol_name FROM "alerts"
     JOIN "person" ON "person".id = "alerts".person_id
     JOIN "symbols" ON "symbols".id = "alerts".symbol_id
     WHERE "alerts".id = $1;`, [alertId])
@@ -198,8 +199,12 @@ function triggerPushNotification(alertId) {
                     direction: subscription.less_than ? 'less than' : 'more than',
                     threshold: subscription.price_threshold
                 }
+                const msg = 'hello this is working';
 
                 promiseChain = promiseChain.then(() => {
+                    console.log(subscriptions.rows[i].socket);
+                    
+                    io.to(subscriptions.rows[i].socket).emit('triggerRender', msg);
                     return triggerPushMsg(subscriptionObj, dataToSend);
                 });
             }

@@ -82,6 +82,10 @@ function urlBase64ToUint8Array(base64String) {
     return outputArray;
 }
 
+navigator.serviceWorker.addEventListener('message', event => {
+    console.log(event.data.msg, event.data.url);
+});
+
 export default {
     askPermission: askPermission,
     subscribeUserToPush: subscribeUserToPush

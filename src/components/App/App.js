@@ -70,6 +70,9 @@ class App extends Component {
         socket.on('connect', () => {
             console.log('the client connected');
         })
+        socket.on('triggerRender', (msg) => {
+            this.props.dispatch({ type: 'FETCH_ALERTS' })
+        })
         socket.on('disconnect', () => {
             console.log('the client disconnected');
         })
