@@ -113,14 +113,10 @@ class PortfolioExpansionPanel extends Component {
     }
 
 
-    // add coin to active portfolio
-
     render() {
         const { classes, coin, portfolioSymbols } = this.props;
         const { expanded } = this.state;
         const alertUrl = `/new-alert/${coin.id}`;
-        let countupEnd = 100;
-        let countupStart = 0;
         
         // let addedChip = '';
         // if (portfolioSymbols.length > 0) {

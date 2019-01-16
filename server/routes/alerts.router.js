@@ -33,6 +33,18 @@ router.post('/add', (req, res) => {
         })
 })
 
+router.delete('/', (req, res) => {
+    pool.query(`DELETE FROM "alerts" WHERE "person_id" = $1`, [req.user.id])
+    .then(() => {
+        monitorAlerts.getAlerts();
+        res.sendStatus(200);
+    })
+    .catch(err => {
+        console.log('error deleting all user alerts', err);
+        res.sendStatus(500);
+    })
+})
+
 router.delete('/:id', (req, res) => {
     const id = req.params.id;
     pool.query(`DELETE FROM "alerts" WHERE "id" = $1 AND "person_id" = $2`, [id, req.user.id])
@@ -60,6 +72,7 @@ router.put('/toggle-alert/:id', (req, res) => {
 })
 
 // route to match order of list to user preferences.  Need to look at more for bugs
+// need to refactor to use either async/await for promises - not both
 router.put('/update-order', (req, res) => {
     console.log('in put:', req.body.data);
     const coins = req.body.data;
@@ -76,18 +89,14 @@ router.put('/update-order', (req, res) => {
             console.log('responseArr', coins)
         } finally {
             console.log('done')
-            client.release()
+            res.sendStatus(200);
+            client.release();
         }
-    })().catch(e => console.log(e.stack))
+    })().catch(e => {
+        console.log(e.stack);
+        res.sendStatus(500);
+    })
     
 })
-
-
-
-
-
-
-
-
 
 module.exports = router;

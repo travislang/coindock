@@ -52,8 +52,9 @@ function* deletePortfolio(action) {
 }
 
 function* deletePortfolioCoin(action) {
+    console.log('delete port coin', action.payload);
     yield call(axios.delete, `/api/portfolio/coin/${action.payload.coinId}?pid=${action.payload.portfolioId}`)
-    yield put({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: action.payload.portfolioId})
+    yield put({ type: 'FETCH_PORTFOLIO_SYMBOLS', payload: {portfolio: action.payload.portfolioId}})
 }
 function* addPortfolio(action) {
     const responseId = yield call(axios.post, '/api/portfolio/new', action.payload.name)

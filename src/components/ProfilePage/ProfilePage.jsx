@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
+import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import EditIcon from '@material-ui/icons/Edit';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -12,15 +14,11 @@ import Grid from '@material-ui/core/Grid';
 const styles = theme => ({
     root: {
         flexGrow: 1,
-        minHeight: '100vh',
+        minHeight: '30vh',
+        padding: theme.spacing.unit * 3
     },
     container: {
         marginTop: theme.spacing.unit * 7,
-    },
-    border: {
-        border: `2px solid ${theme.palette.divider}`,
-        borderRadius: '15px',
-        padding: theme.spacing.unit * 3
     },
     avatar: {
         margin: 10,
@@ -30,6 +28,13 @@ const styles = theme => ({
     label: {
         margin: theme.spacing.unit * 2,
         color: theme.palette.text.secondary
+    },
+    editButton: {
+        color: 'rgba(255, 255, 255, 0.5)',
+        marginLeft: theme.spacing.unit * 2,
+    },
+    spacingText: {
+        marginBottom: theme.spacing.unit * 3
     }
 });
 
@@ -38,34 +43,49 @@ class ProfilePage extends Component {
 
 
     render() {
-        const { classes, user, portfolios } = this.props;
+        const { classes, user, portfolios, alerts } = this.props;
 
         return (
-            <div className={classes.root}>
-                <Grid container className={classes.container} alignItems='center' justify='center' >
-                    <Grid item className={classes.border} xs={10} md={7} lg={4}>
-                        <Grid container justify='center'>
-                            {user.facebook_image !== 'none' ? <Avatar className={classes.avatar} alt="user profile image" src={user.facebook_image} /> : <AccountCircle className={classes.avatar} />}
-                        </Grid>
-                        <Typography gutterBottom color='textPrimary' align='center' variant="h3">
-                            {user.name}
-                        </Typography>
-                        <Typography color='textPrimary' align='center' variant="body1" gutterBottom >
-                            <span className={classes.label}>
-                                Number Of Portfolios:
-                            </span> 
-                            {portfolios.portfolios && portfolios.portfolios.length}
-                        </Typography>
+            <Grid container className={classes.container} alignItems='center' justify='center' >
+                <Grid item xs={10} md={7} lg={4}>
+                    <Paper className={classes.root} elevation={10}>
+                    <Grid container justify='center'>
+                        {user.facebook_image !== 'none' ? <Avatar className={classes.avatar} alt="user profile image" src={user.facebook_image} /> : <AccountCircle className={classes.avatar} />}
                     </Grid>
+                    <Typography gutterBottom color='textPrimary' align='center' variant="h3">
+                        {user.name}
+                    </Typography>
+                    <Typography color='textPrimary' align='center' variant="body1" gutterBottom >
+                        Username
+                        <EditIcon className={classes.editButton} fontSize='small' />
+                    </Typography>
+                        <Typography className={classes.spacingText} color='textPrimary' align='center' variant="body1" gutterBottom >
+                        Password
+                        <EditIcon className={classes.editButton} fontSize='small' />
+                    </Typography>
+                    <Typography color='textPrimary' align='center' variant="body1" gutterBottom >
+                        <span className={classes.label}>
+                            Number of portfolios:
+                        </span>
+                        {portfolios.portfolios && portfolios.portfolios.length}
+                    </Typography>
+                    <Typography color='textPrimary' align='center' variant="body1" gutterBottom >
+                        <span className={classes.label}>
+                            Number of active alerts:
+                        </span>
+                        {alerts.length}
+                    </Typography>
+                    </Paper>
                 </Grid>
-            </div>
+            </Grid>
         )
     }
 }
 
 const mapStateToProps = state => ({
     user: state.user,
-    portfolios: state.portfolios
+    portfolios: state.portfolios,
+    alerts: state.alerts
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(ProfilePage));

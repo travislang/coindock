@@ -45,6 +45,11 @@ class MainTabs extends React.Component {
                 value: 2
             })
         }
+        else if (this.props.history.location.pathname.includes('/profile')) {
+            this.setState({
+                value: 5
+            })
+        }
         console.log(this.props.history.location);
         
     }

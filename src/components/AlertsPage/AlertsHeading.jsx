@@ -19,6 +19,15 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Tooltip from '@material-ui/core/Tooltip';
 
+// dialog dependencies
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 const styles = theme => ({
     paper: {
         padding: theme.spacing.unit,
@@ -77,19 +86,30 @@ const styles = theme => ({
     buttonAlign: {
         display: 'flex',
         alignItems: 'center'
+    },
+    dialogText: {
+        marginBottom: theme.spacing.unit
     }
 })
 const infoTooltip = 'This is your alerts page.  CoinDock will automatically monitor the alert prices that you set and send you push notifications when required.  After a notification has been triggered the notification will be turned off.  You can manually turn individual alerts off/off or toggle all alerts at once.'
 
 
 class AlertsHeading extends Component {
+    state = {
+        open: false,
+    }
 
     handleAddAlert = () => {
         
     }
 
     handleDeleteAll = () => {
-        
+        const { enqueueSnackbar } = this.props;
+        this.props.dispatch({type: 'DELETE_ALL_ALERTS'})
+        enqueueSnackbar(`all alerts successfully deleted`, {
+            variant: 'success',
+            autoHideDuration: 4000
+        })
     }
 
     handleToggle =  () => {
@@ -101,6 +121,14 @@ class AlertsHeading extends Component {
             autoHideDuration: 4000
         })
     };
+
+    handleOpenDialog = () => {
+        this.setState({ open: true });
+    }
+
+    handleCloseDialog = () => {
+        this.setState({ open: false });
+    }
 
     render() {
         const { classes, user } = this.props;
@@ -132,7 +160,7 @@ class AlertsHeading extends Component {
                             <IconButton
                                 size='small'
                                 className={classes.deleteButton}
-                                onClick={this.handleDeleteAll}
+                                onClick={this.handleOpenDialog}
                             >
                                 <DeleteIcon fontSize='small' />
                             </IconButton>
@@ -152,6 +180,26 @@ class AlertsHeading extends Component {
                             <Help className={classes.icon} />
                         </Tooltip>
                     </div>
+                    <Dialog
+                        open={this.state.open}
+                        onClose={this.handleCloseDialog}
+                        aria-labelledby="form-dialog-title"
+                    >
+                        <DialogTitle id="form-dialog-title">Delete?</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText className={classes.dialogText}>
+                                Are you sure?  This will delete all of your alerts.
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.handleCloseDialog} color="default">
+                                Cancel
+                                </Button>
+                            <Button onClick={this.handleDeleteAll} color="primary">
+                                Delete
+                                </Button>
+                        </DialogActions>
+                    </Dialog>
                 </Paper>
             </Grid>
         )

@@ -31,6 +31,16 @@ function* deleteAlert(action) {
     }
 }
 
+function* deleteAllAlerts() {
+    try {
+        yield call(axios.delete, `api/alerts`)
+        yield put({ type: 'FETCH_ALERTS' })
+    }
+    catch (err) {
+        console.log('error in add alert saga', err);
+    }
+}
+
 function* toggleCoinAlerts(action) {
     try {
         yield call(axios.put, `/api/alerts/toggle-alert/${action.payload}`);
@@ -52,6 +62,7 @@ function* alertsSaga() {
     yield takeLatest('UPDATE_ALERTS_ORDER', updateAlertsOrder);
     yield takeLatest('ADD_ALERT', addAlert);
     yield takeLatest('DELETE_ALERT', deleteAlert);
+    yield takeLatest('DELETE_ALL_ALERTS', deleteAllAlerts);
 }
 
 

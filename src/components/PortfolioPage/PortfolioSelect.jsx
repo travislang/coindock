@@ -93,6 +93,10 @@ const styles = theme => ({
     },
     dialogText: {
         marginBottom: theme.spacing.unit
+    },
+    selectButton: {
+        color: 'rgba(255, 255, 255, 0.5)',
+        padding: theme.spacing.unit / 2
     }
 })
 
@@ -115,35 +119,32 @@ class PortfolioSelect extends Component {
 
     handleClose = (item) => {
         const socket = this.context;
-        this.props.dispatch({ type: 'SET_LOADING_TRUE' })
         const currentPortfolio = this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0];
         console.log('current portfolio', currentPortfolio);
         
         this.setState({ anchorEl: null });
         // check to make sure user closed menu by clicking a portfolio item
         if (Number(item.id) && (currentPortfolio && currentPortfolio.id) != item.id ) {
+            this.props.dispatch({ type: 'SET_LOADING_TRUE' })
             this.props.dispatch({ type: 'SET_ACTIVE', payload: {data: { data: item.id }, socket: socket}})
             // close current socket stream and start new one with updated symbols
             socket.emit('closePortfolioWs');
         }
     };
 
+    // dialog state management functions
     handleOpenDialog = () => {
         this.setState({ open: true });
     }
-
     handleDeleteOpenDialog = () => {
         this.setState({ openDeleteDialog: true });
     }
-
     handleCloseDialog = () => {
         this.setState({ open: false });
     }
-
     handleCloseDeleteDialog = () => {
         this.setState({ openDeleteDialog: false });
     }
-
     handleNewPortfolio = (e) => {
         this.setState({
             newPortfolio: e.target.value
@@ -171,7 +172,7 @@ class PortfolioSelect extends Component {
         // delete portfolio
         this.handleDelete();
     }
-
+    // delete portfolio from db
     handleDelete = () => {
         const socket = this.context;
         this.props.dispatch({ type: 'SET_LOADING_TRUE' })
@@ -211,15 +212,15 @@ class PortfolioSelect extends Component {
                         <Typography className={classes.titleText} color='textPrimary' variant='overline'>
                             {portfolios.activePortfolio && portfolios.activePortfolio[0] && portfolios.activePortfolio[0].portfolio_name || 'No Portfolio Selected'}
                         </Typography>
-                        <Tooltip title="Switch Portfolio" aria-label="Switch Portfolio">
+                        <Tooltip disableFocusListener={true} title="Switch Portfolio" aria-label="Switch Portfolio">
                             <IconButton
                                 size='small'
-                                className={classes.button}
+                                className={classes.selectButton}
                                 aria-owns={anchorEl ? 'simple-menu' : undefined}
                                 aria-haspopup="true"
                                 onClick={this.handleClick}
                             >
-                                <ArrowDropDown fontSize='small' />
+                                <ArrowDropDown  />
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -236,7 +237,7 @@ class PortfolioSelect extends Component {
                         </Menu>
                     </div>
                     <div className={classNames(classes.column, classes.editButtons)}>
-                        <Tooltip title="Delete Portfolio" aria-label="Delete Portfolio">
+                        <Tooltip disableFocusListener title="Delete Portfolio" aria-label="Delete Portfolio">
                             <IconButton
                                 size='small'
                                 className={classes.deleteButton}
@@ -247,7 +248,7 @@ class PortfolioSelect extends Component {
                                 <DeleteIcon fontSize='small' />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="New Portfolio" aria-label="New Portfolio">
+                        <Tooltip disableFocusListener={true} title="New Portfolio" aria-label="New Portfolio">
                             <IconButton
                                 size='small'
                                 className={classes.button}
@@ -301,7 +302,7 @@ class PortfolioSelect extends Component {
                                 </DialogContentText>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={this.handleCloseDialog} color="default">
+                                <Button onClick={this.handleCloseDeleteDialog} color="default">
                                     Cancel
                                 </Button>
                                 <Button onClick={this.handleDeleteDialog} color="primary">
