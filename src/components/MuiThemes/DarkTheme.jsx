@@ -12,7 +12,9 @@ const darkTheme = createMuiTheme({
     palette: {
         type: 'dark',
         primary: lightBlue,
-        secondary: purple,
+        secondary: {
+            main: red[700],
+        },
         error: red,
         contrastThreshold: 3,
         tonalOffset: 0.2,

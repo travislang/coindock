@@ -43,13 +43,11 @@ const styles = theme => ({
         flexWrap: 'wrap',
         alignItems: 'center',
         justifyContent: 'center',
-        border: `1px solid ${theme.palette.primary.dark}`,
-        borderRadius: '30px'
     },
     titleText: {
         letterSpacing: '2px',
-        fontSize: '0.85rem',
-        lineHeight: 'normal'
+        fontSize: '1.1rem',
+        lineHeight: 1.2
     },
     column: {
         flexBasis: '33%'
@@ -89,7 +87,7 @@ const styles = theme => ({
     },
     dialogText: {
         marginBottom: theme.spacing.unit
-    }
+    },
 })
 const infoTooltip = 'This is your alerts page.  CoinDock will automatically monitor the alert prices that you set and send you push notifications when required.  After a notification has been triggered the notification will be turned off.  You can manually turn individual alerts off/off or toggle all alerts at once.'
 

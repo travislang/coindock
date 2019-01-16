@@ -9,9 +9,9 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Switch from '@material-ui/core/Switch';
+import Chip from '@material-ui/core/Chip';
 
 import green from '@material-ui/core/colors/green';
-
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReorderIcon from '@material-ui/icons/Reorder';
@@ -50,7 +50,11 @@ const styles = theme => ({
     centerButtons: {
         display: 'flex',
         alignItems: 'center'
-    }
+    },
+    chip: {
+        margin: theme.spacing.unit,
+        marginRight: theme.spacing.unit * 2
+    },
 
 });
 
@@ -64,8 +68,19 @@ class AlertsListItem extends Component {
         this.props.dispatch({type: 'DELETE_ALERT', payload: coinId})
     }
 
+    handleChipDelete = (alertId) => () => {
+        this.props.dispatch({type: 'DELETE_CHIP', payload: alertId})
+    }
+
     render() {
         const { classes, coin, user } = this.props;
+        const dateChip = <Chip
+                            label={`Alert Sent ${coin.alert_sent}`}
+                            onDelete={this.handleChipDelete(coin.id)}
+                            className={classes.chip}
+                            color="default"
+                            variant="outlined"
+                        />
         return (
             <ListItem className={classes.listItem} disabled={user.global_alerts_on && coin.alerts_on ? false : true} key={coin.id}>
                 <ListItemAvatar>
@@ -86,10 +101,12 @@ class AlertsListItem extends Component {
                             <Typography component="span" className={classes.inlinePrice} variant='h5'>
                                 {`$${coin.price_threshold}`}
                             </Typography>
+                            
                         </React.Fragment>
                     }
                 />
                 <ListItemSecondaryAction className={classes.centerButtons}>
+                    {coin.alert_sent ? dateChip : null}
                     <IconButton
                         size='small'
                         className={classes.button}
