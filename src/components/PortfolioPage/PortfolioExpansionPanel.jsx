@@ -25,6 +25,7 @@ import red from '@material-ui/core/colors/red';
 
 import LineChart from '../LineChart/LineChart';
 import CountUp from 'react-countup';
+import CoinLoader from './CoinLoader';
 
 const styles = theme => ({
     "@global": {
@@ -125,20 +126,6 @@ class PortfolioExpansionPanel extends Component {
         const { expanded } = this.state;
         const alertUrl = `/new-alert/${coin.id}`;
         
-        // let addedChip = '';
-        // if (portfolioSymbols.length > 0) {
-        //     let match = portfolioSymbols.filter(item => {
-        //         return item.id === coin.id
-        //     })
-        //     if (match.length === 1) {
-        //         addedChip = (<Chip
-        //             icon={<DoneAll />}
-        //             label="Added to Portfolio"
-        //             className={classes.chip}
-        //             variant="outlined"
-        //         />)
-        //     }
-        // }
         return (
             <ExpansionPanel expanded={expanded === coin.id} onChange={this.handleChange(coin.id)}>
                 <ExpansionPanelSummary classes={{ expandIcon: classes.expandIcon, root: classes.summaryRoot}} expandIcon={<ExpandMoreIcon color='disabled' />}>
@@ -149,19 +136,24 @@ class PortfolioExpansionPanel extends Component {
                         </Typography>
                         {/* {addedChip} */}
                     </div>
-                    <CountUp 
-                        start={Number(coin.previous_price)} 
-                        end={Number(coin.usd_price)} 
-                        delay={0}
-                        decimals={2}
-                        prefix={'$'}
-                    >
-                        {({ countUpRef }) => (
-                            <div className={classes.countup}>
-                                <span ref={countUpRef} />
-                            </div>
-                        )}
-                    </CountUp>
+                    {coin.previous_price ? 
+                        <CountUp 
+                            start={Number(coin.previous_price)} 
+                            end={Number(coin.usd_price)} 
+                            delay={0}
+                            duration={3}
+                            decimals={2}
+                            prefix={'$'}
+                        >
+                            {({ countUpRef }) => (
+                                <div className={classes.countup}>
+                                    <span ref={countUpRef} />
+                                </div>
+                            )}
+                        </CountUp>
+                    :
+                        <CoinLoader />
+                    }
                     {/* <Typography variant='h4' className={classes.textPrice}>{Number(coin.usd_price).toFixed(2)}</Typography> */}
                     <Typography variant='overline' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
                     <div

@@ -119,7 +119,12 @@ router.get('/alltickers', (req, res) => {
                     SET "last_price" = $1, "volume" = $2, "price_change" = $3
                     WHERE "symbol" = $4;`, params)
                     .then(result => {
+                        console.log('promise chain', item);
+                        
                         return result;
+                    })
+                    .catch(err => {
+                        console.log('error in promise chain all tickers', err);
                     })
             })
         }

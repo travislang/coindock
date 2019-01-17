@@ -10,12 +10,6 @@ let ethPrice;
 
 // starts socket for portfolio symbols
 function startPortfolioStream(coins, socket) {
-    // sends emit right away
-    socket.emit('portfolioUpdate', {
-        msg: symbolsToSend,
-        btc: btcPrice,
-        eth: ethPrice
-    })
     // sends emits every 3 seconds
     const intervalId = setInterval(() => {
         socket.emit('portfolioUpdate', {
@@ -190,11 +184,6 @@ function binanceAllTickers(io) {
             eth: ethPrice
         })
     }, 3000);
-    io.to('allTickers').emit('allTickers', {
-        msg: allTickers,
-        btc: btcPrice,
-        eth: ethPrice
-    })
 }
 
 function saveSocket(socketId, userId) {

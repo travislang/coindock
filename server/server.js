@@ -6,9 +6,10 @@ const server = require('http').Server(app);
 const bodyParser = require('body-parser');
 const sessionMiddleware = require('./modules/session-middleware');
 const passport = require('./strategies/user.strategy');
-const io = require('socket.io')(server, {
-    pingTimeout: 60000,
-});
+// const io = require('socket.io')(server, {
+//     pingTimeout: 60000,
+// });
+const io = require('socket.io')(server);
 
 // Route includes
 const userRouter = require('./routes/user.router');

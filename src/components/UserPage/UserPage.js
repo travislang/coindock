@@ -47,6 +47,7 @@ const styles = theme => ({
 
 class UserPage extends Component {
     // static contextType = ThemeContext;
+
     loadCoins = (page) => {
         console.log('in loadcoins');
         const amount = page * 20;
@@ -75,7 +76,6 @@ class UserPage extends Component {
         // set false so it shows all symbols
         this.props.dispatch({ type: 'SET_SEARCH_FALSE' })
         // clear out any prior searches
-        this.props.dispatch({ type: 'CLEAR_TICKERS' })
         this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
         this.props.dispatch({ type: 'FETCH_TICKER_NAMES' })
         socket.on('allTickers', ({msg, btc, eth}) => {
@@ -94,7 +94,8 @@ class UserPage extends Component {
         const socket = this.context;
         //leave allTickers room
         socket.emit('leaveAllTickers');
-        console.log('unmounting home');
+        // clear ticker saga
+        this.props.dispatch({ type: 'CLEAR_TICKERS' })
         
     }
 

@@ -32,7 +32,7 @@ function* fetchTickerNames() {
 }
 
 function* tickersSaga() {
-    yield takeEvery('FETCH_TICKERS', fetchTickers);
+    yield takeLatest('FETCH_TICKERS', fetchTickers);
     yield takeEvery('FETCH_SEARCH_TICKER', fetchSearchTicker);
     yield takeLatest('FETCH_TICKER_NAMES', fetchTickerNames);
 }

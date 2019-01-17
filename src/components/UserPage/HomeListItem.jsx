@@ -37,10 +37,6 @@ const styles = theme => ({
     inlineTitle: {
         display: 'inline',
     },
-    textPrice: {
-        display: 'inline',
-        paddingRight: theme.spacing.unit * 2,
-    },
     textPercentPos: {
         display: 'inline',
         color: green[400],
@@ -135,7 +131,7 @@ class HomeListItem extends Component {
                                 </Hidden>
                             </span>
                             <React.Fragment>
-                                {/* <CountUp
+                                <CountUp
                                     start={Number(coin.previous_price)}
                                     end={Number(coin.usd_price)}
                                     delay={0}
@@ -147,8 +143,7 @@ class HomeListItem extends Component {
                                             <span ref={countUpRef} />
                                         </div>
                                     )}
-                                </CountUp> */}
-                                <Typography component="span" variant='h5' className={classes.textPrice}>${Number(coin.usd_price).toFixed(2)}</Typography>
+                                </CountUp>
                                 <Typography component="span" variant='overline' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
                             </React.Fragment>
                             
