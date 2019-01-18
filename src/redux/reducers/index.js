@@ -10,6 +10,7 @@ import alerts from './alerts.reducer';
 import tickerNames from './tickerNames.reducer';
 import search from './search.reducer';
 import loading from './loading.reducer';
+import connectedFlag from './connectedFlag.reducer';
 
 const rootReducer = combineReducers({
   errors, // contains registrationMessage and loginMessage
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   alerts,
   tickerNames,
   search,
-  loading
+  loading,
+  connectedFlag // used to know if server socket to API lost connection
 });
 
 export default rootReducer;

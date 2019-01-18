@@ -15,13 +15,18 @@ import PlayArrow from '@material-ui/icons/PlayArrow';
 
 const styles = theme => ({
     root: {
-        width: '100%',
+        minHeight: 'calc(100vh - 65px)',
+        backgroundColor: theme.palette.background.default,
+    },
+    hero: {
+        minHeight: '100%',
+    },
+    secondaryGroup: {
         minHeight: '100vh',
         backgroundColor: theme.palette.background.paper,
     },
-    hero: {
-        height: '92vh',
-        backgroundColor: theme.palette.background.default,
+    iconColumn: {
+        border: '1px solid blue',
     },
     mockup: {
         width: '100%'
@@ -34,7 +39,7 @@ const styles = theme => ({
     },
     button: {
         margin: theme.spacing.unit * 2
-    }
+    },
 });
 
 class LandingPage extends Component {
@@ -44,81 +49,94 @@ class LandingPage extends Component {
     render() {
         const { classes, user } = this.props;
         return (
-            <div className={classes.root}>
-                <Grid container className={classes.hero} alignItems='center' justify='space-around' >
-                    <Grid item xs={12} md={5}>
-                        <img src='/images/coindock-mockup.png' className={classes.mockup} />
-                    </Grid>
-                    <Grid item xs={12} md={5}>
-                        <Grid container alignItems='flex-start'>
-                            <Grid item xs={12}>
-                                <Typography className={classes.title} variant="h4" color="textSecondary">
-                                    A Cross Platform Cryptocurrency Tracking Application
+            <div>
+                <Grid container direction='column' justify='space-around' className={classes.root}>
+                    <Grid container alignItems='center' className={classes.hero} justify='space-around' >
+                        <Grid item xs={12} md={5}>
+                            <img src='/images/coindock-mockup.png' className={classes.mockup} />
+                        </Grid>
+                        <Grid item xs={12} md={5}>
+                            <Grid container alignItems='flex-start'>
+                                <Grid item xs={12}>
+                                    <Typography className={classes.title} variant="h4" color="textSecondary">
+                                        A Cross Platform Cryptocurrency Tracking Application
                                 </Typography>
-                                <List>
-                                    <ListItem>
-                                        <ListItemIcon>
-                                            <PlayArrow color='primary' />
-                                        </ListItemIcon>
-                                        <ListItemText
-                                            primaryTypographyProps={'color'}
-                                            color='textSecondary'
-                                            primary="Real-Time Prices"
-                                            secondary={null}
-                                        />
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemIcon>
-                                            <PlayArrow color='primary' />
-                                        </ListItemIcon>
-                                        <ListItemText
-                                            primaryTypographyProps={'color'}
-                                            color='textSecondary'
-                                            primary="Create multiple portfolios to organize your coins"
-                                            secondary={null}
-                                        />
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemIcon>
-                                            <PlayArrow color='primary' />
-                                        </ListItemIcon>
-                                        <ListItemText
-                                            primaryTypographyProps={'color'}
-                                            color='textSecondary'
-                                            primary="Set price points and recieve push alerts"
-                                            secondary={null}
-                                        />
-                                    </ListItem>
-                                </List>
-                            </Grid>
-                            <Grid className={classes.buttons} item xs={12}>
-                                <Grid container justify='flex-start'>
-                                    <Button 
-                                        component={Link}
-                                        to='/home'
-                                        variant="contained" 
-                                        size="large" 
-                                        color="default" 
-                                        className={classes.button}>
+                                    <List>
+                                        <ListItem>
+                                            <ListItemIcon>
+                                                <PlayArrow color='primary' />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                                primaryTypographyProps={'color'}
+                                                color='textSecondary'
+                                                primary="Real-Time Prices"
+                                                secondary={null}
+                                            />
+                                        </ListItem>
+                                        <ListItem>
+                                            <ListItemIcon>
+                                                <PlayArrow color='primary' />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                                primaryTypographyProps={'color'}
+                                                color='textSecondary'
+                                                primary="Create multiple portfolios to organize your coins"
+                                                secondary={null}
+                                            />
+                                        </ListItem>
+                                        <ListItem>
+                                            <ListItemIcon>
+                                                <PlayArrow color='primary' />
+                                            </ListItemIcon>
+                                            <ListItemText
+                                                primaryTypographyProps={'color'}
+                                                color='textSecondary'
+                                                primary="Set price points and recieve push alerts"
+                                                secondary={null}
+                                            />
+                                        </ListItem>
+                                    </List>
+                                </Grid>
+                                <Grid className={classes.buttons} item xs={12}>
+                                    <Grid container justify='flex-start'>
+                                        <Button
+                                            component={Link}
+                                            to='/home'
+                                            variant="contained"
+                                            size="large"
+                                            color="default"
+                                            className={classes.button}>
                                             Register
                                     </Button>
-                                    <Button 
-                                        component={Link}
-                                        to='/home'
-                                        variant="contained" 
-                                        size="large" 
-                                        color="primary" 
-                                        className={classes.button}>
+                                        <Button
+                                            component={Link}
+                                            to='/home'
+                                            variant="contained"
+                                            size="large"
+                                            color="primary"
+                                            className={classes.button}>
                                             Login
                                     </Button>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
                     <Grid item xs={12}>
                         <Grid container justify='center'>
-                            <ExpandMoreIcon color="primary" style={{ fontSize: 50 }}/>
+                            <ExpandMoreIcon color="primary" style={{ fontSize: 50}} />
                         </Grid>
+                    </Grid>
+                </Grid>
+                <Grid container className={classes.secondaryGroup}>
+                    <Grid item xs={12} md={4} className={classes.iconColumn}>
+                        Test Data
+                    </Grid>
+                    <Grid item xs={12} md={4} className={classes.iconColumn}>
+                        Test Data
+                    </Grid>
+                    <Grid item xs={12} md={4} className={classes.iconColumn}>
+                        Test Data
                     </Grid>
                 </Grid>
             </div>

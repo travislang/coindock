@@ -78,10 +78,16 @@ class UserPage extends Component {
         // clear out any prior searches
         this.props.dispatch({ type: 'FETCH_PORTFOLIOS' })
         this.props.dispatch({ type: 'FETCH_TICKER_NAMES' })
-        socket.on('allTickers', ({msg, btc, eth}) => {
+        socket.on('allTickers', ({msg, btc, eth, connectedFlag}) => {
             this.props.dispatch({
                 type: 'UPDATE_TICKERS', payload: { msg, btc, eth }
             });
+            if(!connectedFlag) {
+                this.props.dispatch({type: 'SET_CONNECTED_FALSE'})
+            }
+            if(connectedFlag) {
+                this.props.dispatch({ type: 'SET_CONNECTED_TRUE' })
+            }
         })
         socket.emit('joinAllTickers')
         // if socket loses connection it will rejoin room on reconnect

@@ -29,8 +29,14 @@ class PortfolioPage extends Component {
         //send socket obj with dispatch so it can start connection when the response gets back
         this.props.dispatch({ type: 'FETCH_PORTFOLIOS', socket: socket })
         this.props.dispatch({ type: 'SET_LOADING_TRUE' })
-        socket.on('portfolioUpdate', ({msg, btc, eth}) => {
+        socket.on('portfolioUpdate', ({msg, btc, eth, portfolioConnectedFlag}) => {
             this.props.dispatch({ type: 'UPDATE_PORTFOLIO_SYMBOLS', payload: {msg, btc, eth}})
+            if (!portfolioConnectedFlag) {
+                this.props.dispatch({ type: 'SET_CONNECTED_FALSE' })
+            }
+            if (portfolioConnectedFlag) {
+                this.props.dispatch({ type: 'SET_CONNECTED_TRUE' })
+            }
         })
 
         socket.on('reconnect', () => {

@@ -7,6 +7,7 @@ const server = require('../server');
 let symbolsToSend = [];
 let btcPrice;
 let ethPrice;
+let portfolioConnectedFlag = false;
 
 // starts socket for portfolio symbols
 function startPortfolioStream(coins, socket) {
@@ -15,8 +16,10 @@ function startPortfolioStream(coins, socket) {
         socket.emit('portfolioUpdate', {
             msg: symbolsToSend,
             btc: btcPrice,
-            eth: ethPrice
+            eth: ethPrice,
+            portfolioConnectedFlag: portfolioConnectedFlag
         })
+        portfolioConnectedFlag = false;
     }, 3000);
     //get symbols out of obj
     let portfolioSymbols = coins.map(item => {
@@ -60,6 +63,7 @@ function portfolioSocket(portfolioSymbols, intervalId, socket) {
     });
     //listen for data stream
     ws.on('message', (data) => {
+        portfolioConnectedFlag = true;
         const dataObj = JSON.parse(data)
         let foundIndex = symbolsToSend.findIndex(el => {
             return el.data.s === dataObj.data.s
@@ -121,6 +125,8 @@ function binanceAllTickers(io) {
     let allTickers;
     let btcPrice;
     let ethPrice;
+    // flag to tell client if server socket to API has disconnected
+    let connectedFlag = false;
 
     let pingTimeout;
     //opens allTickers stream
@@ -150,6 +156,8 @@ function binanceAllTickers(io) {
    
     //listen for data stream
     ws.on('message', function (data) {
+        // lets the client know if server websocke to api has disconnected
+        connectedFlag = true;
         const dataObj = JSON.parse(data)
         if (dataObj.stream === '!ticker@arr') {
             allTickers = dataObj.data;
@@ -181,8 +189,10 @@ function binanceAllTickers(io) {
         io.to('allTickers').emit('allTickers', {
             msg: allTickers,
             btc: btcPrice,
-            eth: ethPrice
+            eth: ethPrice,
+            connectedFlag: connectedFlag
         })
+        connectedFlag = false;
     }, 3000);
 }
 

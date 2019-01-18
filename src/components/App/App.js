@@ -19,6 +19,7 @@ import ProfilePage from '../ProfilePage/ProfilePage';
 import AlertsPage from '../AlertsPage/AlertsPage';
 import NewAlert from '../NewAlert/NewAlert';
 import LandingPage from '../LandingPage/LandingPage';
+import ReconnectError from '../ReconnectError/ReconnectError';
 
 import './App.css';
 import 'typeface-roboto';
@@ -47,6 +48,7 @@ const styles = {
 }
 
 class App extends Component {
+    
     componentDidMount() {
         // check for service worker and notification support and install sw
         if ('serviceWorker' in navigator && 'PushManager' in window) {
@@ -147,7 +149,7 @@ class App extends Component {
                                 {/* If none of the other routes matched, we will show a 404. */}
                                 <Route render={() => <h1>404</h1>} />
                             </Switch>
-                            {/* <Footer /> */}
+                            {!this.props.connectedFlag && <ReconnectError />}
                             <Hidden mdUp>
                                 <BottomNav />
                             </Hidden>
@@ -159,4 +161,8 @@ class App extends Component {
     }
 }
 
-export default connect()(App);
+const mapStateToProps = state => ({
+    connectedFlag: state.connectedFlag
+});
+
+export default connect(mapStateToProps)(App);

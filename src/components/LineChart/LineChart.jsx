@@ -28,12 +28,6 @@ function LineChart(props) {
         <div {...props} style={{height: '100px'}}>
             <ResponsiveLine
                 data={data}
-                // margin={{
-                //     "top": 50,
-                //     "right": 110,
-                //     "bottom": 50,
-                //     "left": 60
-                // }}
                 colorBy={function (c) { return c.color }}
                 lineWidth={2}
                 curve="monotoneX"

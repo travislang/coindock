@@ -149,7 +149,8 @@ class MainAppBar extends Component {
                                         <TagFaces className={classes.icon} />
                                         Profile
                                     </MenuItem>
-                                    <MenuItem onClick={this.handleLogout}>
+                                    <MenuItem component={Link}
+                                        to="/" onClick={this.handleLogout}>
                                         <PowerSettings className={classes.icon} />
                                         Logout
                                     </MenuItem>
