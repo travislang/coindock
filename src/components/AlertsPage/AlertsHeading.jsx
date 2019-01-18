@@ -187,13 +187,15 @@ class AlertsHeading extends Component {
                                 <AddCircle fontSize='small' />
                             </IconButton>
                         </Tooltip>
-                        <IconButton
-                            size='small'
-                            className={classes.button}
-                            onClick={this.handleOpenInfo}
-                        >
-                            <Help fontSize='small' />
-                        </IconButton>
+                        <Tooltip title={'Help'}>
+                            <IconButton
+                                size='small'
+                                className={classes.button}
+                                onClick={this.handleOpenInfo}
+                            >
+                                <Help fontSize='small' />
+                            </IconButton>
+                        </Tooltip>
                     </div>
                     <Dialog
                         open={this.state.open}

@@ -30,6 +30,7 @@ function* fetchPortfolioSymbols(action) {
     const newResponse = yield call(axios.post, '/api/crypto/klines', {data: responseSymbols.data})
     yield put({ type: 'SET_PORTFOLIO_SYMBOLS', payload: newResponse.data })
     if(action.payload && action.payload.socket) {
+        // close current socket stream and start new one with updated symbols
         action.payload.socket.emit('closePortfolioWs')
         action.payload.socket.emit('portfolioStream', newResponse.data)
     }

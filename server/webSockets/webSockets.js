@@ -91,7 +91,7 @@ function portfolioSocket(portfolioSymbols, intervalId, socket) {
     
     // client socket closed, disconnect ws
     socket.on('disconnect', () => {
-        console.log('client disconnected, closing portfolioStream webSocket.');
+        console.log('client', socket.id, 'disconnected, closing portfolioStream webSocket.');
         didIClose = true;
         ws.close(1001);
         // clears socket.emit 3 second interval

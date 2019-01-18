@@ -1,25 +1,23 @@
 import React from 'react';
-import './Footer.css'
-import axios from 'axios';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
-// This is one of our simplest components
-// It doesn't have local state, so it can be a function component.
-// It doesn't dispatch any redux actions or display any part of redux state
-// or even care what the redux state is, so it doesn't need 'connect()'
-
-const triggerPush = () => {
-        setTimeout(() => {
-            axios.post('/api/push/trigger-push/2')
-        }, 3000)
+const styles = theme => ({
+    footer: {
+        width: '100%',
+        position: 'absolute',
+        bottom: 0,
+        height: 40,
+        backgroundColor: theme.palette.background.default
     }
+});
 
-const Footer = () => (
-  <footer>
-    &copy; Prime Digital Academy
-    <button onClick={triggerPush}>
-        trigger push
-    </button>
+const Footer = (props) => (
+  <footer className={props.classes.footer}>
+    <Typography variant="overline" align={'center'}>
+            Travis Lang &copy; 2019
+    </Typography>
   </footer>
 );
 
-export default Footer;
+export default withStyles(styles)(Footer);

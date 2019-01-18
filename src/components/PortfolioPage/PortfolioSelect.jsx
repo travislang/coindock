@@ -130,15 +130,11 @@ class PortfolioSelect extends Component {
     handleClose = (item) => {
         const socket = this.context;
         const currentPortfolio = this.props.portfolios.activePortfolio && this.props.portfolios.activePortfolio[0];
-        console.log('current portfolio', currentPortfolio);
-        
         this.setState({ anchorEl: null });
         // check to make sure user closed menu by clicking a portfolio item
         if (Number(item.id) && (currentPortfolio && currentPortfolio.id) != item.id ) {
             this.props.dispatch({ type: 'SET_LOADING_TRUE' })
             this.props.dispatch({ type: 'SET_ACTIVE', payload: {data: { data: item.id }, socket: socket}})
-            // close current socket stream and start new one with updated symbols
-            socket.emit('closePortfolioWs');
         }
     };
 
@@ -237,7 +233,6 @@ class PortfolioSelect extends Component {
                             id="simple-menu"
                             anchorEl={anchorEl}
                             open={Boolean(anchorEl)}
-                            onClose={this.handleClose}
                         >
                             {portfolios.portfolios && portfolios.portfolios.map(item => {
                                 return (

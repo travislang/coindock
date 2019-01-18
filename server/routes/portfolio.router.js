@@ -20,7 +20,6 @@ router.get('/', (req, res) => {
             pool.query(`INSERT INTO "portfolio"("person_id", "active")
                         VALUES($1, true) RETURNING *;`, [req.user.id])
             .then( result => {
-                console.log(result.rows);
                 res.send( result.rows )
             })
         }
@@ -34,8 +33,6 @@ router.get('/', (req, res) => {
 //route to save active portfolio in DB
 router.post('/', (req, res) => {
     const id = req.body.data;
-    console.log('in post portfolio', id);
-    
     // set all portfolios user owns to false
     pool.query('UPDATE "portfolio" SET "active" = false WHERE "person_id" = $1', [req.user.id])
     .then( result => {
@@ -58,8 +55,6 @@ router.post('/', (req, res) => {
 router.delete('/coin/:id', (req, res) => {
     const coinId = req.params.id;
     const portfolioId = req.query.pid;
-    console.log('in coin deleete', coinId, portfolioId);
-    
     pool.query(`DELETE FROM "portfolio_symbols" WHERE "symbol_id" = $1 AND "portfolio_id" = $2`, [coinId, portfolioId])
         .then(() => {
             res.sendStatus(201);
@@ -127,8 +122,6 @@ router.get('/symbols/:id', (req, res) => {
 router.post('/add', (req, res) => {
     const portfolioId = req.body.portfolio;
     const coinId = req.body.coin;
-    console.log('in add coin');
-
     pool.query(`INSERT INTO "portfolio_symbols"("symbol_id", "portfolio_id")
                 VALUES($1, $2);`, [coinId, portfolioId])
         .then( () => {

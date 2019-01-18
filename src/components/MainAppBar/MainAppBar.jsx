@@ -5,11 +5,10 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import PowerSettings from '@material-ui/icons/PowerSettingsNew';
 import TagFaces from '@material-ui/icons/Person';
+import Subtitles from '@material-ui/icons/Subtitles';
 import Avatar from '@material-ui/core/Avatar';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -36,6 +35,8 @@ const styles = theme => ({
     },
     button: {
         margin: theme.spacing.unit,
+        marginRight: 0,
+        paddingRight: 0
     },
     menuButton: {
         marginLeft: -12,
@@ -67,6 +68,10 @@ const styles = theme => ({
     },
     icon: {
         marginRight: theme.spacing.unit * 2
+    },
+    toolbar: {
+        marginRight: 32,
+        marginLeft: 32
     }
 });
 
@@ -95,10 +100,7 @@ class MainAppBar extends Component {
         return (
             <div className={classes.root}>
                 <AppBar color='default' position="static">
-                    <Toolbar>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-                            <MenuIcon />
-                        </IconButton>
+                    <Toolbar className={classes.toolbar} >
                         {user.id ? <NavLink to="/home" className={classes.breakpointGrow} style={{ textDecoration: 'none', color: 'unset' }}>
                             <LogoIcon />
                             {/* need this to add flex grow to logo if not logged in */}
@@ -137,6 +139,11 @@ class MainAppBar extends Component {
                                 >
                                     {/* <MenuItem component={Link}
                                     to="/about" onClick={this.handleClose} >About</MenuItem> */}
+                                    <MenuItem component={Link}
+                                        to="/about" onClick={this.handleClose}>
+                                        <Subtitles className={classes.icon} />
+                                        About
+                                    </MenuItem>
                                     <MenuItem component={Link} 
                                     to="/profile" onClick={this.handleClose}>
                                         <TagFaces className={classes.icon} />

@@ -47,15 +47,18 @@ class LandingPage extends Component {
                     <Grid item xs={12} md={5}>
                         <Grid container>
                             <Grid item xs={12}>
-                                <Typography className={classes.title} variant="h3" align={'center'} color="textPrimary">
-                                    CoinDock
+                                <Typography className={classes.title} variant="h3" color="textPrimary">
+                                    A Cross Platform Real-Time
                                 </Typography>
-                                <Typography variant="h5" align={'center'} color="textSecondary">
+                                <Typography className={classes.title} variant="h3" color="textPrimary">
+                                    Cryptocurrency Tracking Application
+                                </Typography>
+                                {/* <Typography variant="h5" align={'center'} color="textSecondary">
                                     A Cross Platform Real-Time
                                 </Typography>
                                 <Typography variant="h5" align={'center'} color="textSecondary">
                                     Cryptocurrency Tracking Application
-                                </Typography>
+                                </Typography> */}
                             </Grid>
                             <Grid className={classes.buttons} item xs={12}>
                                 <Grid container justify='center'>

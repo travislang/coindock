@@ -19,6 +19,8 @@ import AddCircle from '@material-ui/icons/AddCircle';
 
 import CountUp from 'react-countup';
 import Hidden from '@material-ui/core/Hidden';
+import Tooltip from '@material-ui/core/Tooltip';
+import CoinLoader from '../PortfolioPage/CoinLoader';
 
 const styles = theme => ({
     root: {
@@ -131,19 +133,24 @@ class HomeListItem extends Component {
                                 </Hidden>
                             </span>
                             <React.Fragment>
-                                <CountUp
-                                    start={Number(coin.previous_price)}
-                                    end={Number(coin.usd_price)}
-                                    delay={0}
-                                    decimals={2}
-                                    prefix={'$'}
-                                >
-                                    {({ countUpRef }) => (
-                                        <div className={classes.countup}>
-                                            <span ref={countUpRef} />
-                                        </div>
-                                    )}
-                                </CountUp>
+                                {coin.previous_price ?
+                                    <CountUp
+                                        start={Number(coin.previous_price)}
+                                        end={Number(coin.usd_price)}
+                                        delay={0}
+                                        duration={3}
+                                        decimals={Number(coin.usd_price) > 10 ? 2 : 4}
+                                        prefix={'$'}
+                                    >
+                                        {({ countUpRef }) => (
+                                            <div className={classes.countup}>
+                                                <span ref={countUpRef} />
+                                            </div>
+                                        )}
+                                    </CountUp>
+                                    :
+                                    <CoinLoader />
+                                }
                                 <Typography component="span" variant='overline' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
                             </React.Fragment>
                             
@@ -151,13 +158,15 @@ class HomeListItem extends Component {
                     }
                 />
                 <ListItemSecondaryAction className={classes.centerButtons}>
-                    <IconButton
-                        size='small'
-                        className={classes.button}
-                        onClick={() => this.addCoin(coin)}
-                    >
-                        <AddCircle fontSize='small' />
-                    </IconButton>
+                    <Tooltip disableFocusListener={true} title="Add To Portfolio" aria-label="Add To Portfolio">
+                        <IconButton
+                            size='small'
+                            className={classes.button}
+                            onClick={() => this.addCoin(coin)}
+                        >
+                            <AddCircle fontSize='small' />
+                        </IconButton>
+                    </Tooltip>
                 </ListItemSecondaryAction>
             </ListItem>
         )

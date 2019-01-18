@@ -6,9 +6,6 @@ const server = require('http').Server(app);
 const bodyParser = require('body-parser');
 const sessionMiddleware = require('./modules/session-middleware');
 const passport = require('./strategies/user.strategy');
-// const io = require('socket.io')(server, {
-//     pingTimeout: 60000,
-// });
 const io = require('socket.io')(server);
 
 // Route includes
@@ -24,6 +21,9 @@ const pushRouter = require('./routes/push.router');
 const monitorAlerts = require('./webSockets/monitorAlerts');
 //module to handle websocket connections -- passing in the io socket 
 const webSockets = require('./webSockets/webSockets');
+
+//server functions
+const binanceUpdates = require('./modules/binance-updates');
 
 // Body parser middleware
 app.use(bodyParser.json());
@@ -57,6 +57,11 @@ app.use(express.static('build'));
 webSockets.binanceAllTickers(io); // starts all tickers stream
 monitorAlerts.monitorAlerts(io); // starts stream to monitor prices against alerts
 
+// update DB symbol prices once an hour
+const intervalId = setInterval(() => {
+    binanceUpdates.updateSymbolPrices();
+}, 3600000);
+
 // App Set //
 const PORT = process.env.PORT || 5000;
 
@@ -87,7 +92,7 @@ io.on('connection', function (socket) {
     socket.on('portfolioStream', (data) => {
         if (data.length > 0) {
             webSockets.startPortfolioStream(data, socket);
-            console.log(socket.id, 'started portfolio stream');
+            console.log(socket.id, 'starting portfolio stream');
         }
         else {
             console.log(socket.id, 'no symbols in this portfolio');

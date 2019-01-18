@@ -87,7 +87,6 @@ router.put('/toggle-alert/:id', (req, res) => {
 // route to match order of list to user preferences.  Need to look at more for bugs
 // need to refactor to use either async/await for promises - not both
 router.put('/update-order', (req, res) => {
-    console.log('in put:', req.body.data);
     const coins = req.body.data;
     (async () => {
         const client = await pool.connect()
@@ -95,13 +94,9 @@ router.put('/update-order', (req, res) => {
             await Promise.all(
                 coins.map( async (coin, i) => {
                     await client.query(`UPDATE "alerts" SET "order" = $1 WHERE "id" = $2 AND "person_id" = $3;`, [i + 1, coin.id, req.user.id])
-                    console.log('in map');
-                    
                 })
             )
-            console.log('responseArr', coins)
         } finally {
-            console.log('done')
             res.sendStatus(200);
             client.release();
         }

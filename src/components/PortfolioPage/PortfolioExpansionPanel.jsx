@@ -26,6 +26,7 @@ import red from '@material-ui/core/colors/red';
 import LineChart from '../LineChart/LineChart';
 import CountUp from 'react-countup';
 import CoinLoader from './CoinLoader';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
     "@global": {
@@ -142,7 +143,7 @@ class PortfolioExpansionPanel extends Component {
                             end={Number(coin.usd_price)} 
                             delay={0}
                             duration={3}
-                            decimals={2}
+                            decimals={Number(coin.usd_price) > 10 ? 2 : 4}
                             prefix={'$'}
                         >
                             {({ countUpRef }) => (
@@ -168,7 +169,7 @@ class PortfolioExpansionPanel extends Component {
                 <ExpansionPanelDetails>
                     <div className={classes.column}>
                         <Typography variant='h5'>
-                            ${coin.high ? Number(coin.high).toFixed(4) : 'Loading...'}
+                            {coin.high ? `$${Number(coin.high).toFixed(4)}` : <CoinLoader />}
                         </Typography>
                         <Typography color='textSecondary' variant='overline'>
                             24 Hour High
@@ -176,14 +177,16 @@ class PortfolioExpansionPanel extends Component {
                     </div>
                     <div className={classes.column}>
                         <Typography variant='h5'>
-                            ${coin.low ? Number(coin.low).toFixed(4) : 'Loading...'}
+                            {coin.low ? `$${Number(coin.low).toFixed(4)}` : <CoinLoader />}
                             </Typography>
                         <Typography color='textSecondary' variant='overline'>
                             24 Hour Low
                             </Typography>
                     </div>
                     <div className={classes.columnRight}>
-                        <LineChart klines={coin.kline} />
+                        <Tooltip title="7 Day Chart" placement="bottom-end" aria-label="7 Day Chart">
+                            <LineChart klines={coin.kline} />
+                        </Tooltip>
                     </div>
                 </ExpansionPanelDetails>
                 <Divider />
