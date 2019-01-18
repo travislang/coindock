@@ -49,23 +49,21 @@ class MainTabs extends React.Component {
                 value: 2
             })
         }
+        else if (this.props.history.location.pathname === '/about') {
+            this.setState({
+                value: false
+            })
+        }
+        else if (this.props.history.location.pathname === '/profile') {
+            this.setState({
+                value: false
+            })
+        }
         else if (this.props.history.location.pathname.includes('/new-alert')) {
             this.setState({
                 value: 2
             })
         }
-        else if (this.props.history.location.pathname.includes('/profile')) {
-            this.setState({
-                value: 5
-            })
-        }
-        else if (this.props.history.location.pathname.includes('/about')) {
-            this.setState({
-                value: 5
-            })
-        }
-        console.log(this.props.history.location);
-        
     }
 
     handleChange = (event, value) => {
@@ -74,7 +72,8 @@ class MainTabs extends React.Component {
 
     render() {
         const { classes, user } = this.props;
-
+        console.log('histpry', this.props.history.location);
+        
         return (
             <Tabs
                 value={this.state.value}

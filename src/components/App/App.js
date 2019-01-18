@@ -69,6 +69,7 @@ class App extends Component {
         //start socket connection
         socket.on('connect', () => {
             console.log('the client connected');
+            
         })
         socket.on('triggerRender', (msg) => {
             // updates alerts badge

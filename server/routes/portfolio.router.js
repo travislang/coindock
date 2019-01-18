@@ -7,7 +7,7 @@ const { rejectUnauthenticated } = require('../modules/authentication-middleware'
  * GET route template
  */
 //get all portfolios owned by user
-router.get('/', (req, res) => {
+router.get('/', rejectUnauthenticated, (req, res) => {
     pool.query(`SELECT * FROM "portfolio"
                 WHERE "person_id" = $1`, [req.user.id])
     .then( result => {
@@ -32,7 +32,7 @@ router.get('/', (req, res) => {
 })
 
 //route to save active portfolio in DB
-router.post('/', (req, res) => {
+router.post('/', rejectUnauthenticated, (req, res) => {
     const id = req.body.data;
     // set all portfolios user owns to false
     pool.query('UPDATE "portfolio" SET "active" = false WHERE "person_id" = $1', [req.user.id])
@@ -53,7 +53,7 @@ router.post('/', (req, res) => {
     })
 })
 
-router.delete('/coin/:id', (req, res) => {
+router.delete('/coin/:id', rejectUnauthenticated, (req, res) => {
     const coinId = req.params.id;
     const portfolioId = req.query.pid;
     pool.query(`DELETE FROM "portfolio_symbols" WHERE "symbol_id" = $1 AND "portfolio_id" = $2`, [coinId, portfolioId])
@@ -67,7 +67,7 @@ router.delete('/coin/:id', (req, res) => {
 })
 
 // delete portfolio from db
-router.delete( '/:id', (req, res) => {
+router.delete('/:id', rejectUnauthenticated, (req, res) => {
     console.log('in delete', req.params.id);
     
     const id = req.params.id;
@@ -87,7 +87,7 @@ router.delete( '/:id', (req, res) => {
 })
 
 // add new portfolio to db
-router.post('/new', (req, res) => {
+router.post('/new', rejectUnauthenticated, (req, res) => {
     pool.query(`INSERT INTO "portfolio"("portfolio_name", "person_id")
                 VALUES($1, $2) RETURNING id`, [req.body.data, req.user.id])
         .then( result => {
@@ -100,7 +100,7 @@ router.post('/new', (req, res) => {
 })
 
 // get all coins in a portfolio
-router.get('/symbols/:id', (req, res) => {
+router.get('/symbols/:id', rejectUnauthenticated, (req, res) => {
     // capture portfolio id
     let id = req.params.id
     // get all symbols for portfolio that user owns
@@ -120,7 +120,7 @@ router.get('/symbols/:id', (req, res) => {
 })
 
 // add new coin to db
-router.post('/add', (req, res) => {
+router.post('/add', rejectUnauthenticated, (req, res) => {
     const portfolioId = req.body.portfolio;
     const coinId = req.body.coin;
     pool.query(`INSERT INTO "portfolio_symbols"("symbol_id", "portfolio_id")

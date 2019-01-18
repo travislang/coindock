@@ -36,7 +36,7 @@ function AboutPage(props) {
                                 <PlayArrow color='primary' />
                             </ListItemIcon>
                             <ListItemText
-                                primary="React/Redux/Sagas/Material-UI"
+                                primary="React/Redux/Sagas/Node/Express/Material-UI"
                                 secondary={null}
                             />
                         </ListItem>

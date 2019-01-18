@@ -136,6 +136,7 @@ function checkPriceThreshold() {
     })
     // if a coin matches update db and send push alert
     if (filteredCoins.length > 0) {
+        // add timeout here for demo purposes
         let date = moment().format('MMM Do @ h:mma');
         console.log('clearing interval');
         // clear the interval

@@ -16,8 +16,6 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 // The only thing different from this and every other post we've seen
 // is that the password gets encrypted before being inserted
 router.post('/register', (req, res, next) => {
-    console.log('made it to register', req.body);
-    
     const name = req.body.name;
     const username = req.body.username;
     const password = encryptLib.encryptPassword(req.body.password);
@@ -43,7 +41,7 @@ router.post('/logout', (req, res) => {
     res.sendStatus(200);
 });
 
-router.put('/toggle-alerts', (req, res) => {
+router.put('/toggle-alerts', rejectUnauthenticated, (req, res) => {
     pool.query(`UPDATE "person" SET "global_alerts_on" = NOT "global_alerts_on" WHERE "id" =               $1`, [req.user.id])
         .then( result => {
             monitorAlerts.getAlerts();
