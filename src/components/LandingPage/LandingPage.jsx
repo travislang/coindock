@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { NavLink, Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMoreRounded';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import PlayArrow from '@material-ui/icons/PlayArrow';
 
 const styles = theme => ({
     root: {
@@ -45,28 +50,66 @@ class LandingPage extends Component {
                         <img src='/images/coindock-mockup.png' className={classes.mockup} />
                     </Grid>
                     <Grid item xs={12} md={5}>
-                        <Grid container>
+                        <Grid container alignItems='flex-start'>
                             <Grid item xs={12}>
-                                <Typography className={classes.title} variant="h3" color="textPrimary">
-                                    A Cross Platform Real-Time
+                                <Typography className={classes.title} variant="h4" color="textSecondary">
+                                    A Cross Platform Cryptocurrency Tracking Application
                                 </Typography>
-                                <Typography className={classes.title} variant="h3" color="textPrimary">
-                                    Cryptocurrency Tracking Application
-                                </Typography>
-                                {/* <Typography variant="h5" align={'center'} color="textSecondary">
-                                    A Cross Platform Real-Time
-                                </Typography>
-                                <Typography variant="h5" align={'center'} color="textSecondary">
-                                    Cryptocurrency Tracking Application
-                                </Typography> */}
+                                <List>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <PlayArrow color='primary' />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primaryTypographyProps={'color'}
+                                            color='textSecondary'
+                                            primary="Real-Time Prices"
+                                            secondary={null}
+                                        />
+                                    </ListItem>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <PlayArrow color='primary' />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primaryTypographyProps={'color'}
+                                            color='textSecondary'
+                                            primary="Create multiple portfolios to organize your coins"
+                                            secondary={null}
+                                        />
+                                    </ListItem>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <PlayArrow color='primary' />
+                                        </ListItemIcon>
+                                        <ListItemText
+                                            primaryTypographyProps={'color'}
+                                            color='textSecondary'
+                                            primary="Set price points and recieve push alerts"
+                                            secondary={null}
+                                        />
+                                    </ListItem>
+                                </List>
                             </Grid>
                             <Grid className={classes.buttons} item xs={12}>
-                                <Grid container justify='center'>
-                                    <Button variant="contained" size="large" color="default" className={classes.button}>
-                                        Register
+                                <Grid container justify='flex-start'>
+                                    <Button 
+                                        component={Link}
+                                        to='/home'
+                                        variant="contained" 
+                                        size="large" 
+                                        color="default" 
+                                        className={classes.button}>
+                                            Register
                                     </Button>
-                                    <Button variant="contained" size="large" color="primary" className={classes.button}>
-                                        Login
+                                    <Button 
+                                        component={Link}
+                                        to='/home'
+                                        variant="contained" 
+                                        size="large" 
+                                        color="primary" 
+                                        className={classes.button}>
+                                            Login
                                     </Button>
                                 </Grid>
                             </Grid>

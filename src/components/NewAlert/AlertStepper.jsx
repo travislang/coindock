@@ -74,9 +74,6 @@ class AlertStepper extends Component {
 
     componentDidMount() {
         const { activeStep } = this.state;
-        console.log('this is coinId', this.props.coinId);
-        console.log('checkin nan', Number.isNaN(this.props.coinId));
-        
         if (this.props.coinId !== 'new') {
             this.setState({
                 coinName: this.props.coinId,
@@ -136,7 +133,6 @@ class AlertStepper extends Component {
 
     // called when user selects item from search form
     handleSelection = (name) => {
-        console.log('in handle selection', name);
         this.setState({
             coinName: name.id,
             activeStep: 1
@@ -144,7 +140,6 @@ class AlertStepper extends Component {
     }
 
     render() {
-
         // coinId is passed in as prop
         const { classes, coinId } = this.props;
         const steps = getSteps();
@@ -204,11 +199,11 @@ class AlertStepper extends Component {
                             />
                         </div>
                     )}
-                    {activeStep === steps.length - 1 ? (
+                    {activeStep >= 2 ? (
                         <div>
                             <Fab
                                 component={Link}
-                                to='/alerts'
+                                to='/portfolio'
                                 variant="extended"
                                 className={classes.fab}
                                 color='primary'

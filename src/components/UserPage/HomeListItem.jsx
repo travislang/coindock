@@ -74,6 +74,16 @@ const styles = theme => ({
 
 class HomeListItem extends Component {
 
+    componentDidMount() {
+        setTimeout(() => {
+            if(!this.props.coin.previous_price) {
+                console.log('this is prev', this.props.coin.previous_price, 'this is usd', this.props.coin.usd_price, 'this is coin', this.props.coin);
+                
+                this.props.coin.previous_price = this.props.coin.usd_price;
+            }
+        }, 6000);
+    }
+
     // add coin to active portfolio
     addCoin = ({ id, symbol_name }) => {
         const { portfolioSymbols } = this.props;

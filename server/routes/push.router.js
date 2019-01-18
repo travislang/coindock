@@ -2,7 +2,7 @@ const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
 const webpush = require('../modules/web-push.module');
-
+const { rejectUnauthenticated } = require('../modules/authentication-middleware');
 
 // saves users push subscription to db
 router.post('/save-subscription', (req, res) => {

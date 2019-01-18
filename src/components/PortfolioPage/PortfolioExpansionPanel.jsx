@@ -111,6 +111,16 @@ class PortfolioExpansionPanel extends Component {
         expanded: null,
     };
 
+    componentDidMount() {
+        setTimeout(() => {
+            if (!this.props.coin.previous_price) {
+                console.log('this is prev', this.props.coin.previous_price, 'this is usd', this.props.coin.usd_price, 'this is coin', this.props.coin);
+
+                this.props.coin.previous_price = this.props.coin.usd_price;
+            }
+        }, 6000);
+    }
+
     handleChange = panel => (event, expanded) => {
         this.setState({
             expanded: expanded ? panel : false,

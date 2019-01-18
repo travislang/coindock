@@ -13,7 +13,7 @@ import Footer from'../Footer/Footer';
 const styles = theme => ({
     root: {
         position: 'relative',
-        minHeight: '100vh',
+        minHeight: '90vh',
         flexGrow: 1,
     },
     title: {
@@ -27,7 +27,7 @@ function AboutPage(props) {
         <Grid className={classes.root} container justify={'center'}>
             <Grid item xs={12} md={6}>
                 <Typography variant="h4" align={'center'} className={classes.title}>
-                    About CoinDock
+                    Technologies Used:
                 </Typography>
                 <Grid container justify={'center'} className={classes.demo}>
                     <List>
@@ -36,7 +36,7 @@ function AboutPage(props) {
                                 <PlayArrow color='primary' />
                             </ListItemIcon>
                             <ListItemText
-                                primary="React/Redux/Sagas"
+                                primary="React/Redux/Sagas/Material-UI"
                                 secondary={null}
                             />
                         </ListItem>

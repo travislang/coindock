@@ -59,6 +59,11 @@ class MainTabs extends React.Component {
                 value: 5
             })
         }
+        else if (this.props.history.location.pathname.includes('/about')) {
+            this.setState({
+                value: 5
+            })
+        }
         console.log(this.props.history.location);
         
     }
