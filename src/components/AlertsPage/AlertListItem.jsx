@@ -21,7 +21,7 @@ const styles = theme => ({
     "@global": {
         html: {
             [theme.breakpoints.down("md")]: {
-                fontSize: 10
+                fontSize: 12
             }
         }
     },

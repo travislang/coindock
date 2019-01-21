@@ -40,7 +40,7 @@ function calculateUsd(btc, eth, coins) {
     // stops error if coins is undefined
     let newCoins = coins.length > 0 ? coins : [];
     const newState = newCoins.map(ticker => {
-        if (ticker.quote_asset === 'BTC') {
+        if (ticker && ticker.quote_asset === 'BTC') {
             let usdPrice = btcPrice * ticker.last_price;
             let usdPrev = btcPrice * ticker.previous_price;
             return {
@@ -49,13 +49,13 @@ function calculateUsd(btc, eth, coins) {
                 usd_price: usdPrice,
             }
         }
-        else if (ticker.quote_asset === 'USDT') {
+        else if (ticker && ticker.quote_asset === 'USDT') {
             return {
                 ...ticker,
                 usd_price: ticker.last_price,
             }
         }
-        else if (ticker.quote_asset === 'ETH') {
+        else if (ticker && ticker.quote_asset === 'ETH') {
             let usdPrice = ethPrice * ticker.last_price;
             let usdPrev = ethPrice * ticker.previous_price;
             return {
