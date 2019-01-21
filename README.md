@@ -4,10 +4,10 @@
 
 A cryptocurrency tracking app
 
-The user can seamlessly check real-time cryptocurrency price data on mobile or desktop and receive push notifications on dynamically generated alerts without downloading a native app
+Seamlessly check real-time cryptocurrency price data on mobile or desktop, create multiple different portfolios to organize different cryptocurrencies, and receive push notifications on dynamically generated price alerts.
 
 ## Screen Shot
-![screenshot](/assets/screenShot.png)
+![screenshot](/public/images/coindock-mockup.png)
 
 ## Built With
 
@@ -18,10 +18,11 @@ The user can seamlessly check real-time cryptocurrency price data on mobile or d
 -Redux
 -Sagas
 -Material-UI
--webSockets
+-webSockets API's
 -socket.io
 -Nivo (charts)
--web Push
+-web Push API
+-service workers
 
 ## Getting Started
 
