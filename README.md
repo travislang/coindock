@@ -7,7 +7,7 @@ A cryptocurrency tracking app
 Seamlessly check real-time cryptocurrency price data on mobile or desktop, create multiple different portfolios to organize different cryptocurrencies, and receive push notifications on dynamically generated price alerts.
 
 ## Screen Shot
-![screenshot](/public/images/coindock-mockup.png)
+![screenshot](/public/images/main-coindock.png)
 
 ## Built With
 
