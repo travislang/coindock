@@ -162,7 +162,7 @@ function checkPriceThreshold() {
                 .catch(err => {
                     console.log('error updating alerts in monitorAlerts', err);
                 })
-        }, 5000);
+        }, 10000);
         
     }
 }

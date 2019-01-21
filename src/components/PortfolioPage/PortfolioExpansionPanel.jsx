@@ -166,7 +166,7 @@ class PortfolioExpansionPanel extends Component {
                         <CoinLoader />
                     }
                     {/* <Typography variant='h4' className={classes.textPrice}>{Number(coin.usd_price).toFixed(2)}</Typography> */}
-                    <Typography variant='overline' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
+                    <Typography variant='h6' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
                     <div
                         style={{ display: 'flex', alignItems: 'center', paddingRight: 0 }}
                         {...this.props.dragHandleProps}>

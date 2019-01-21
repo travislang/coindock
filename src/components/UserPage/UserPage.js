@@ -18,13 +18,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 const styles = theme => ({
-    "@global": {
-        html: {
-            [theme.breakpoints.down("md")]: {
-                fontSize: 10
-            }
-        }
-    },
+    // "@global": {
+    //     html: {
+    //         [theme.breakpoints.down("md")]: {
+    //             fontSize: 10
+    //         }
+    //     }
+    // },
     root: {
         flexGrow: 1,
         minHeight: '100vh',

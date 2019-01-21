@@ -74,7 +74,7 @@ const styles = theme => ({
         fontSize: '1.2rem',
         lineHeight: 1.5,
         [theme.breakpoints.down("md")]: {
-            fontSize: 9
+            fontSize: 10
         }
     },
     column: {

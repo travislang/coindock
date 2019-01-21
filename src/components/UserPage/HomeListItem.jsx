@@ -161,7 +161,7 @@ class HomeListItem extends Component {
                                     :
                                     <CoinLoader />
                                 }
-                                <Typography component="span" variant='overline' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
+                                <Typography component="span" variant='h6' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
                             </React.Fragment>
                             
                         </div>
