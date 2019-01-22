@@ -96,7 +96,7 @@ class App extends Component {
                     <CssBaseline />
                     <Router>
                         <div>
-                            {this.props.user.id && <MainAppBar />}
+                            <MainAppBar />
                             <Switch>
                                 <Redirect exact from="/_=_" to="/home" />
                                 <Route
