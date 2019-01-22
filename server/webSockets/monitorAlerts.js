@@ -142,27 +142,25 @@ function checkPriceThreshold() {
         console.log('clearing interval');
         // clear the interval
         clearInterval(intervalId);
-        setTimeout(() => {
-            triggerPushNotification(filteredCoins[0].id)
-            // turn alerts off for alert that just got sent and attach alert time
-            pool.query(`UPDATE "alerts" SET "alerts_on" = NOT "alerts_on", "alert_sent" = $1 WHERE "id" = $2`, [date, filteredCoins[0].id])
-                .then((res) => {
-                    return res;
-                })
-                .then(() => {
-                    // updates user db alerts total needed for badges
-                    return pool.query(`UPDATE "person" SET "alerts_total" = "alerts_total" + 1 WHERE "id" = $1`, [filteredCoins[0].person_id])
-                })
-                .then(() => {
-                    // call getAlerts again to get new alerts
-                    getAlerts();
-                    // set new 3 second interval
-                    priceCheckInterval(globalAlerts);
-                })
-                .catch(err => {
-                    console.log('error updating alerts in monitorAlerts', err);
-                })
-        }, 10000);
+        triggerPushNotification(filteredCoins[0].id)
+        // turn alerts off for alert that just got sent and attach alert time
+        pool.query(`UPDATE "alerts" SET "alerts_on" = NOT "alerts_on", "alert_sent" = $1 WHERE "id" = $2`, [date, filteredCoins[0].id])
+            .then((res) => {
+                return res;
+            })
+            .then(() => {
+                // updates user db alerts total needed for badges
+                return pool.query(`UPDATE "person" SET "alerts_total" = "alerts_total" + 1 WHERE "id" = $1`, [filteredCoins[0].person_id])
+            })
+            .then(() => {
+                // call getAlerts again to get new alerts
+                getAlerts();
+                // set new 3 second interval
+                priceCheckInterval(globalAlerts);
+            })
+            .catch(err => {
+                console.log('error updating alerts in monitorAlerts', err);
+            })
         
     }
 }
