@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/facebook', userStrategy.authenticate('facebook'));
 
 router.get('/facebook/return', userStrategy.authenticate('facebook'), (req, res) => {
-    res.redirect('http://localhost:3000/');
+    res.redirect(process.env.FB_AUTH);
 });
 
 module.exports = router;
