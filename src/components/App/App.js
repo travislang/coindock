@@ -39,7 +39,6 @@ import io from 'socket.io-client'
 import darkTheme from '../MuiThemes/DarkTheme';
 
 let socket = io();
-// let socket = io('http://localhost:5000');
 
 const styles = {
     position: 'fixed',
@@ -97,13 +96,9 @@ class App extends Component {
                     <CssBaseline />
                     <Router>
                         <div>
-                            <MainAppBar />
+                            {this.props.user.id && <MainAppBar />}
                             <Switch>
-                                {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
-                                {/* <Redirect exact from="/" to="/home" /> */}
                                 <Redirect exact from="/_=_" to="/home" />
-                                {/* Visiting localhost:3000/about will show the about page.
-                            This is a route anyone can see, no login necessary */}
                                 <Route
                                     exact
                                     path="/"
@@ -114,17 +109,11 @@ class App extends Component {
                                     path="/about"
                                     component={AboutPage}
                                 />
-                                {/* For protected routes, the view could show one of several things on the same route.
-                            Visiting localhost:3000/home will show the UserPage if the user is logged in.
-                            If the user is not logged in, the ProtectedRoute will show the 'Login' or 'Register' page.
-                            Even though it seems like they are different pages, the user is always on localhost:3000/home */}
                                 <ProtectedRoute
                                     exact
                                     path="/home"
                                     component={UserPage}
                                 />
-                                {/* This works the same as the other protected route, except that if the user is logged in,
-                            they will see the info page instead. */}
                                 <ProtectedRoute
                                     path="/info"
                                     component={InfoPage}
@@ -145,14 +134,14 @@ class App extends Component {
                                     path="/profile"
                                     component={ProfilePage}
                                 />
-
-                                {/* If none of the other routes matched, we will show a 404. */}
                                 <Route render={() => <h1>404</h1>} />
                             </Switch>
                             {!this.props.connectedFlag && <ReconnectError />}
-                            <Hidden mdUp>
-                                <BottomNav />
-                            </Hidden>
+                            {this.props.user.id && 
+                                <Hidden mdUp>
+                                    <BottomNav />
+                                </Hidden>
+                            }
                         </div>
                     </Router>
                 </SocketContext.Provider>
@@ -162,7 +151,8 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
-    connectedFlag: state.connectedFlag
+    connectedFlag: state.connectedFlag,
+    user: state.user
 });
 
 export default connect(mapStateToProps)(App);

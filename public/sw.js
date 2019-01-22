@@ -15,7 +15,6 @@ self.addEventListener('push', function (event) {
         icon: '/images/coindockicon.png'
         }
     );
-    console.log('in push sw', event.data.json());
     event.waitUntil(promiseChain);
 });
 
