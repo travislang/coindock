@@ -78,14 +78,17 @@ class BottomNav extends React.Component {
             >
                 <BottomNavigationAction component={Link} to='/home' label="Home" icon={<HomeIcon />} />
                 <BottomNavigationAction component={Link} to='/portfolio' label="Portfolio" icon={<BrokenImage />} />
-                <BottomNavigationAction component={Link} to='/alerts' label="Alerts" icon={<Badge
-                    max={25}
-                    classes={{ badge: classes.badge }}
-                    badgeContent={user.alerts_total}
-                    invisible={user.alerts_total === 0}
-                >
-                    <Cast />
-                </Badge>} />
+                <BottomNavigationAction component={Link} to='/alerts' label="Alerts" 
+                icon={
+                    <Badge
+                        max={25}
+                        classes={{ badge: classes.badge }}
+                        badgeContent={user.alerts_total}
+                        invisible={user.alerts_total === 0}
+                    >
+                        <Cast />
+                    </Badge>
+                } />
             </BottomNavigation>
         );
     }
