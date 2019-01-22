@@ -55,7 +55,7 @@ passport.use('local', new LocalStrategy({
 passport.use('facebook', new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: 'http://localhost:5000/auth/facebook/return',
+    callbackURL: process.env.FB_CALLBACK_URL,
     profileFields: ['id', 'displayName', 'picture.type(large)', 'first_name']
 },  // this is called after facebook authorizes user
     function (accessToken, refreshToken, profile, done) {
