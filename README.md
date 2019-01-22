@@ -2,7 +2,7 @@
 
 ## CoinDock
 
-A cryptocurrency tracking app
+A cryptocurrency tracking application
 
 Seamlessly check real-time cryptocurrency price data on mobile or desktop, create multiple different portfolios to organize different cryptocurrencies, and receive push notifications on dynamically generated price alerts.
 
@@ -24,9 +24,14 @@ Seamlessly check real-time cryptocurrency price data on mobile or desktop, creat
 - Web Push API
 - Service Workers
 
+## Demo
+
+To view a live demo of the app please visit [https://coindock.herokuapp.com](https://coindock.herokuapp.com)
+It is hosted on heroku's free tier so please allow a few moments for the heroku server to spin up.
+
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. *In Progress*
 
 
 ### Prerequisites
