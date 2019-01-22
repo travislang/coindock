@@ -133,7 +133,7 @@ class PortfolioExpansionPanel extends Component {
 
 
     render() {
-        const { classes, coin, portfolioSymbols } = this.props;
+        const { classes, coin } = this.props;
         const { expanded } = this.state;
         const alertUrl = `/new-alert/${coin.id}`;
         
@@ -166,7 +166,7 @@ class PortfolioExpansionPanel extends Component {
                         <CoinLoader />
                     }
                     {/* <Typography variant='h4' className={classes.textPrice}>{Number(coin.usd_price).toFixed(2)}</Typography> */}
-                    <Typography variant='h6' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
+                    <Typography variant='body1' className={coin.price_change > 0 ? classes.textPercentPos : classes.textPercentNeg}>{Number(coin.price_change).toFixed(2)}%</Typography>
                     <div
                         style={{ display: 'flex', alignItems: 'center', paddingRight: 0 }}
                         {...this.props.dragHandleProps}>

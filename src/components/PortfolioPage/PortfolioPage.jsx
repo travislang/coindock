@@ -62,9 +62,6 @@ class PortfolioPage extends Component {
                             <Grid container alignItems='center' justify='center'>
                                 <Loader />
                             </Grid>
-                            // <div className={classes.loadingRoot}>
-                            //     <Loader />
-                            // </div> 
                             : 
                             <PortfolioList />}
                     </Grid>
