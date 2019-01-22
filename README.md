@@ -4,28 +4,30 @@
 
 A cryptocurrency tracking app
 
-The user can seamlessly check real-time cryptocurrency price data on mobile or desktop and receive push notifications on dynamically generated alerts without downloading a native app
+Seamlessly check real-time cryptocurrency price data on mobile or desktop, create multiple different portfolios to organize different cryptocurrencies, and receive push notifications on dynamically generated price alerts.
 
 ## Screen Shot
-![screenshot](/assets/screenShot.png)
+![screenshot](/public/images/main-coindock.png)
 
 ## Built With
 
--Node
--Express
--PostgreSQL
--React
--Redux
--Sagas
--Material-UI
--webSockets
--socket.io
--Nivo (charts)
--web Push
+- Node
+- Express
+- PostgreSQL
+- React
+- Redux
+- Sagas
+- Material-UI
+- webSockets API's
+- Socket.io
+- Nivo (charts)
+- Web Push API
+- Service Workers
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
 
 ### Prerequisites
 
@@ -37,16 +39,17 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Completed Features
 
-- [x] ajax loading of tasks on page
-- [x] ajax posting of new task to DB and updating list
+- [x] real time streaming price data
+- [x] Installation of service worker and subscription to Push Notifications
+- [x] Infinite scroll loading of cryptocurrencies
+- [x] create/delete portfolios
+- [x] create price alerts and toggle them on/off
 
 
 ### Next Steps
 
 - [ ] work on improving code performance
-- [ ] Add Twilio for notifications backup
-
-## Deployment
+- [ ] Add Twilio for notifications backup in case browser doesn't support Push
 
 
 
