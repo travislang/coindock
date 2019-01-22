@@ -123,7 +123,7 @@ class LoginPage extends Component {
                             </Typography>
                         </div>
                         <Grid justify='center' container>
-                            <Button href='http://localhost:5000/auth/facebook' variant="contained" className={classes.fbButton}>
+                            <Button href={process.env.FB_AUTH} variant="contained" className={classes.fbButton}>
                                 Login with Facebook
                             </Button>
                         </Grid>
