@@ -27,6 +27,7 @@ Seamlessly check real-time cryptocurrency price data on mobile or desktop, creat
 ## Demo
 
 To view a live demo of the app please visit [https://coindock.herokuapp.com](https://coindock.herokuapp.com)
+
 It is hosted on heroku's free tier so please allow a few moments for the heroku server to spin up.
 
 ## Getting Started
