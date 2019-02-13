@@ -50,8 +50,10 @@ Next you will need to create an ```.env``` file that has the following fields:
 - PUBLIC_VAPID_KEY={YOUR_KEY}
 - PRIVATE_VAPID_KEY={YOUR_KEY}
 
-```CMC_API_KEY``` is a coin market cap api key that you will need to generate
-The public and private VAPID KEYS are needed for web push authentication with service workers - when you ```npm install web-push -g``` if you install it globally you can create these keys from the command line by typing ```web-push generate-vapid-keys [--json]``` into your command line at the project directory.
+```CMC_API_KEY``` is a coin market cap api key that you will need to generate.
+
+The public and private VAPID KEYS are needed for web push authentication with service workers.
+Whne you install web-push run ```npm install web-push -g``` if you install it globally you can create these keys from the command line by typing ```web-push generate-vapid-keys [--json]``` into your command line at the project directory.
 
 the below fields are only needed if using facebook authentication
 
