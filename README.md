@@ -1,5 +1,3 @@
-## *IN PROGRESS*
-
 ## CoinDock
 
 A cryptocurrency tracking application
